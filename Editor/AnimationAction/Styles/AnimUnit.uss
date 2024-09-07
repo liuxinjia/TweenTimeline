@@ -1,0 +1,30 @@
+#animUnitContainer {
+    flex-direction: column;
+}
+
+#animUnitPrefab {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+#animUnitPrefab .icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+#animUnitPrefab .label {
+    flex-grow: 1;
+    text-align: center;
+}
+
+#animUnitPrefab .useCurPos {
+    margin-left: 10px;
+}
+
+.paramsPart{
+    flex-direction: row;
+    margin-top: -6px;
+    margin-bottom: -12px;
+}

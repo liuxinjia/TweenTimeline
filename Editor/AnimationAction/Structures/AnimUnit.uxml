@@ -1,0 +1,10 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements"
+    noNamespaceSchemaLocation="../../../../com.unity.ui/Editor/Schema/Unity.UIBuilder.xsd"
+    editor-extension-mode="True">
+    <ui:VisualElement name="animUnitPrefab"
+        style="flex-direction: row; align-items: center; margin-bottom: 5px;">
+        <ui:Label name="label" />
+        <ui:VisualElement name="paramsPart" class="paramsPart" />
+        <ui:Toggle name="useCurPos" label="Use Current Position" style="margin-left: 10px;" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" noNamespaceSchemaLocation="../../../../com.unity.ui/Editor/Schema/Unity.UIBuilder.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Plugins/TweenTimeline/Editor/AnimationAction/AnimationGrid.uss?fileID=7433441132597879392&amp;guid=bcf8978c76b6418ca38f4a57fe81056c&amp;type=3#AnimationGrid" />
+    <ui:ScrollView name="scrollView" class="scrollView">
+        <ui:VisualElement name="grid" class="grid" />
+    </ui:ScrollView>
+</ui:UXML>

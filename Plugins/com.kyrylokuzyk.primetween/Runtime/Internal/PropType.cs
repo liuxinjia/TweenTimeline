@@ -1,6 +1,6 @@
 
 namespace PrimeTween {
-    internal enum PropType {
+    public enum PropType {
         None = 0,
         Float,
         Color,

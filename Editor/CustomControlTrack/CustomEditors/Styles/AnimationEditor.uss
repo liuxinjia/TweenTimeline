@@ -1,0 +1,74 @@
+.custom-label {
+    font-size: 20px;
+    -unity-font-style: bold;
+    color: rgb(68, 138, 255);
+}
+
+.editor-window {
+    flex-direction: column;
+    height: 401px;
+    width: 600px;
+}
+
+.top-section {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: rgb(247, 240, 240);
+}
+
+.toolBtns {
+    flex-direction: row;
+    padding: 2px;
+    background-color: rgb(197, 197, 197);
+    opacity: 0.66;
+    transition-property: all;
+    transition-duration: 0.15s;
+    transition-timing-function: ease-in-back;
+}
+
+.top-button {
+    flex-grow: 1;
+    margin-right: 5px;
+}
+
+.bottom-section {
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+.left-part {
+    padding: 10px;
+    flex-grow: 1;
+    background-color: rgba(172, 173, 173, 0.53);
+}
+
+.right-part {
+    flex-grow: 2;
+    padding: 10px;
+    transition-property: all;
+    transition-duration: 0.18s;
+    transition-timing-function: ease-out-elastic;
+    transition-delay: 0s;
+    background-color: rgba(196, 217, 217, 0.53);
+    opacity: 0.69;
+}
+
+.part-label {
+    font-size: 16px;
+}
+
+.DisActiveBtn {
+    background-color: rgb(12, 233, 78);
+}
+
+.historyList {
+}
+
+.ActiveBtn {
+    background-color: rgb(206, 64, 64);
+    transition-property: color;
+    transition-duration: 0.25s;
+    transition-timing-function: ease-in-out-cubic;
+    background-image: none;
+}

@@ -1,0 +1,14 @@
+.unity-property-field__label {
+    flex-grow: 1;
+    /* 控制 label 在可用空间中扩展 */
+    flex-shrink: 0;
+    /* 防止 label 缩小 */
+    flex-basis: auto;
+    /* 初始大小 */
+    margin-right: 10px;
+    /* 给 Label 和其他元素之间添加间距 */
+}
+
+#unity-text-input {
+    flex-grow: 2;
+}

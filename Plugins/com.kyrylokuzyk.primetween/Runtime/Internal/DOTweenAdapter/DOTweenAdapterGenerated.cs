@@ -64,6 +64,10 @@ namespace PrimeTween {
 
         public static Tween DOTimeScale([NotNull] this PrimeTween.Sequence target, Single endValue, float duration) => Tween.TweenTimeScale(target, endValue, duration);
 
+        public static Tween DoPadding([NotNull] this UnityEngine.UI.RectMask2D target, UnityEngine.Vector4 endValue, float duration) => Tween.RectMaskPadding(target, endValue, duration);
+
+        public static Tween DoSoftness([NotNull] this UnityEngine.UI.RectMask2D target, UnityEngine.Vector2 endValue, float duration) => Tween.RectMaskSoftness(target, endValue, duration);
+
         #if !UNITY_2019_1_OR_NEWER || UNITY_UGUI_INSTALLED
         public static Tween DOValue([NotNull] this UnityEngine.UI.Slider target, Single endValue, float duration) => Tween.UISliderValue(target, endValue, duration);
 

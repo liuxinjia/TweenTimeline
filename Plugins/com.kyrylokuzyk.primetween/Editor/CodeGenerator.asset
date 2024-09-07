@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: CodeGenerator
   m_EditorClassIdentifier: 
   methodsScript: {fileID: 11500000, guid: 51610f0e9d8e4ccead49e9fcc96d54e3, type: 3}
-  dotweenMethodsScript: {fileID: 11500000, guid: 3c238e2b584a4987b714406da2cf9c56, type: 3}
-  tweenComponentScript: {fileID: 11500000, guid: f191f8e3fa31440d9f1217f1f80dba7d, type: 3}
+  dotweenMethodsScript: {fileID: 11500000, guid: 3c238e2b584a4987b714406da2cf9c56,
+    type: 3}
+  tweenComponentScript: {fileID: 11500000, guid: f191f8e3fa31440d9f1217f1f80dba7d,
+    type: 3}
   editorUtilsScript: {fileID: 11500000, guid: 7f3bfd9524c14644bfbab698076886f3, type: 3}
   methodsData:
   - description: Range_Light
@@ -220,7 +222,7 @@ MonoBehaviour:
     targetType: UnityEngine.RectTransform
     propertyType: 1
     propertyName: 
-    propertyGetter: pivot[0]
+    propertyGetter: 'pivot[0]'
     propertySetter: pivot = _target.pivot.WithComponent(0, val)
     dotweenMethodName: DOPivotX
     dependency: 1
@@ -231,7 +233,7 @@ MonoBehaviour:
     targetType: UnityEngine.RectTransform
     propertyType: 1
     propertyName: 
-    propertyGetter: pivot[1]
+    propertyGetter: 'pivot[1]'
     propertySetter: pivot = _target.pivot.WithComponent(1, val)
     dotweenMethodName: DOPivotY
     dependency: 1
@@ -286,7 +288,7 @@ MonoBehaviour:
     targetType: UnityEngine.RectTransform
     propertyType: 1
     propertyName: 
-    propertyGetter: anchoredPosition3D[0]
+    propertyGetter: 'anchoredPosition3D[0]'
     propertySetter: anchoredPosition3D = _target.anchoredPosition3D.WithComponent(0,
       val)
     dotweenMethodName: DOAnchorPos3DX
@@ -298,7 +300,7 @@ MonoBehaviour:
     targetType: UnityEngine.RectTransform
     propertyType: 1
     propertyName: 
-    propertyGetter: anchoredPosition3D[1]
+    propertyGetter: 'anchoredPosition3D[1]'
     propertySetter: anchoredPosition3D = _target.anchoredPosition3D.WithComponent(1,
       val)
     dotweenMethodName: DOAnchorPos3DY
@@ -310,7 +312,7 @@ MonoBehaviour:
     targetType: UnityEngine.RectTransform
     propertyType: 1
     propertyName: 
-    propertyGetter: anchoredPosition3D[2]
+    propertyGetter: 'anchoredPosition3D[2]'
     propertySetter: anchoredPosition3D = _target.anchoredPosition3D.WithComponent(2,
       val)
     dotweenMethodName: DOAnchorPos3DZ
@@ -973,7 +975,7 @@ MonoBehaviour:
     targetType: UnityEngine.RectTransform
     propertyType: 1
     propertyName: 
-    propertyGetter: offsetMin[0]
+    propertyGetter: 'offsetMin[0]'
     propertySetter: offsetMin = _target.offsetMin.WithComponent(0, val)
     dotweenMethodName: 
     dependency: 1
@@ -984,7 +986,7 @@ MonoBehaviour:
     targetType: UnityEngine.RectTransform
     propertyType: 1
     propertyName: 
-    propertyGetter: offsetMin[1]
+    propertyGetter: 'offsetMin[1]'
     propertySetter: offsetMin = _target.offsetMin.WithComponent(1, val)
     dotweenMethodName: 
     dependency: 1
@@ -1006,7 +1008,7 @@ MonoBehaviour:
     targetType: UnityEngine.RectTransform
     propertyType: 1
     propertyName: 
-    propertyGetter: offsetMax[0]
+    propertyGetter: 'offsetMax[0]'
     propertySetter: offsetMax = _target.offsetMax.WithComponent(0, val)
     dotweenMethodName: 
     dependency: 1
@@ -1017,7 +1019,7 @@ MonoBehaviour:
     targetType: UnityEngine.RectTransform
     propertyType: 1
     propertyName: 
-    propertyGetter: offsetMax[1]
+    propertyGetter: 'offsetMax[1]'
     propertySetter: offsetMax = _target.offsetMax.WithComponent(1, val)
     dotweenMethodName: 
     dependency: 1
@@ -1032,6 +1034,28 @@ MonoBehaviour:
     propertySetter: 
     dotweenMethodName: DOMaxVisibleCharacters
     dependency: 10
+    placeInGlobalScope: 0
+    generateOnlyOverloads: 1
+  - description: Padding_RectMask
+    methodName: RectMaskPadding
+    targetType: UnityEngine.UI.RectMask2D
+    propertyType: 5
+    propertyName: padding
+    propertyGetter: 
+    propertySetter: 
+    dotweenMethodName: DoPadding
+    dependency: 0
+    placeInGlobalScope: 0
+    generateOnlyOverloads: 1
+  - description: Softness_RectMask
+    methodName: RectMaskSoftness
+    targetType: UnityEngine.UI.RectMask2D
+    propertyType: 3
+    propertyName: softness
+    propertyGetter: 
+    propertySetter: 
+    dotweenMethodName: DoSoftness
+    dependency: 0
     placeInGlobalScope: 0
     generateOnlyOverloads: 1
   additiveMethodsGenerator:

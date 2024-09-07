@@ -10,12 +10,12 @@ using UnityEngine;
 using Assert = UnityEngine.Assertions.Assert;
 
 // todo check all TweenType are covered in TweenTypeToTweenData()
-internal class CodeGenerator : ScriptableObject {
+public class CodeGenerator : ScriptableObject {
     [SerializeField] MonoScript methodsScript;
     [SerializeField] MonoScript dotweenMethodsScript;
     [SerializeField] MonoScript tweenComponentScript;
     [SerializeField] MonoScript editorUtilsScript;
-    [SerializeField] MethodGenerationData[] methodsData;
+    [SerializeField] public MethodGenerationData[] methodsData;
     [SerializeField] AdditiveMethodsGenerator additiveMethodsGenerator;
     [SerializeField] SpeedBasedMethodsGenerator speedBasedMethodsGenerator;
 
@@ -32,7 +32,7 @@ internal class CodeGenerator : ScriptableObject {
         #endif
     }*/
 
-    [Serializable]
+    [Serializable] 
     class AdditiveMethodsGenerator {
         [SerializeField] AdditiveMethodsGeneratorData[] additiveMethods;
 
@@ -66,7 +66,7 @@ internal class CodeGenerator : ScriptableObject {
     }
 
     [ContextMenu(nameof(generateAllMethods))]
-    internal void generateAllMethods() {
+    public void generateAllMethods() {
         generateMethods();
         generateDotweenMethods();
     }
@@ -80,6 +80,7 @@ internal class CodeGenerator : ScriptableObject {
             Debug.LogError("Not generating TweenComponent script because this component is only available in PrimeTween PRO.");
             return;
         }
+
 
         var str = tweenComponentScript.text;
         var searchIndex = str.IndexOf(generatorBeginLabel, StringComparison.Ordinal);
@@ -191,7 +192,7 @@ namespace PrimeTween {
     }
 
     [CanBeNull]
-    static string getMethodPrefix(Dependency dep) {
+    public static string getMethodPrefix(Dependency dep) {
         switch (dep) {
             case Dependency.UNITY_UGUI_INSTALLED:
                 return "UI";
@@ -718,7 +719,7 @@ internal static class Utils {
 }
 
 [Serializable]
-class MethodGenerationData {
+public class MethodGenerationData {
     public string description;
     public string methodName;
     public string targetType;
@@ -735,7 +736,7 @@ class MethodGenerationData {
 }
 
 [PublicAPI]
-enum Dependency {
+public enum Dependency {
     None,
     UNITY_UGUI_INSTALLED,
     AUDIO_MODULE_INSTALLED,

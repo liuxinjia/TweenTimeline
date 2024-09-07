@@ -15,6 +15,7 @@ using UnityEditor;
 
 namespace PrimeTween {
     [AddComponentMenu("")]
+    // [ExecuteInEditMode]
     internal class PrimeTweenManager : MonoBehaviour {
         internal static PrimeTweenManager Instance;
         #if UNITY_EDITOR
@@ -117,9 +118,9 @@ namespace PrimeTween {
         }
 
         void Reset() {
-            Assert.IsFalse(Application.isPlaying);
-            Debug.LogError(manualInstanceCreationIsNotAllowedMessage);
-            DestroyImmediate(this);
+            // Assert.IsFalse(Application.isPlaying);
+            // Debug.LogError(manualInstanceCreationIsNotAllowedMessage);
+            // DestroyImmediate(this);
         }
         #endif
 

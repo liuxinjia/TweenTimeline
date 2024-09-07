@@ -49,10 +49,10 @@ namespace PrimeTween {
 
         internal static bool warnNoInstance {
             get {
-                if (noInstance) {
-                    Debug.LogWarning(editModeWarning);
-                    return true;
-                }
+                // if (noInstance) {
+                //     Debug.LogWarning(editModeWarning);
+                //     return true;
+                // }
                 return false;
             }
         }

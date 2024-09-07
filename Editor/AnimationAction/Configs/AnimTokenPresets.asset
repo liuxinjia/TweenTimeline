@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d706078d9c140a74c916aa82c91ffa73, type: 3}
+  m_Name: AnimTokenPresets
+  m_EditorClassIdentifier: 
+  settings:
+  - settingType: 1
+    duration: 500
+    easing: 0
+    tooltip: Begin and end on screen, 500ms
+  - settingType: 2
+    duration: 450
+    easing: 1
+    tooltip: Enter the screen, 400ms
+  - settingType: 3
+    duration: 200
+    easing: 2
+    tooltip: Exit the screen, 200ms
+  - settingType: 4
+    duration: 300
+    easing: 3
+    tooltip: Begin and end on screen, 300ms
+  - settingType: 5
+    duration: 250
+    easing: 4
+    tooltip: Enter the screen, 250ms
+  - settingType: 6
+    duration: 150
+    easing: 5
+    tooltip: Exit the screen, 200ms

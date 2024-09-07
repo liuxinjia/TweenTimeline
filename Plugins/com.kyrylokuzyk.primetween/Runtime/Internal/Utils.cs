@@ -70,6 +70,10 @@ internal static class Utils {
                 return (PropType.Float, typeof(PrimeTween.Tween));
             case TweenType.TweenTimeScaleSequence:
                 return (PropType.Float, typeof(PrimeTween.Sequence));
+            case TweenType.RectMaskPadding:
+                return (PropType.Vector4, typeof(UnityEngine.UI.RectMask2D));
+            case TweenType.RectMaskSoftness:
+                return (PropType.Vector2, typeof(UnityEngine.UI.RectMask2D));
             #if !UNITY_2019_1_OR_NEWER || UNITY_UGUI_INSTALLED
             case TweenType.UISliderValue:
                 return (PropType.Float, typeof(UnityEngine.UI.Slider));
@@ -202,10 +206,6 @@ internal static class Utils {
             #endif
             case TweenType.None:
                 return (PropType.None, null);
-            #if PRIME_TWEEN_PRO
-            case TweenType.TweenComponent:
-                return (PropType.None, typeof(PrimeTween.TweenComponent));
-            #endif
             case TweenType.Delay:
                 return (PropType.Float, null);
             case TweenType.Callback:

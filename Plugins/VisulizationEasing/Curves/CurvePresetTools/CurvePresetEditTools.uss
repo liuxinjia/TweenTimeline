@@ -1,0 +1,32 @@
+#container {
+    flex-direction: row;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#verticalContainer {
+    flex-direction: column;
+    flex-grow: 1;
+    flex-shrink: 0;
+    width: 300px;
+}
+
+#horizontalContainer {
+    flex-direction: row;
+}
+
+#leftPart {
+    flex-direction: column;
+}
+
+#rightPart {
+    flex-direction: column;
+}
+
+#curveListContainer {
+    min-height: 100px;
+    max-height: 200px;
+    flex-grow: 1;
+}

@@ -1,0 +1,22 @@
+<UXML xmlns="UnityEngine.UIElements" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    editor-extension-mode="False">
+    <Style
+        src="project://database/Assets/Plugins/TweenTimeline/Editor/Base/CustomEditors/Styles/CodeGeneratorWindow.uss?fileID=7433441132597879392&amp;guid=08a001351ac20b444a9e84881ba933e8&amp;type=3#CodeGeneratorWindow" />
+    <VisualElement name="root" class="rootContainer">
+        <VisualElement name="addParameterSection" class="addParameterSection">
+            <TextField name="componentTypeField" label="Component Type" binding-path="componentType" />
+            <TextField name="valueTypeField" label="Value Type" binding-path="valueType" />
+            <TextField name="propertyMethodField" label="Property Method"
+                binding-path="propertyMethod" />
+            <TextField name="tweenMethodField" label="Tween Method" binding-path="tweenMethod" />
+            <Button name="addParameterButton" text="Add Parameter" />
+        </VisualElement>
+        <VisualElement name="parametersListSection">
+            <Label text="Parameters" />
+            <ListView name="parametersListView" class="parametersListView"
+                items-source="{parameters}" make-item="{makeItem}"
+                bind-item="{bindItem}" />
+        </VisualElement>
+        <Button name="generateCodeButton" text="Generate Code" />
+    </VisualElement>
+</UXML>

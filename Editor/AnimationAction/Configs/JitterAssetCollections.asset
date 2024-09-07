@@ -1,0 +1,525 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcb5a6131a292894bb493562b8e66d75, type: 3}
+  m_Name: JitterAssetCollections
+  m_EditorClassIdentifier: 
+  animationContainers:
+  - animationCollections:
+    - label: Fade In
+      image: crate_with_heart.png
+      effectCategory: Fade
+      target: {fileID: 0}
+      durationToken: 250
+      easeToken: 0
+      animationSteps:
+      - label: 
+        tweenMethod: GraphicColorA
+        EndPos: 1.0f
+        StartPos: 0.0f
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: Slide In
+      image: crate_with_heart.png
+      effectCategory: Fade
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: MoveX
+        tweenMethod: RectTransformAnchoredPositionX
+        EndPos: -250
+        StartPos: 
+        useCurPos: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+      - label: Alpha
+        tweenMethod: GraphicColorA
+        EndPos: 1.0f
+        StartPos: 0.0f
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: Grow In
+      image: crate_with_heart.png
+      effectCategory: Scale
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: Scale
+        tweenMethod: TransformLocalScale
+        EndPos: (1.00, 1.00, 1.00)
+        StartPos: (0.00, 0.00, 0.00)
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+      - label: Fade
+        tweenMethod: GraphicColorA
+        EndPos: 1.0f
+        StartPos: 0.0f
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: Shrink In
+      image: shrink_in_example.png
+      effectCategory: Scale
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: Scale
+        tweenMethod: TransformLocalScale
+        EndPos: (1.00, 1.00, 1.00)
+        StartPos: (2.00, 2.00, 2.00)
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+      - label: Fade
+        tweenMethod: GraphicColorA
+        EndPos: 1.0f
+        StartPos: 0.0f
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: Spin In
+      image: spin_in_example.png
+      effectCategory: Scale
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: Scale
+        tweenMethod: TransformLocalScale
+        EndPos: (1.00, 1.00, 1.00)
+        StartPos: (0.50, 0.50, 0.50)
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+      - label: Rotate
+        tweenMethod: TransformRotation
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: (0.00, 0.00, 0.00)
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+      - label: Fade
+        tweenMethod: GraphicColorA
+        EndPos: 1.0f
+        StartPos: 0.0f
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: Twist In
+      image: twist_in_example.png
+      effectCategory: Scale
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: Scale
+        tweenMethod: TransformLocalScale
+        EndPos: (1.00, 1.00, 1.00)
+        StartPos: (0.50, 0.50, 0.50)
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+      - label: Rotate
+        tweenMethod: TransformRotation
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: (0.00, 0.00, 0.00)
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+      - label: Fade
+        tweenMethod: GraphicColorA
+        EndPos: 1.0f
+        StartPos: 0.0f
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: Move & Scale In
+      image: move_and_scale_in_example.png
+      effectCategory: Scale
+      target: {fileID: 0}
+      durationToken: 1000
+      easeToken: 3
+      animationSteps:
+      - label: MoveX
+        tweenMethod: RectTransformAnchoredPositionX
+        EndPos: -200
+        StartPos: 
+        useCurPos: 1
+        startTimeOffset: 400
+        animationTarget: {fileID: 0}
+      - label: Fade
+        tweenMethod: GraphicColorA
+        EndPos: 1.0f
+        StartPos: 0.0f
+        useCurPos: 0
+        startTimeOffset: 400
+        animationTarget: {fileID: 0}
+      - label: Scale
+        tweenMethod: TransformLocalScale
+        EndPos: (0.80, 0.80, 0.80)
+        StartPos: (1.00, 1.00, 1.00)
+        useCurPos: 0
+        startTimeOffset: -400
+        animationTarget: {fileID: 0}
+    - label: Mask Reveal
+      image: mask_reveal_fade_in_example.png
+      effectCategory: Mask
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: Padding
+        tweenMethod: RectMask2DPadding
+        EndPos: (0.00, 0.00, 0.00, 0.00)
+        StartPos: (100.00, 0.00, 0.00, 0.00)
+        useCurPos: 0
+        startTimeOffset: 500
+        animationTarget: {fileID: 0}
+    - label: Mask Center
+      image: mask_center_example.png
+      effectCategory: Mask
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: PaddingCenter
+        tweenMethod: RectMask2DPadding
+        EndPos: (0.00, 0.00, 0.00, 0.00)
+        StartPos: (0.00, 50.00, 0.00, 50.00)
+        useCurPos: 0
+        startTimeOffset: 500
+        animationTarget: {fileID: 0}
+    - label: Mask Resize
+      image: mask_resize_example.png
+      effectCategory: Mask
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: PaddingResize
+        tweenMethod: RectMask2DPadding
+        EndPos: (0.00, 0.00, 0.00, 0.00)
+        StartPos: (50.00, 50.00, 50.00, 50.00)
+        useCurPos: 0
+        startTimeOffset: 500
+        animationTarget: {fileID: 0}
+    - label: Mask Expand
+      image: mask_expand_example.png
+      effectCategory: Mask
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: Softness
+        tweenMethod: RectMask2DSoftness
+        EndPos: (0.00, 0.00)
+        StartPos: (50.00, 50.00)
+        useCurPos: 0
+        startTimeOffset: 500
+        animationTarget: {fileID: 0}
+    category: In
+  - animationCollections:
+    - label: Fade Out
+      image: crate_with_heart.png
+      effectCategory: Fade
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: 
+        tweenMethod: GraphicColorA
+        EndPos: 0.0f
+        StartPos: 1.0f
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: Slide Out
+      image: crate_with_heart.png
+      effectCategory: Fade
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: MoveX
+        tweenMethod: RectTransformAnchoredPositionX
+        EndPos: 250
+        StartPos: 
+        useCurPos: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+      - label: Alpha
+        tweenMethod: GraphicColorA
+        EndPos: 0.0f
+        StartPos: 1.0f
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: Grow Out
+      image: crate_with_heart.png
+      effectCategory: Scale
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: Scale
+        tweenMethod: TransformLocalScale
+        EndPos: (2.00, 2.00, 2.00)
+        StartPos: (1.00, 1.00, 1.00)
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+      - label: Fade
+        tweenMethod: GraphicColorA
+        EndPos: 0.0f
+        StartPos: 1.0f
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: Shrink Out
+      image: shrink_out_example.png
+      effectCategory: Scale
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: Scale
+        tweenMethod: TransformLocalScale
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: (1.00, 1.00, 1.00)
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+      - label: Fade
+        tweenMethod: GraphicColorA
+        EndPos: 0.0f
+        StartPos: 1.0f
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: Spin Out
+      image: spin_out_example.png
+      effectCategory: Scale
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: Scale
+        tweenMethod: TransformLocalScale
+        EndPos: (0.50, 0.50, 0.50)
+        StartPos: (1.00, 1.00, 1.00)
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+      - label: Rotate
+        tweenMethod: TransformRotation
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: (0.00, 0.00, 0.00)
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+      - label: Fade
+        tweenMethod: GraphicColorA
+        EndPos: 0.0f
+        StartPos: 1.0f
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: Twist Out
+      image: twist_out_example.png
+      effectCategory: Scale
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: Scale
+        tweenMethod: TransformLocalScale
+        EndPos: (0.50, 0.50, 0.50)
+        StartPos: (1.00, 1.00, 1.00)
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+      - label: Rotate
+        tweenMethod: TransformRotation
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: (0.00, 0.00, 0.00)
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+      - label: Fade
+        tweenMethod: GraphicColorA
+        EndPos: 0.0f
+        StartPos: 1.0f
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: Move & Scale Out
+      image: move_and_scale_out_example.png
+      effectCategory: Scale
+      target: {fileID: 0}
+      durationToken: 1000
+      easeToken: 3
+      animationSteps:
+      - label: MoveX
+        tweenMethod: RectTransformAnchoredPositionX
+        EndPos: 200
+        StartPos: 
+        useCurPos: 1
+        startTimeOffset: 400
+        animationTarget: {fileID: 0}
+      - label: Fade
+        tweenMethod: GraphicColorA
+        EndPos: 0.0f
+        StartPos: 1.0f
+        useCurPos: 0
+        startTimeOffset: 400
+        animationTarget: {fileID: 0}
+      - label: Scale
+        tweenMethod: TransformLocalScale
+        EndPos: (1.00, 1.00, 1.00)
+        StartPos: (0.80, 0.80, 0.80)
+        useCurPos: 0
+        startTimeOffset: -400
+        animationTarget: {fileID: 0}
+    - label: Mask Unveil
+      image: mask_unveil_example.png
+      effectCategory: Mask
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: Padding
+        tweenMethod: RectMask2DPadding
+        EndPos: (100.00, 0.00, 0.00, 0.00)
+        StartPos: (0.00, 0.00, 0.00, 0.00)
+        useCurPos: 0
+        startTimeOffset: 500
+        animationTarget: {fileID: 0}
+    - label: Mask Contract
+      image: mask_contract_example.png
+      effectCategory: Mask
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: PaddingCenter
+        tweenMethod: RectMask2DPadding
+        EndPos: (0.00, 50.00, 0.00, 50.00)
+        StartPos: (0.00, 0.00, 0.00, 0.00)
+        useCurPos: 0
+        startTimeOffset: 500
+        animationTarget: {fileID: 0}
+    - label: Mask Reduce
+      image: mask_reduce_example.png
+      effectCategory: Mask
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: PaddingResize
+        tweenMethod: RectMask2DPadding
+        EndPos: (50.00, 50.00, 50.00, 50.00)
+        StartPos: (0.00, 0.00, 0.00, 0.00)
+        useCurPos: 0
+        startTimeOffset: 500
+        animationTarget: {fileID: 0}
+    - label: Mask Collapse
+      image: mask_collapse_example.png
+      effectCategory: Mask
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: Softness
+        tweenMethod: RectMask2DSoftness
+        EndPos: (50.00, 50.00)
+        StartPos: (0.00, 0.00)
+        useCurPos: 0
+        startTimeOffset: 500
+        animationTarget: {fileID: 0}
+    category: Out
+  - animationCollections:
+    - label: Move
+      image: custom_move_example.png
+      effectCategory: Transform
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: MoveX
+        tweenMethod: RectTransformAnchoredPositionX
+        EndPos: 500
+        StartPos: 0
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: Scale
+      image: custom_scale_example.png
+      effectCategory: Transform
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: Scale
+        tweenMethod: TransformLocalScale
+        EndPos: (1.00, 1.00, 1.00)
+        StartPos: (2.00, 2.00, 2.00)
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: Rotate
+      image: custom_rotate_example.png
+      effectCategory: Transform
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: Rotate
+        tweenMethod: TransformRotation
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: (0.00, 0.00, 0.00)
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: Opacity
+      image: custom_opacity_example.png
+      effectCategory: Style
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: Opacity
+        tweenMethod: GraphicColorA
+        EndPos: 0.0f
+        StartPos: 1.0f
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: Resize
+      image: custom_resize_example.png
+      effectCategory: Other
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: Resize
+        tweenMethod: RectTransformSizeDelta
+        EndPos: (100.00, 100.00)
+        StartPos: (50.00, 50.00)
+        useCurPos: 0
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    category: Custom

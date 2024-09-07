@@ -23,7 +23,7 @@ namespace PrimeTween {
             parametricEasePeriod = period;
         }
 
-        Easing(Ease ease, [CanBeNull] AnimationCurve curve) {
+        public Easing(Ease ease, [CanBeNull] AnimationCurve curve) {
             if (ease == Ease.Custom) {
                 if (curve == null || !TweenSettings.ValidateCustomCurveKeyframes(curve)) {
                     Debug.LogError("Ease is Ease.Custom, but AnimationCurve is not configured correctly. Using Ease.Default instead.");

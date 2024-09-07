@@ -1,0 +1,11 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <engine:Template name="ToolButtonsTemplate" src="project://database/Assets/Plugins/TweenTimeline/Editor/Base/CustomEditors/Structures/ToolButtons.uxml?fileID=9197481963319205126&amp;guid=b1b965571fcf78d4bbfc33b9ce048c6d&amp;type=3#ToolButtons" />
+    <Style src="project://database/Assets/Plugins/TweenTimeline/Editor/Base/CustomEditors/Styles/TweenTimelineToolsWindow.uss?fileID=7433441132597879392&amp;guid=3aa796920ef933346a1925cc21e7286e&amp;type=3#TweenTimelineToolsWindow" />
+    <engine:Instance template="ToolButtonsTemplate" style="transition-property: display;" />
+    <engine:VisualElement name="RootContainer" class="bottom-section">
+        <engine:VisualElement name="CommandContainers" class="left-part">
+            <engine:ListView name="historyList" class="historyList" />
+        </engine:VisualElement>
+        <engine:VisualElement name="SettingsContainers" class="right-part" style="background-color: rgba(57, 51, 51, 0.76);" />
+    </engine:VisualElement>
+</engine:UXML>

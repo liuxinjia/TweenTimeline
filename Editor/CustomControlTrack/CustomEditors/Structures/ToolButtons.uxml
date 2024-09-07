@@ -1,0 +1,8 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Plugins/TweenTimeline/Editor/Base/CustomEditors/Styles/TweenTimelineToolsWindow.uss?fileID=7433441132597879392&amp;guid=3aa796920ef933346a1925cc21e7286e&amp;type=3#TweenTimelineToolsWindow" />
+    <engine:VisualElement name="toolBtns" class="toolBtns">
+        <engine:Button text="Preview" name="preViewBtn" class="top-button ActiveBtn DisActiveBtn" />
+        <engine:Button text="Play" name="playBtn" class="top-button DisActiveBtn ActiveBtn" />
+        <engine:Button text="Record" name="recordBtn" class="top-button DisActiveBtn ActiveBtn" />
+    </engine:VisualElement>
+</engine:UXML>

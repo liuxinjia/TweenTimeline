@@ -76,6 +76,8 @@ namespace PrimeTween {
         Alpha,
         TweenTimeScale,
         TweenTimeScaleSequence,
+        RectMaskPadding,
+        RectMaskSoftness,
         UISliderValue,
         UINormalizedPosition,
         UIHorizontalNormalizedPosition,
@@ -697,7 +699,45 @@ namespace PrimeTween {
         public static Tween TweenTimeScale([NotNull] PrimeTween.Sequence target, Single endValue, TweenSettings settings) => TweenTimeScale(target, new TweenSettings<float>(endValue, settings));
         public static Tween TweenTimeScale([NotNull] PrimeTween.Sequence target, Single startValue, Single endValue, TweenSettings settings) => TweenTimeScale(target, new TweenSettings<float>(startValue, endValue, settings));
 
-        #if !UNITY_2019_1_OR_NEWER || UNITY_UGUI_INSTALLED
+        public static Tween RectMaskPadding([NotNull] UnityEngine.UI.RectMask2D target, UnityEngine.Vector4 endValue, float duration, Ease ease = Ease.Default, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false) 
+            => RectMaskPadding(target, new TweenSettings<UnityEngine.Vector4>(endValue, new TweenSettings(duration, ease, cycles, cycleMode, startDelay, endDelay, useUnscaledTime)));
+        public static Tween RectMaskPadding([NotNull] UnityEngine.UI.RectMask2D target, UnityEngine.Vector4 endValue, float duration, Easing ease, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false) 
+            => RectMaskPadding(target, new TweenSettings<UnityEngine.Vector4>(endValue, new TweenSettings(duration, ease, cycles, cycleMode, startDelay, endDelay, useUnscaledTime)));
+        public static Tween RectMaskPadding([NotNull] UnityEngine.UI.RectMask2D target, UnityEngine.Vector4 startValue, UnityEngine.Vector4 endValue, float duration, Ease ease = Ease.Default, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false) 
+            => RectMaskPadding(target, new TweenSettings<UnityEngine.Vector4>(startValue, endValue, new TweenSettings(duration, ease, cycles, cycleMode, startDelay, endDelay, useUnscaledTime)));
+        public static Tween RectMaskPadding([NotNull] UnityEngine.UI.RectMask2D target, UnityEngine.Vector4 startValue, UnityEngine.Vector4 endValue, float duration, Easing ease, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false) 
+            => RectMaskPadding(target, new TweenSettings<UnityEngine.Vector4>(startValue, endValue, new TweenSettings(duration, ease, cycles, cycleMode, startDelay, endDelay, useUnscaledTime)));
+        public static Tween RectMaskPadding([NotNull] UnityEngine.UI.RectMask2D target, UnityEngine.Vector4 endValue, TweenSettings settings) => RectMaskPadding(target, new TweenSettings<UnityEngine.Vector4>(endValue, settings));
+        public static Tween RectMaskPadding([NotNull] UnityEngine.UI.RectMask2D target, UnityEngine.Vector4 startValue, UnityEngine.Vector4 endValue, TweenSettings settings) => RectMaskPadding(target, new TweenSettings<UnityEngine.Vector4>(startValue, endValue, settings));
+        public static Tween RectMaskPadding([NotNull] UnityEngine.UI.RectMask2D target, TweenSettings<UnityEngine.Vector4> settings)
+        {
+            return animate(target, ref settings, _tween =>
+            {
+                var _target = _tween.target as UnityEngine.UI.RectMask2D;
+                var val = _tween.Vector4Val;
+                _target.padding = val;
+            }, t => (t.target as UnityEngine.UI.RectMask2D).padding.ToContainer(), TweenType.RectMaskPadding);
+        }
+        public static Tween RectMaskSoftness([NotNull] UnityEngine.UI.RectMask2D target, UnityEngine.Vector2 endValue, float duration, Ease ease = Ease.Default, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false) 
+            => RectMaskSoftness(target, new TweenSettings<UnityEngine.Vector2>(endValue, new TweenSettings(duration, ease, cycles, cycleMode, startDelay, endDelay, useUnscaledTime)));
+        public static Tween RectMaskSoftness([NotNull] UnityEngine.UI.RectMask2D target, UnityEngine.Vector2 endValue, float duration, Easing ease, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false) 
+            => RectMaskSoftness(target, new TweenSettings<UnityEngine.Vector2>(endValue, new TweenSettings(duration, ease, cycles, cycleMode, startDelay, endDelay, useUnscaledTime)));
+        public static Tween RectMaskSoftness([NotNull] UnityEngine.UI.RectMask2D target, UnityEngine.Vector2 startValue, UnityEngine.Vector2 endValue, float duration, Ease ease = Ease.Default, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false) 
+            => RectMaskSoftness(target, new TweenSettings<UnityEngine.Vector2>(startValue, endValue, new TweenSettings(duration, ease, cycles, cycleMode, startDelay, endDelay, useUnscaledTime)));
+        public static Tween RectMaskSoftness([NotNull] UnityEngine.UI.RectMask2D target, UnityEngine.Vector2 startValue, UnityEngine.Vector2 endValue, float duration, Easing ease, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false) 
+            => RectMaskSoftness(target, new TweenSettings<UnityEngine.Vector2>(startValue, endValue, new TweenSettings(duration, ease, cycles, cycleMode, startDelay, endDelay, useUnscaledTime)));
+        public static Tween RectMaskSoftness([NotNull] UnityEngine.UI.RectMask2D target, UnityEngine.Vector2 endValue, TweenSettings settings) => RectMaskSoftness(target, new TweenSettings<UnityEngine.Vector2>(endValue, settings));
+        public static Tween RectMaskSoftness([NotNull] UnityEngine.UI.RectMask2D target, UnityEngine.Vector2 startValue, UnityEngine.Vector2 endValue, TweenSettings settings) => RectMaskSoftness(target, new TweenSettings<UnityEngine.Vector2>(startValue, endValue, settings));
+        public static Tween RectMaskSoftness([NotNull] UnityEngine.UI.RectMask2D target, TweenSettings<UnityEngine.Vector2> settings)
+        {
+            return animate(target, ref settings, _tween =>
+            {
+                var _target = _tween.target as UnityEngine.UI.RectMask2D;
+                var val = _tween.Vector2Val;
+                _target.softness = new UnityEngine.Vector2Int((int)val.x, (int)val.y);
+            }, t => (t.target as UnityEngine.UI.RectMask2D).padding.ToContainer(), TweenType.RectMaskSoftness);
+        }
+#if !UNITY_2019_1_OR_NEWER || UNITY_UGUI_INSTALLED
         public static Tween UISliderValue([NotNull] UnityEngine.UI.Slider target, Single endValue, float duration, Ease ease = Ease.Default, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false) 
             => UISliderValue(target, new TweenSettings<float>(endValue, new TweenSettings(duration, ease, cycles, cycleMode, startDelay, endDelay, useUnscaledTime)));
         public static Tween UISliderValue([NotNull] UnityEngine.UI.Slider target, Single endValue, float duration, Easing ease, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, float startDelay = 0, float endDelay = 0, bool useUnscaledTime = false) 

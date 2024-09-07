@@ -1,0 +1,39 @@
+.addParameterSection {
+    flex-direction: column;
+    margin-bottom: 10px;
+    /* flex-grow: 1; */
+}
+
+.addParameterSection TextField {
+    /* flex-grow: 1; */
+    margin-right: 10px;
+}
+
+.addParameterSection Button {
+    margin-right: 10px;
+}
+
+.parametersListSection {
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.parametersListSection Label {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.parametersListView {
+    flex-grow: 1;
+    height: 160px;
+    /* 8 items * 20px per item */
+}
+
+.generateCodeButton {
+    margin-top: 10px;
+}
+
+.rootContainer {
+    flex-grow: 1;
+    flex-direction: column;
+}

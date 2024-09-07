@@ -1,0 +1,16 @@
+#scrollView {
+    flex-direction: column;
+    height: 300px;
+}
+
+#grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.categoryLabel {
+    margin-top: 10;
+    margin-bottom: 5;
+    -unity-font-style: bold;
+}
