@@ -5,7 +5,7 @@
 #animUnitPrefab {
     flex-direction: row;
     align-items: center;
-    margin-bottom: 5px;
+    /* margin-bottom: 5px; */
 }
 
 #animUnitPrefab .icon {
@@ -14,17 +14,44 @@
     margin-right: 5px;
 }
 
-#animUnitPrefab .label {
-    flex-grow: 1;
-    text-align: center;
+#animUnitPrefab #label {
+    flex-grow: 0;
+    -unity-text-align: middle-center;
+    margin-right: 20px;
+    margin-bottom: 5px;
 }
 
-#animUnitPrefab .useCurPos {
-    margin-left: 10px;
+#animUnitPrefab #relative {
+    margin-bottom: -5px;
 }
 
-.paramsPart{
+.paramsPart {
     flex-direction: row;
     margin-top: -6px;
     margin-bottom: -12px;
+    flex-grow: 1;
+}
+
+
+.paramsPart .unity-base-field__input {
+    min-width: 24px;
+}
+.paramsPart  .unity-vector2-field__input .unity-float-field__input {
+    min-width: 44px;
+}
+.paramsPart .unity-color-field__input {
+    min-width: 62px;
+}
+/* 定义 StartPosField 下标签的样式 */
+#StartPosField > .unity-label {
+    color: #00ffd5; /* 标签颜色 */
+    -unity-font-style: bold;
+    min-width: 56px;
+}
+
+/* 定义 StartPosField 下标签的样式 */
+#EndPosField > .unity-label {
+    color: #c3ff00; /* 标签颜色 */
+    -unity-font-style: bold;
+    min-width: 56px;
 }

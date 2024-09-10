@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Cr7Sund.TweenTimeLine
@@ -16,37 +14,41 @@ namespace Cr7Sund.TweenTimeLine
             {
                 string typeName = GetTypeName(parameter.ComponentType);
                 string processedPropertyMethod = ProcessPropertyMethod(parameter.GetPropertyMethod);
-                string identifier = $"{typeName}{processedPropertyMethod}";
-                string namespaceName = GetNamespaceName(parameter.ComponentType);
+                string identifier = $"{typeName}_{processedPropertyMethod}";
+                string includeNamespaceName = GetNamespaceName(parameter.ComponentType);
 
-                string controlAssetFolder = Path.Combine(OutputPath, "ControlAsset", namespaceName.Replace('.', Path.DirectorySeparatorChar), typeName);
-                string primeTweenBehaviourFolder = Path.Combine(OutputPath, "PrimeTweenBehaviour", namespaceName.Replace('.', Path.DirectorySeparatorChar), typeName);
-                string controlTrackFolder = Path.Combine(OutputPath, "ControlTrack", namespaceName.Replace('.', Path.DirectorySeparatorChar), typeName);
+                string controlAssetFolder = Path.Combine(OutputPath, "ControlAsset", includeNamespaceName.Replace('.', Path.DirectorySeparatorChar), typeName);
+                string primeTweenBehaviourFolder = Path.Combine(OutputPath, "PrimeTweenBehaviours", includeNamespaceName.Replace('.', Path.DirectorySeparatorChar), typeName);
+                string controlTrackFolder = Path.Combine(OutputPath, "ControlTrack", includeNamespaceName.Replace('.', Path.DirectorySeparatorChar), typeName);
 
-                // 确保文件夹路径存在
                 Directory.CreateDirectory(controlAssetFolder);
                 Directory.CreateDirectory(primeTweenBehaviourFolder);
                 Directory.CreateDirectory(controlTrackFolder);
 
-                string controlAssetCode = GenerateControlAssetCode(namespaceName, identifier, parameter.ComponentType, parameter.ValueType);
-                string controlBehaviourCode = GenerateControlBehaviourCode(namespaceName, identifier, typeName, parameter.ValueType, parameter.GetPropertyMethod, parameter.SetPropertyMethod, parameter.PreTweenMethod);
-                string controlTrackCode = GenerateControlTrackCode(namespaceName, identifier, typeName, parameter.ValueType);
+                string namespaceName = $"Cr7Sund.{typeName}Tweeen";
+                string controlAssetCode = GenerateControlAssetCode(namespaceName,includeNamespaceName, identifier, parameter.ComponentType, parameter.ValueType);
+                string controlBehaviourCode = GenerateControlBehaviourCode(namespaceName,includeNamespaceName, identifier, parameter.ComponentType, parameter.ValueType, parameter.GetPropertyMethod, parameter.SetPropertyMethod, parameter.PreTweenMethod);
+                string controlTrackCode = GenerateControlTrackCode(namespaceName,includeNamespaceName, identifier, parameter.ComponentType, parameter.ValueType);
 
-                // 将文件写入相应的文件夹中
                 File.WriteAllText(Path.Combine(controlAssetFolder, $"{identifier}ControlAsset.cs"), controlAssetCode);
                 File.WriteAllText(Path.Combine(primeTweenBehaviourFolder, $"{identifier}ControlBehaviour.cs"), controlBehaviourCode);
                 File.WriteAllText(Path.Combine(controlTrackFolder, $"{identifier}ControlTrack.cs"), controlTrackCode);
             });
         }
 
-        private static string GenerateControlAssetCode(string namespaceName, string identifier, string componentType, string valueType)
+        private static string GenerateControlAssetCode(string namespaceName, string includeNameSpace, string identifier, string componentType, string valueType)
         {
+            string customNamespaceName = string.Empty;
+            if (includeNameSpace != "UnityEngine")
+            {
+                customNamespaceName = $"using {includeNameSpace};";
+            }
             return $@"
 using System;
-using {namespaceName};
 using UnityEngine;
-
-namespace Cr7Sund.TweenTimeLine
+using Cr7Sund.TweenTimeLine;
+{customNamespaceName}
+namespace {namespaceName}
 {{
     public class {identifier}ControlAsset : BaseControlAsset<{identifier}ControlBehaviour, {componentType}, {valueType}>
     {{
@@ -55,15 +57,21 @@ namespace Cr7Sund.TweenTimeLine
 ";
         }
 
-        private static string GenerateControlBehaviourCode(string namespaceName, string identifier, string componentType, string valueType, string getPropertyMethod, string setPropertyMethod, string tweenMethod)
+        private static string GenerateControlBehaviourCode(string namespaceName,string includeNameSpace, string identifier, string componentType, string valueType, string getPropertyMethod, string setPropertyMethod, string tweenMethod)
         {
+            string customNamespaceName = string.Empty;
+            if (includeNameSpace != "UnityEngine" &&
+             includeNameSpace != "PrimeTween")
+            {
+                customNamespaceName = $"using {includeNameSpace};";
+            }
             return $@"
 using System;
-using {namespaceName};
 using UnityEngine;
 using PrimeTween;
-
-namespace Cr7Sund.TweenTimeLine
+using Cr7Sund.TweenTimeLine;
+{customNamespaceName}
+namespace {namespaceName}
 {{
     [Serializable]
     public  class {identifier}ControlBehaviour : BaseControlBehaviour<{componentType}, {valueType}>
@@ -88,19 +96,24 @@ namespace Cr7Sund.TweenTimeLine
 ";
         }
 
-        private static string GenerateControlTrackCode(string namespaceName, string identifier, string componentType, string valueType)
+        private static string GenerateControlTrackCode(string namespaceName,string includeNameSpace, string identifier, string componentType, string valueType)
         {
+            string customNamespaceName = string.Empty;
+            if (includeNameSpace != "UnityEngine")
+            {
+                customNamespaceName = $"using {includeNameSpace};";
+            }
             return $@"
 using System;
-using {namespaceName};
 using UnityEngine;
 using UnityEngine.Timeline;
-
-namespace Cr7Sund.TweenTimeLine
+using Cr7Sund.TweenTimeLine;
+{customNamespaceName}
+namespace {namespaceName}
 {{
     [TrackClipType(typeof({identifier}ControlAsset))]
     [TrackBindingType(typeof({componentType}))]
-    public class {identifier}ControlTrack : TrackAsset
+    public class {identifier}ControlTrack : TrackAsset,IBaseTrack
     {{
 
     }}
@@ -108,7 +121,7 @@ namespace Cr7Sund.TweenTimeLine
 ";
         }
 
-        private static string GetTypeName(string fullType)
+        public static string GetTypeName(string fullType)
         {
             return fullType.Substring(fullType.LastIndexOf('.') + 1);
         }
@@ -119,7 +132,7 @@ namespace Cr7Sund.TweenTimeLine
             return lastDotIndex > 0 ? fullType.Substring(0, lastDotIndex) : string.Empty;
         }
 
-        private static string ProcessPropertyMethod(string propertyMethod)
+        public static string ProcessPropertyMethod(string propertyMethod)
         {
             // 去除括号并将点号后的部分转换为 PascalCase
             string methodWithoutParentheses = propertyMethod.Split('(')[0];

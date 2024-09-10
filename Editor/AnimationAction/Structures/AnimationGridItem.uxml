@@ -1,7 +1,7 @@
 ﻿<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements"
          noNamespaceSchemaLocation="../../../../com.unity.ui/Editor/Schema/Unity.UIBuilder.xsd"
          editor-extension-mode="True">
-    <ui:VisualElement name="gridItem" class="grid-item">
+    <ui:VisualElement name="gridItem" class="grid-item select">
         <ui:Image name="icon" class="icon" />
         <ui:Label name="label" class="label" />
     </ui:VisualElement>

@@ -133,11 +133,16 @@ namespace Cr7Sund.TweenTimeLine
             // Convert the value back to the original type
             var objectValue = TypeConverter.ConvertToOriginalType(value, type);
 
+            if (objectValue == null || objectValue.GetType() != type)
+            {
+                Debug.LogWarning($"{objectValue} is not type {type}");
+                objectValue = Activator.CreateInstance(type);
+            }
             if (type == typeof(Vector3))
             {
                 var element = new Vector3Field();
                 element.value = (Vector3)objectValue;
-                element.label = label;  // 设置 label
+                element.label = label; // 设置 label
                 element.RegisterValueChangedCallback(evt =>
                 {
                     var newValue = evt.newValue.ToString();
@@ -149,7 +154,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 var element = new IntegerField();
                 element.value = (int)objectValue;
-                element.label = label;  // 设置 label
+                element.label = label; // 设置 label
                 element.RegisterValueChangedCallback(evt =>
                 {
                     var newValue = evt.newValue.ToString();
@@ -161,7 +166,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 var element = new FloatField();
                 element.value = (float)objectValue;
-                element.label = label;  // 设置 label
+                element.label = label; // 设置 label
                 element.RegisterValueChangedCallback(evt =>
                 {
                     var newValue = evt.newValue.ToString();
@@ -173,7 +178,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 var element = new TextField();
                 element.value = (string)objectValue;
-                element.label = label;  // 设置 label
+                element.label = label; // 设置 label
                 element.RegisterValueChangedCallback(evt =>
                 {
                     var newValue = evt.newValue;
@@ -185,7 +190,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 var element = new Toggle();
                 element.value = (bool)objectValue;
-                element.label = label;  // 设置 label
+                element.label = label; // 设置 label
                 element.RegisterValueChangedCallback(evt =>
                 {
                     var newValue = evt.newValue.ToString();
@@ -197,7 +202,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 var element = new ColorField();
                 element.value = (Color)objectValue;
-                element.label = label;  // 设置 label
+                element.label = label; // 设置 label
                 element.RegisterValueChangedCallback(evt =>
                 {
                     var newValue = evt.newValue.ToString();
@@ -209,7 +214,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 var element = new Vector2Field();
                 element.value = (Vector2)objectValue;
-                element.label = label;  // 设置 label
+                element.label = label; // 设置 label
                 element.RegisterValueChangedCallback(evt =>
                 {
                     var newValue = evt.newValue.ToString();
@@ -217,11 +222,39 @@ namespace Cr7Sund.TweenTimeLine
                 });
                 return element;
             }
+            else if (type == typeof(Vector3))
+            {
+                var element = new Vector3Field();
+                element.value = (Vector3)objectValue;
+                element.label = label; // 设置 label
+                element.RegisterValueChangedCallback(evt =>
+                {
+                    var newValue = evt.newValue.ToString();
+                    onValueChange?.Invoke(newValue);
+                });
+                return element;
+            }
+            else if (type == typeof(Quaternion))
+            {
+                var element = new Vector3Field();
+                Quaternion euler = default;
+                if (objectValue is Vector3 vector3)
+                {
+                    euler = Quaternion.Euler(vector3);
+                }
+                element.value = euler.eulerAngles;
+                element.label = label; // 设置 label
+                element.RegisterValueChangedCallback(evt =>
+                {
+                    onValueChange?.Invoke(Quaternion.Euler(evt.newValue).ToString());
+                });
+                return element;
+            }
             else if (type == typeof(Vector4))
             {
                 var element = new Vector4Field();
                 element.value = (Vector4)objectValue;
-                element.label = label;  // 设置 label
+                element.label = label; // 设置 label
                 element.RegisterValueChangedCallback(evt =>
                 {
                     var newValue = evt.newValue.ToString();
@@ -232,7 +265,7 @@ namespace Cr7Sund.TweenTimeLine
             else if (type.IsEnum)
             {
                 var element = new EnumField((Enum)objectValue);
-                element.label = label;  // 设置 label
+                element.label = label; // 设置 label
                 element.RegisterValueChangedCallback(evt =>
                 {
                     var newValue = evt.newValue.ToString();
@@ -241,7 +274,7 @@ namespace Cr7Sund.TweenTimeLine
                 return element;
             }
 
-            return null;
+            throw new InvalidOperationException($"can not create filedDrawer{type} , {label}");
         }
         public static float ConvertDuration(float duration)
         {

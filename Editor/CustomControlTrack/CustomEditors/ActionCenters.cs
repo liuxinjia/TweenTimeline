@@ -55,15 +55,9 @@ namespace Cr7Sund.TweenTimeLine
             }
             var target = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
 
-            if (!clipInfo.tween.isAlive)
+            if (!clipInfo.Sequence.isAlive)
             {
                 clipInfo.CreateTween(key);
-            }
-
-            if (key.StartPos.Equals(key.EndPos))
-            {
-                MoveToEndPos(key); 
-                return;
             }
 
             clipInfo.PlayTween(target);
@@ -76,22 +70,18 @@ namespace Cr7Sund.TweenTimeLine
                 return;
             }
             var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[key];
-            if (clipInfo.tween.isAlive)
+            if (clipInfo.Sequence.isAlive)
             {
-                clipInfo.tween.Stop();
+                clipInfo.Sequence.Stop();
             }
         }
 
         internal static void StartPreview(IUniqueBehaviour key)
         {
             var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[key];
-            if (!clipInfo.tween.isAlive)
+            if (!clipInfo.Sequence.isAlive)
             {
                 clipInfo.CreateTween(key);
-            }
-            if (key.StartPos.Equals(key.EndPos))
-            {
-                MoveToEndPos(key); // 
             }
         }
 
@@ -116,7 +106,14 @@ namespace Cr7Sund.TweenTimeLine
             }
             var target = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
             var stateInfo = TweenTimeLineDataModel.ClipStateDict[key];
+            var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[key];
             key.Set(target, stateInfo.initPos);
+
+            foreach (var item in stateInfo.markerInitPosDict)
+            {
+                var valueMarker = clipInfo.valueMakers.Find(m => m.InstanceID == item.Key);
+                valueMarker.Set(target, item.Value);
+            }
         }
     }
 }

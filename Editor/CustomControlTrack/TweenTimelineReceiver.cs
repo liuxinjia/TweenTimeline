@@ -8,19 +8,16 @@ namespace Cr7Sund.TweenTimeLine
     {
         public void OnNotify(Playable origin, INotification notification, object context)
         {
-            if (notification is IValueMaker valueMarker)
-            {
-                IUniqueBehaviour behaviour = TweenTimeLineDataModel.NotificationReceiverDict.FirstOrDefault(t => t.Value == (this)).Key;
-                if (behaviour == null) return;
-                var trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[behaviour];
-                var target = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
+            // if (notification is IValueMaker valueMarker)
+            // {
+            //     IUniqueBehaviour behaviour = TweenTimeLineDataModel.NotificationReceiverDict.FirstOrDefault(t => t.Value == (this)).Key;
+            //     if (behaviour == null) return;
 
-                if (behaviour.EndPos.GetType() != valueMarker.Value.GetType())
-                {
-                    return;
-                }
-                // behaviour.Set(target, valueMarker.Value);
-            }
+            //     var trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[behaviour];
+            //     var target = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
+
+            //     // valueMarker.Set(target);
+            // }
         }
 
     }

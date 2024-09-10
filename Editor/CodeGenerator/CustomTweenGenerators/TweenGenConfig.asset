@@ -69,9 +69,9 @@ MonoBehaviour:
     SetPropertyMethod: target.rect = updateValue;
     PreTweenMethod: CameraRect
   - ComponentType: UnityEngine.Transform
-    ValueType: Vector3
+    ValueType: Quaternion
     GetPropertyMethod: localRotation
-    SetPropertyMethod: target. = updateValue;
+    SetPropertyMethod: target.rotation = updateValue;
     PreTweenMethod: LocalRotation
   - ComponentType: UnityEngine.Transform
     ValueType: float
@@ -79,9 +79,9 @@ MonoBehaviour:
     SetPropertyMethod: target. = updateValue;
     PreTweenMethod: Scale
   - ComponentType: UnityEngine.Transform
-    ValueType: Vector3
+    ValueType: Quaternion
     GetPropertyMethod: rotation
-    SetPropertyMethod: target.rotation = Quaternion.Euler(updateValue);
+    SetPropertyMethod: target.rotation = updateValue;
     PreTweenMethod: Rotation
   - ComponentType: UnityEngine.UI.Slider
     ValueType: float
@@ -501,7 +501,7 @@ MonoBehaviour:
     SetPropertyMethod: target.padding = updateValue;
     PreTweenMethod: RectMaskPadding
   - ComponentType: UnityEngine.UI.RectMask2D
-    ValueType: Vector2
+    ValueType: Vector2Int
     GetPropertyMethod: softness
     SetPropertyMethod: target.softness = updateValue;
     PreTweenMethod: RectMaskSoftness

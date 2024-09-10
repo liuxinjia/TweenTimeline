@@ -19,10 +19,10 @@ namespace Cr7Sund.TweenTimeLine
 
         public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)
         {
-            var playable = ScriptPlayable<TBehaviour>.Create(graph, template);
-            playable.GetBehaviour().BindTarget = owner.name;
-            return playable;
+           var playable = ScriptPlayable<TBehaviour>.Create(graph, template);
+           return playable;
         }
+
     }
 
 }

@@ -17,6 +17,7 @@ public static class TypeConverter
             if (targetType == typeof(Vector2Int)) return default(Vector2Int);
             if (targetType == typeof(Vector3)) return default(Vector3);
             if (targetType == typeof(Vector4)) return default(Vector4);
+            if (targetType == typeof(Quaternion)) return default(Quaternion);
             if (targetType == typeof(Color)) return default(Color);
         }
 
@@ -77,14 +78,47 @@ public static class TypeConverter
         }
         else if (targetType == typeof(Vector3))
         {
-            var components = storedString.Trim('(', ')').Split(',');
-            if (components.Length == 3 &&
-                float.TryParse(components[0], out float x) &&
-                float.TryParse(components[1], out float y) &&
-                float.TryParse(components[2], out float z))
+            if (storedString == "0")
             {
-                return new Vector3(x, y, z);
+                return Vector2.zero;
             }
+            var components = storedString.Trim('(', ')').Split(',');
+            if (components.Length == 2)
+            {
+                if (float.TryParse(components[0], out float x) &&
+                    float.TryParse(components[1], out float y))
+                {
+                    return new Vector3(x, y, 0);
+                }
+            }
+            if (components.Length == 3)
+            {
+                if (float.TryParse(components[0], out float x) &&
+                    float.TryParse(components[1], out float y) &&
+                    float.TryParse(components[2], out float z))
+                {
+                    return new Vector3(x, y, z);
+                }
+            }
+        }
+        else if (targetType == typeof(Quaternion))
+        {
+            var components = storedString.Trim('(', ')').Split(',');
+            if (components.Length == 3)
+            {
+                if (float.TryParse(components[0], out float dx) &&
+                    float.TryParse(components[1], out float dy) &&
+                    float.TryParse(components[2], out float dz))
+                    return Quaternion.Euler(new Vector3(dx, dy, dz));
+            }
+            if (components.Length == 4)
+                if (float.TryParse(components[0], out float dx) &&
+                    float.TryParse(components[1], out float dy) &&
+                    float.TryParse(components[2], out float dz) &&
+                    float.TryParse(components[3], out float dw))
+                {
+                    return new Quaternion(dx, dy, dz, dw);
+                }
         }
         else if (targetType == typeof(Vector4))
         {
@@ -100,7 +134,12 @@ public static class TypeConverter
         }
         else if (targetType == typeof(Color))
         {
-            var components = storedString.Trim('(', ')').Split(',');
+            var storedStringTrimmed = storedString.StartsWith("RGBA")
+                ? storedString.Substring(4).Trim()
+                : storedString;
+
+            var components = storedStringTrimmed.Trim('(', ')').Split(',');
+
             if (components.Length == 4 &&
                 float.TryParse(components[0], out float r) &&
                 float.TryParse(components[1], out float g) &&
@@ -111,7 +150,9 @@ public static class TypeConverter
             }
         }
 
-        throw new InvalidOperationException($"Cannot convert '{storedString}' to type '{targetType.Name}'.");
+        Debug.LogWarning($"Cannot convert '{storedString}' to type '{targetType.Name}'.");
+
+        return Activator.CreateInstance(targetType);
     }
 
     public static object AddDelta(object startValue, string deltaString, Type targetType)
@@ -175,13 +216,53 @@ public static class TypeConverter
         {
             if (startValue is Vector3 vector3Value)
             {
-                var deltaComponents = deltaString.Trim('(', ')').Split(',');
-                if (deltaComponents.Length == 3 &&
-                    float.TryParse(deltaComponents[0], out float dx) &&
-                    float.TryParse(deltaComponents[1], out float dy) &&
-                    float.TryParse(deltaComponents[2], out float dz))
+                if (deltaString == "0")
                 {
-                    return new Vector3(vector3Value.x + dx, vector3Value.y + dy, vector3Value.z + dz);
+                    return Vector2.zero;
+                }
+                var deltaComponents = deltaString.Trim('(', ')').Split(',');
+                if (deltaComponents.Length == 2)
+                {
+                    if (float.TryParse(deltaComponents[0], out float dx) &&
+                        float.TryParse(deltaComponents[1], out float dy))
+                    {
+                        return new Vector3(vector3Value.x + dx, vector3Value.y + dy, vector3Value.z);
+                    }
+                }
+                if (deltaComponents.Length == 3)
+                {
+                    if (float.TryParse(deltaComponents[0], out float dx) &&
+                        float.TryParse(deltaComponents[1], out float dy) &&
+                        float.TryParse(deltaComponents[2], out float dz))
+                    {
+                        return new Vector3(vector3Value.x + dx, vector3Value.y + dy, vector3Value.z + dz);
+                    }
+                }
+            }
+        }
+        else if (targetType == typeof(Quaternion))
+        {
+            if (startValue is Quaternion quaternionValue)
+            {
+                var deltaComponents = deltaString.Trim('(', ')').Split(',');
+                if (deltaComponents.Length == 3)
+                {
+                    if (float.TryParse(deltaComponents[0], out float dx) &&
+                        float.TryParse(deltaComponents[1], out float dy) &&
+                        float.TryParse(deltaComponents[2], out float dz))
+                        return quaternionValue * Quaternion.Euler(new Vector3(dx, dy, dz));
+                }
+                if (deltaComponents.Length == 4)
+                {
+                    if (float.TryParse(deltaComponents[0], out float dx) &&
+                        float.TryParse(deltaComponents[1], out float dy) &&
+                        float.TryParse(deltaComponents[2], out float dz) &&
+                        float.TryParse(deltaComponents[3], out float dw))
+                    {
+                        var rotation = new Quaternion(dx, dy, dz, dw);
+                        // var rotation = Quaternion.Euler(new Vector3(dx, dy, dz));
+                        return rotation * quaternionValue;
+                    }
                 }
             }
         }
@@ -197,7 +278,7 @@ public static class TypeConverter
                     float.TryParse(deltaComponents[3], out float dw))
                 {
                     return new Vector4(vector4Value.x + dx, vector4Value.y + dy,
-                                       vector4Value.z + dz, vector4Value.w + dw);
+                        vector4Value.z + dz, vector4Value.w + dw);
                 }
             }
         }

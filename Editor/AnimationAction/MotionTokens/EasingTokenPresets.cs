@@ -61,7 +61,7 @@ namespace Cr7Sund.TweenTimeLine
             return preset;
         }
 
-        public Easing GetEasePreset(string easeName)
+        public bool TryGetEasePreset(string easeName, out Easing resultEase)
         {
             var findIndex = -1;
             if (Enum.TryParse<MaterialEasingToken>(easeName, out var materialToken))
@@ -77,9 +77,19 @@ namespace Cr7Sund.TweenTimeLine
             }
             if (findIndex < 0)
             {
-                return Enum.Parse<Ease>(easeName);
+                if (Enum.TryParse<Ease>(easeName, out var builtInEase))
+                {
+                    resultEase = builtInEase;
+                    return true;
+                }
+                else
+                {
+                    resultEase = default;
+                    return false;
+                }
             }
-            return easingTokenPresets[findIndex].animationCurve;
+            resultEase = easingTokenPresets[findIndex].animationCurve;
+            return true;
         }
 
         public EasingTokenPreset GetEasePreset(JitterEasingToken jitterToken)

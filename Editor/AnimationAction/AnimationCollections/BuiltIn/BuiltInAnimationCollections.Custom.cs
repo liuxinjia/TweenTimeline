@@ -1,11 +1,13 @@
 using System.Collections.Generic;
+using Cr7Sund.GraphicTweeen;
+using Cr7Sund.RectTransformTweeen;
+using Cr7Sund.TransformTweeen;
 using UnityEngine;
 
 namespace Cr7Sund.TweenTimeLine
 {
     public partial class AnimationContainerBuilder
     {
-
 
         private AnimationCollection CreateCustomAnimationCollection()
         {
@@ -21,7 +23,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 EndPos = "500", // 目标位置
                 StartPos = "0", // 起始位置
-                tweenMethod = GetTweenMethodName<RectTransformAnchoredPositionXControlBehaviour>(), // 控制位置
+                tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionXControlBehaviour>(), // 控制位置
                 label = "MoveX",
             }
         }
@@ -37,7 +39,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 EndPos = Vector3.one.ToString(), // 目标缩放尺寸
                 StartPos = new Vector3(2.0f, 2.0f, 2.0f).ToString(), // 起始缩放尺寸
-                tweenMethod = GetTweenMethodName<TransformLocalScaleControlBehaviour>(), // 控制缩放
+                tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(), // 控制缩放
                 label = "Scale",
             }
         }
@@ -53,7 +55,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 EndPos = Quaternion.Euler(0, 0, 360).eulerAngles.ToString(), // 目标旋转角度
                 StartPos = Vector3.zero.ToString(), // 起始角度
-                tweenMethod = GetTweenMethodName<TransformRotationControlBehaviour>(), // 控制旋转
+                tweenMethod = GetTweenMethodName<Transform_RotationControlBehaviour>(), // 控制旋转
                 label = "Rotate",
             }
         }
@@ -69,7 +71,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 EndPos = "0.0f", // 目标透明度
                 StartPos = "1.0f", // 起始透明度
-                tweenMethod = GetTweenMethodName<GraphicColorAControlBehaviour>(), // 控制透明度
+                tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(), // 控制透明度
                 label = "Opacity",
             }
         }
@@ -86,7 +88,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 EndPos = new Vector2(100, 100).ToString(), // 目标尺寸
                 StartPos = new Vector2(50, 50).ToString(), // 起始尺寸
-                tweenMethod = GetTweenMethodName<RectTransformSizeDeltaControlBehaviour>(), // 控制尺寸
+                tweenMethod = GetTweenMethodName<RectTransform_SizeDeltaControlBehaviour>(), // 控制尺寸
                 label = "Resize",
             }
         }
@@ -95,9 +97,5 @@ namespace Cr7Sund.TweenTimeLine
 
             return customAnimationCollection;
         }
-
-
-
-       
     }
 }

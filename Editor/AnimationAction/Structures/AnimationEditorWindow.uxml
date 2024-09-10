@@ -1,5 +1,6 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" noNamespaceSchemaLocation="../../../../com.unity.ui/Editor/Schema/Unity.UIBuilder.xsd" editor-extension-mode="True">
-    <ui:Template name="ToolButtons" src="project://database/Assets/Plugins/TweenTimeline/Editor/Base/CustomEditors/Structures/ToolButtons.uxml?fileID=9197481963319205126&amp;guid=b1b965571fcf78d4bbfc33b9ce048c6d&amp;type=3#ToolButtons" />
+    <ui:Template name="ToolButtons" src="project://database/Assets/Plugins/TweenTimeline/Editor/CustomControlTrack/CustomEditors/Structures/ToolButtons.uxml?fileID=9197481963319205126&amp;guid=b1b965571fcf78d4bbfc33b9ce048c6d&amp;type=3#ToolButtons" />
+    <Style src="project://database/Assets/Plugins/TweenTimeline/Editor/AnimationAction/Styles/AnimationEditorWindow.uss?fileID=7433441132597879392&amp;guid=fb42482ea3524b845aae708f4c63ffc7&amp;type=3#AnimationEditorWindow" />
     <ui:VisualElement name="rootContainer" class="root-container">
         <ui:Instance template="ToolButtons" />
         <ui:VisualElement name="ConfigContainer" class="config-container">
@@ -7,7 +8,7 @@
                 <UnityEditor.UIElements.ObjectField name="TargetField" label="target" type="UnityEngine.GameObject, UnityEngine.CoreModule" class="object-field" />
                 <ui:EnumField name="AnimTokenPreset" label="TokenPreset" type="Cr7Sund.TweenTimeLine.TimeEasePairs, Cr7Sund.TweenTimeline.Editor" class="enum-field" />
                 <ui:EnumField name="CustomDurationField" label="Duration" type="Cr7Sund.TweenTimeLine.DurationToken, Cr7Sund.TweenTimeline.Editor" class="enum-field" />
-                <ui:EnumField name="CustomEasingField" label="Easing" type="Cr7Sund.TweenTimeLine.MaterialEasingToken, Cr7Sund.TweenTimeline.Editor" class="enum-field" />
+                <ui:EnumField name="CustomEasingField" label="Easing" type="Cr7Sund.TweenTimeLine.MaterialEasingToken, VisualizatinEasing" class="enum-field" />
                 <ui:VisualElement style="flex-grow: 1; height: 20px;" />
             </ui:VisualElement>
             <ui:VisualElement name="RightConfigPart" class="ConfigPart RightConfigPart">
@@ -16,6 +17,6 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="BottomParamsPart" class="bottomParamPart" />
-        <ui:TabView name="rooTabView" class="tab-view" />
+        <ui:TabView name="rooTabView" class="tab-view"  />
     </ui:VisualElement>
 </ui:UXML>

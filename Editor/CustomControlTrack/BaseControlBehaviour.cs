@@ -1,5 +1,6 @@
 using System;
 using Cr7Sund.Timeline.Extension;
+using Cr7Sund.TweenTimeLine;
 using Cr7Sund.TweenTimeLine.Editor;
 using PrimeTween;
 using UnityEngine;
@@ -11,7 +12,8 @@ namespace Cr7Sund.TweenTimeLine
     public interface IUniqueBehaviour : IRecordAction
     {
         int ID { get; }
-        string BindTarget{get;set;}
+        string BindTarget { get; set; }
+        string BindType { get; set; }
         Easing PrimEase { get; }
         EasingTokenPreset EasePreset { get; set; }
         PrimeTween.Tween CreateTween(object target, double duration, object startValue);
@@ -22,7 +24,10 @@ namespace Cr7Sund.TweenTimeLine
         [SerializeField] private EasingTokenPreset _easePreset;
         [SerializeField] protected TValue _endPos;
         [SerializeField] private TValue _startPos;
-        [SerializeField]private string _bindTargetName;
+        [HideInInspector]
+        [SerializeField] private string _bindTargetName;
+        [HideInInspector]
+        [SerializeField] private string _bindType;
 
         private readonly int _id = TweenTimeLineDataModel.ID++;
 
@@ -57,18 +62,24 @@ namespace Cr7Sund.TweenTimeLine
         }
         public string BindTarget
         {
-            get => _bindTargetName; 
+            get => _bindTargetName;
             set => _bindTargetName = value; // {{ edit_1 }}
+        }
+        public string BindType
+        {
+            get => _bindType;
+            set => _bindType = value; // {{ edit_1 }}
         }
 
         public override void OnBehaviourPlay(Playable playable, FrameData info)
         {
             // when drag don't publish event
-            if (TweenTimeLineDataModel.NotificationReceiverDict.ContainsKey(this))
-            {
-                info.output.RemoveNotificationReceiver(TweenTimeLineDataModel.NotificationReceiverDict[this]);
-                info.output.AddNotificationReceiver(TweenTimeLineDataModel.NotificationReceiverDict[this]);
-            }
+            // so we will handle the marker event by sequence
+            // if (TweenTimeLineDataModel.NotificationReceiverDict.ContainsKey(this))
+            // {
+            //     info.output.RemoveNotificationReceiver(TweenTimeLineDataModel.NotificationReceiverDict[this]);
+            //     info.output.AddNotificationReceiver(TweenTimeLineDataModel.NotificationReceiverDict[this]);
+            // }
         }
 
         public override void ProcessFrame(Playable playable, FrameData info, object playerData)
@@ -83,10 +94,6 @@ namespace Cr7Sund.TweenTimeLine
             }
             Assert.IsFalse(stateInfo.IsRecording);
 
-            if (StartPos == EndPos)
-            {
-                return;
-            }
             ExecuteTween(playable, info, playerData);
         }
 
@@ -118,7 +125,7 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     return;
                 }
-                var tween = clipInfo.tween;
+                var tween = clipInfo.Sequence;
                 if (!tween.isAlive)
                 {
                     return;

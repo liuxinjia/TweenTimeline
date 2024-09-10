@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Cr7Sund.TweenTimeLine;
 using Cr7Sund.TweenTimeLine.Editor;
+using Cr7Sund.GraphicTweeen;
+using Cr7Sund.TransformTweeen;
 using PrimeTween;
 using UnityEditor;
 using UnityEngine;
@@ -21,42 +22,85 @@ namespace Cr7Sund.TweenTimeLine
             this.category = name;
         }
 
-        public Dictionary<string, List<AnimationEffect>> GetAnimActionCategory()
+        public Dictionary<string, List<AnimationEffect>> FilterActionCategory(string filterName, GameObject selectGO)
         {
             var actionCategoryList = new Dictionary<string, List<AnimationEffect>>();
+
             foreach (var action in animationCollections)
             {
-                if (!actionCategoryList.TryGetValue(action.effectCategory, out var list))
-                {
-                    list = new List<AnimationEffect>();
-                    actionCategoryList.Add(action.effectCategory, list);
-                }
+                if (!action.label.Contains(filterName)) continue;
 
-                bool containsComponent = true;
+                bool containsComponent = false;
                 foreach (var actionUnit in action.animationSteps)
                 {
                     var componentType = actionUnit.GetComponentType();
-                    if (componentType == typeof(UnityEngine.UI.Graphic) ||
-                        componentType == typeof(UnityEngine.RectTransform) ||
-                        componentType == typeof(UnityEngine.Transform))
+                    if (!typeof(Component).IsAssignableFrom(componentType))
+                    {
+                        continue;
+                    }
+                    if (selectGO == null)
                     {
                         continue;
                     }
 
-                    if (Selection.activeGameObject == null)
-                    {
-                        continue;
-                    }
-                    var component = Selection.activeGameObject.GetComponent((Type)componentType);
-                    if (component == null)
-                    {
-                        containsComponent = false;
-                        break;
-                    }
+                    var component = selectGO.GetComponent((Type)componentType);
+                    containsComponent = component != null;
                 }
 
                 if (containsComponent)
                 {
+                    if (!actionCategoryList.TryGetValue(action.effectCategory, out var list))
+                    {
+                        list = new List<AnimationEffect>();
+                        actionCategoryList.Add(action.effectCategory, list);
+                    }
+                    list.Add(action);
+                }
+            }
+
+            return actionCategoryList;
+        }
+        public Dictionary<string, List<AnimationEffect>> GetAnimActionCategory(GameObject selectGO)
+        {
+            var actionCategoryList = new Dictionary<string, List<AnimationEffect>>();
+
+            foreach (var action in animationCollections)
+            {
+                if (action.label.Contains('.'))
+                {
+                    continue;
+                }
+
+                bool containsComponent = false;
+                foreach (var actionUnit in action.animationSteps)
+                {
+                    var componentType = actionUnit.GetComponentType();
+                    if (componentType == typeof(UnityEngine.Transform)) // default show
+                    {
+                        containsComponent = true;
+                        continue;
+                    }
+
+                    if (!typeof(Component).IsAssignableFrom(componentType))
+                    {
+                        continue;
+                    }
+                    if (selectGO == null)
+                    {
+                        continue;
+                    }
+
+                    var component = selectGO.GetComponent((Type)componentType);
+                    containsComponent = component != null;
+                }
+
+                if (containsComponent)
+                {
+                    if (!actionCategoryList.TryGetValue(action.effectCategory, out var list))
+                    {
+                        list = new List<AnimationEffect>();
+                        actionCategoryList.Add(action.effectCategory, list);
+                    }
                     list.Add(action);
                 }
             }
@@ -119,7 +163,7 @@ namespace Cr7Sund.TweenTimeLine
         public string tweenMethod;
         public string EndPos;
         public string StartPos;
-        public bool useCurPos;
+        public bool isRelative;
         public float startTimeOffset; // 动画结束时间点（正数为时间点，0为整个duration, 负数表示提前开始）
         public Component animationTarget;
         // public DurationToken durationToken;
@@ -138,21 +182,40 @@ namespace Cr7Sund.TweenTimeLine
 
         public Type GetComponentType()
         {
-            var methodName = $"{tweenMethod}ControlBehaviour";
-            string fullTypeName = $"Cr7Sund.TweenTimeLine.{methodName}";
-            var tweenBehaviourType = typeof(GraphicColorAControlBehaviour).Assembly.GetType(fullTypeName);
+            var methodName = $"{tweenMethod}";
+            string fullTypeName = GetMethodFullType(methodName);
+            var tweenBehaviourType = typeof(Graphic_ColorAControlBehaviour).Assembly.GetType(fullTypeName);
+            if (tweenBehaviourType == null)
+            {
+                Debug.LogError(methodName);
+            }
             var componentType = AniActionEditToolHelper.GetFirstGenericType(tweenBehaviourType);
             return componentType;
         }
+
+        private static string GetMethodFullType(string methodName)
+        {
+            string prefix = methodName.Split('_')[0];
+            if (methodName.StartsWith("TMP_Text"))
+            {
+                prefix = "TMP_Text";
+            }
+            return $"Cr7Sund.{prefix}Tweeen.{methodName}";
+        }
+
         public Type GetComponentValueType()
         {
-            var methodName = $"{tweenMethod}ControlBehaviour";
-            string fullTypeName = $"Cr7Sund.TweenTimeLine.{methodName}";
-            var tweenBehaviourType = typeof(GraphicColorAControlBehaviour).Assembly.GetType(fullTypeName);
+            var methodName = $"{tweenMethod}";
+            string fullTypeName = GetMethodFullType(methodName);
+            var tweenBehaviourType = typeof(Graphic_ColorAControlBehaviour).Assembly.GetType(fullTypeName);
             var componentType = AniActionEditToolHelper.GetSecondGenericType(tweenBehaviourType);
             return componentType;
         }
-
+        public HashSet<string> NotAdditiveSet = new()
+        {
+            nameof(Transform_LocalScaleControlBehaviour),
+        };
+        
         public void GetAnimUnitTrackInfo(AnimationEffect animAction, EasingTokenPresets easingTokenPreset,
             out TrackInfo trackInfo, out Component component)
         {
@@ -160,9 +223,8 @@ namespace Cr7Sund.TweenTimeLine
             var componentValueType = GetComponentValueType();
             var componentType = GetComponentType();
             component = animAction.target.GetComponent(componentType);
-            var methodName = $"{tweenMethod}ControlBehaviour";
-            var fullTypeName = $"Cr7Sund.TweenTimeLine.{methodName}";
-            var tweenBehaviourType = typeof(GraphicColorAControlBehaviour).Assembly.GetType(fullTypeName);
+            var fullTypeName = GetMethodFullType(tweenMethod);
+            var tweenBehaviourType = typeof(Graphic_ColorAControlBehaviour).Assembly.GetType(fullTypeName);
             var getMethodInfo = tweenBehaviourType.GetMethod("OnGet", BindingFlags.NonPublic | BindingFlags.Instance);
             var target = Activator.CreateInstance(tweenBehaviourType);
 
@@ -171,10 +233,17 @@ namespace Cr7Sund.TweenTimeLine
             {
                 component
             });
-            if (useCurPos)
+            if (isRelative)
             {
                 startPos = initPos;
-                endPos = TypeConverter.AddDelta(startPos, EndPos, componentValueType);
+                if (NotAdditiveSet.Contains((tweenMethod)))
+                {
+                    endPos = TypeConverter.ConvertToOriginalType(EndPos,componentValueType);
+                }
+                else
+                {
+                    endPos = TypeConverter.AddDelta(startPos, EndPos, componentValueType);
+                }
             }
             else
             {
@@ -196,16 +265,31 @@ namespace Cr7Sund.TweenTimeLine
             trackInfo.easePreset = easingTokenPreset.GetEasePreset(animAction.easeToken);
         }
 
+        public object GetCurPos(AnimationEffect animAction, EasingTokenPresets easingTokenPreset)
+        {
+            Type tweenBehaviourType;
+            TrackInfo trackInfo;
+            Component component;
+            MethodInfo createTweenMethodInfo, getMethodInfo, setMethodInfo;
+            object target;
+            GetTweenMethodInfo(animAction, easingTokenPreset, out tweenBehaviourType, out trackInfo, out component, out createTweenMethodInfo, out getMethodInfo, out setMethodInfo, out target);
+
+            var initPos = getMethodInfo.Invoke(target, new[]
+              {
+                component
+            });
+
+            return initPos;
+        }
+
         public Tween GenerateTween(AnimationEffect animAction, EasingTokenPresets easingTokenPreset, out Action onResetAction)
         {
-            var methodName = $"{tweenMethod}ControlBehaviour";
-            string fullTypeName = $"Cr7Sund.TweenTimeLine.{methodName}";
-            var tweenBehaviourType = typeof(GraphicColorAControlBehaviour).Assembly.GetType(fullTypeName);
-            GetAnimUnitTrackInfo(animAction, easingTokenPreset, out var trackInfo, out var component);
-            var createTweenMethodInfo = tweenBehaviourType.GetMethod("OnCreateTween", BindingFlags.NonPublic | BindingFlags.Instance);
-            var getMethodInfo = tweenBehaviourType.GetMethod("OnGet", BindingFlags.NonPublic | BindingFlags.Instance);
-            var setMethodInfo = tweenBehaviourType.GetMethod("OnSet", BindingFlags.NonPublic | BindingFlags.Instance);
-            var target = Activator.CreateInstance(tweenBehaviourType);
+            Type tweenBehaviourType;
+            TrackInfo trackInfo;
+            Component component;
+            MethodInfo createTweenMethodInfo, getMethodInfo, setMethodInfo;
+            object target;
+            GetTweenMethodInfo(animAction, easingTokenPreset, out tweenBehaviourType, out trackInfo, out component, out createTweenMethodInfo, out getMethodInfo, out setMethodInfo, out target);
 
             // Reflectively set properties from AnimationSettings
             FieldInfo destPosFieldInfo = tweenBehaviourType.GetField("_endPos", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -232,6 +316,19 @@ namespace Cr7Sund.TweenTimeLine
             };
             return tweenValue;
         }
+
+        private void GetTweenMethodInfo(AnimationEffect animAction, EasingTokenPresets easingTokenPreset, out Type tweenBehaviourType, out TrackInfo trackInfo, out Component component, out MethodInfo createTweenMethodInfo, out MethodInfo getMethodInfo, out MethodInfo setMethodInfo, out object target)
+        {
+            var methodName = $"{tweenMethod}";
+            var fullTypeName = GetMethodFullType(methodName);
+            tweenBehaviourType = typeof(Graphic_ColorAControlBehaviour).Assembly.GetType(fullTypeName);
+            GetAnimUnitTrackInfo(animAction, easingTokenPreset, out trackInfo, out component);
+            createTweenMethodInfo = tweenBehaviourType.GetMethod("OnCreateTween", BindingFlags.NonPublic | BindingFlags.Instance);
+            getMethodInfo = tweenBehaviourType.GetMethod("OnGet", BindingFlags.NonPublic | BindingFlags.Instance);
+            setMethodInfo = tweenBehaviourType.GetMethod("OnSet", BindingFlags.NonPublic | BindingFlags.Instance);
+            target = Activator.CreateInstance(tweenBehaviourType);
+        }
+
     }
 
 }

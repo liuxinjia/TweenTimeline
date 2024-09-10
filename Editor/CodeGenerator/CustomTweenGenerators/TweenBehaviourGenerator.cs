@@ -72,6 +72,18 @@ namespace Cr7Sund.TweenTimeLine
             return new string(chars);
         }
 
+        public static string ToUpperFirstLetter(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            char[] chars = input.ToCharArray();
+            chars[0] = char.ToUpper(chars[0]);
+            return new string(chars);
+        }
+
         public static string LowerType(string input)
         {
             if (string.IsNullOrEmpty(input))
@@ -82,6 +94,20 @@ namespace Cr7Sund.TweenTimeLine
             if (input == "Float" || input == "Int")
             {
                 return ToLowerFirstLetter(input);
+            }
+            return input;
+        }
+
+        public static string UpperType(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            if (input == "float" || input == "int")
+            {
+                return ToUpperFirstLetter(input);
             }
             return input;
         }

@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using Cr7Sund.TweenTimeLine;
 using UnityEditor;
 using UnityEditor.UIElements;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 [CustomEditor(typeof(TweenGenConfig))]
@@ -21,7 +19,6 @@ public class TweenGenConfigEditor : Editor
         _filteredComponentValuePairs = new List<ComponentValuePair>(config.componentValuePairs);
         serializedObject.Update();
 
-        // 创建搜索框
         _searchField = new TextField("Search");
         _searchField.tooltip = "Search by component type or value type";
         _searchField.RegisterValueChangedCallback(evt => OnSearchChanged(evt.newValue));
@@ -35,7 +32,6 @@ public class TweenGenConfigEditor : Editor
         genBtn.text = "Generate";
         _root.Add(genBtn);
 
-        // 创建列表视图
         _listView = new ListView();
         _listView.selectionType = SelectionType.Single;
         _listView.style.flexGrow = 1.0f;
@@ -73,7 +69,6 @@ public class TweenGenConfigEditor : Editor
         }
         target = target.ToLower();
         searchTerm = searchTerm.ToLower();
-        // 尝试简单的子字符串匹配
         return target.Contains(searchTerm);
     }
 

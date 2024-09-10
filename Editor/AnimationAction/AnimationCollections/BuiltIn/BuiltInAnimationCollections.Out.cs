@@ -1,4 +1,8 @@
 using System.Collections.Generic;
+using Cr7Sund.GraphicTweeen;
+using Cr7Sund.RectMask2DTweeen;
+using Cr7Sund.RectTransformTweeen;
+using Cr7Sund.TransformTweeen;
 using UnityEngine;
 
 namespace Cr7Sund.TweenTimeLine
@@ -9,9 +13,10 @@ namespace Cr7Sund.TweenTimeLine
         {
             container.animationContainers.Add(CreateInAnimationCollection());
             container.animationContainers.Add(CreateOutAnimationCollection());
-            container.animationContainers.Add(CreateCustomAnimationCollection());
+            // container.animationContainers.Add(CreateCustomAnimationCollection());
+            container.animationContainers.Add(CreateBaseAnimationCollection());
         }
-        
+
         private AnimationCollection CreateOutAnimationCollection()
         {
             var outAnimationCollection = new AnimationCollection("Out");
@@ -26,7 +31,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 EndPos = "0.0f",
                 StartPos = "1.0f",
-                tweenMethod = GetTweenMethodName<GraphicColorAControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
             }
         }
             });
@@ -41,15 +46,15 @@ namespace Cr7Sund.TweenTimeLine
             {
                 EndPos = "250",
                 StartPos = string.Empty,
-useCurPos = true,
-                tweenMethod = "RectTransformAnchoredPositionX",
+         isRelative = true,
+          tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionXControlBehaviour>(),
                 label = "MoveX",
             },
             new AnimationStep
             {
                 EndPos = "0.0f",
                 StartPos = "1.0f",
-                tweenMethod = "GraphicColorA",
+                tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
                 label = "Alpha",
             }
         }
@@ -66,14 +71,14 @@ useCurPos = true,
                 EndPos = new Vector3(2.0f, 2.0f, 2.0f).ToString(),
                 StartPos = Vector3.one.ToString(),
                 label = "Scale",
-                tweenMethod = GetTweenMethodName<TransformLocalScaleControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
             },
             new AnimationStep
             {
                 EndPos = "0.0f",
                 StartPos = "1.0f",
                 label = "Fade",
-                tweenMethod = GetTweenMethodName<GraphicColorAControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
             }
         }
             });
@@ -89,14 +94,14 @@ useCurPos = true,
                 EndPos = Vector3.zero.ToString(),
                 StartPos = Vector3.one.ToString(),
                 label = "Scale",
-                tweenMethod = GetTweenMethodName<TransformLocalScaleControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
             },
             new AnimationStep
             {
                 EndPos = "0.0f",
                 StartPos = "1.0f",
                 label = "Fade",
-                tweenMethod = GetTweenMethodName<GraphicColorAControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
             }
         }
             });
@@ -112,21 +117,21 @@ useCurPos = true,
                 EndPos = new Vector3(0.5f, 0.5f, 0.5f).ToString(),
                 StartPos = Vector3.one.ToString(),
                 label = "Scale",
-                tweenMethod = GetTweenMethodName<TransformLocalScaleControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
             },
             new AnimationStep
             {
                 EndPos = Quaternion.Euler(0, 0, -360).eulerAngles.ToString(),
                 StartPos = Vector3.zero.ToString(),
                 label = "Rotate",
-                tweenMethod = GetTweenMethodName<TransformRotationControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<Transform_RotationControlBehaviour>(),
             },
             new AnimationStep
             {
                 EndPos = "0.0f",
                 StartPos = "1.0f",
                 label = "Fade",
-                tweenMethod = GetTweenMethodName<GraphicColorAControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
             }
         }
             });
@@ -142,21 +147,21 @@ useCurPos = true,
                 EndPos = new Vector3(0.5f, 0.5f, 0.5f).ToString(),
                 StartPos = Vector3.one.ToString(),
                 label = "Scale",
-                tweenMethod = GetTweenMethodName<TransformLocalScaleControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
             },
             new AnimationStep
             {
                 EndPos = Quaternion.Euler(0, 0, -720).eulerAngles.ToString(),
                 StartPos = Vector3.zero.ToString(),
                 label = "Rotate",
-                tweenMethod = GetTweenMethodName<TransformRotationControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<Transform_RotationControlBehaviour>(),
             },
             new AnimationStep
             {
                 EndPos = "0.0f",
                 StartPos = "1.0f",
                 label = "Fade",
-                tweenMethod = GetTweenMethodName<GraphicColorAControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
             }
         }
             });
@@ -172,8 +177,8 @@ useCurPos = true,
             {
                 EndPos = "200",
                 StartPos = string.Empty,
-useCurPos = true,
-                tweenMethod = GetTweenMethodName<RectTransformAnchoredPositionXControlBehaviour>(),
+isRelative = true,
+                tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionXControlBehaviour>(),
                 label = "MoveX",
                 startTimeOffset = 400f,
             },
@@ -182,14 +187,14 @@ useCurPos = true,
                 EndPos = "0.0f",
                 StartPos = "1.0f",
                 label = "Fade",
-                tweenMethod = GetTweenMethodName<GraphicColorAControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
                 startTimeOffset = 400f,
             },
             new AnimationStep
             {
                 EndPos = Vector3.one.ToString(),
                 StartPos = new Vector3(0.8f, 0.8f, 0.8f).ToString(),
-                tweenMethod = GetTweenMethodName<TransformLocalScaleControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
                 label = "Scale",
                 startTimeOffset = -400f,
             },
@@ -207,7 +212,7 @@ useCurPos = true,
             {
                 EndPos = new Vector4(100f, 0, 0, 0).ToString(),
                 StartPos = Vector4.zero.ToString(),
-                tweenMethod = GetTweenMethodName<RectMask2DPaddingControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<RectMask2D_PaddingControlBehaviour>(),
                 label = "Padding",
                 startTimeOffset = 500f,
             }
@@ -225,7 +230,7 @@ useCurPos = true,
             {
                 EndPos = new Vector4(0f, 50f, 0f, 50f).ToString(),
                 StartPos = Vector4.zero.ToString(),
-                tweenMethod = GetTweenMethodName<RectMask2DPaddingControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<RectMask2D_PaddingControlBehaviour>(),
                 label = "PaddingCenter",
                 startTimeOffset = 500f,
             }
@@ -243,7 +248,7 @@ useCurPos = true,
             {
                 EndPos = new Vector4(50f, 50f, 50f, 50f).ToString(),
                 StartPos = Vector4.zero.ToString(),
-                tweenMethod = GetTweenMethodName<RectMask2DPaddingControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<RectMask2D_PaddingControlBehaviour>(),
                 label = "PaddingResize",
                 startTimeOffset = 500f,
             }
@@ -261,7 +266,7 @@ useCurPos = true,
             {
                 EndPos = new Vector2(50, 50).ToString(),
                 StartPos = Vector2.zero.ToString(),
-                tweenMethod = GetTweenMethodName<RectMask2DSoftnessControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<RectMask2D_SoftnessControlBehaviour>(),
                 label = "Softness",
                 startTimeOffset = 500f,
             }

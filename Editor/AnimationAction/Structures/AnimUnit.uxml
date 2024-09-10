@@ -5,6 +5,6 @@
         style="flex-direction: row; align-items: center; margin-bottom: 5px;">
         <ui:Label name="label" />
         <ui:VisualElement name="paramsPart" class="paramsPart" />
-        <ui:Toggle name="useCurPos" label="Use Current Position" style="margin-left: 10px;" />
+        <ui:Toggle name="relative" label="Reltative" style="margin-left: 10px;" />
     </ui:VisualElement>
 </ui:UXML>

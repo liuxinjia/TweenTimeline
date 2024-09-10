@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Cr7Sund.GraphicTweeen;
 using Cr7Sund.Timeline.Extension;
 using PrimeTween;
 using UnityEditor;
 using UnityEditor.Timeline;
 using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.Playables;
-using UnityEngine.Timeline;
 using UnityEngine.UIElements;
 
 namespace Cr7Sund.TweenTimeLine.Editor
@@ -19,6 +18,7 @@ namespace Cr7Sund.TweenTimeLine.Editor
         private AnimTokenPresets animTokenPresets;
         private AnimationContainer animationContainer;
         private EasingTokenPresets easingTokenPreset;
+        private VisualElement selecGridItem;
         private const string animContainerGuid = "d53959b9eaf99df44bac415705d1187e";
         public const string easingTokenPresetGuid = "c44b58ffe59d7424aa756ffb11fc39aa";
         private const string animTokenPresetsGuid = "162544b970c4f84498947d47bb4d06e3";
@@ -34,7 +34,9 @@ namespace Cr7Sund.TweenTimeLine.Editor
         public static Background recordOffBackground;
         public static Background plaBackground;
         public static Background stopBackground;
-        [MenuItem("Tools/Animation Editor")]
+
+        // [ContextMenu("GameObject/AnimationEditor")]
+        [MenuItem("GameObject/Animation Editor %T", priority = 1)]
         public static void ShowWindow()
         {
             var window = GetWindow<AnimationEditorWindow>();
@@ -88,19 +90,29 @@ namespace Cr7Sund.TweenTimeLine.Editor
         #region UI
         private void CreateTab()
         {
-            var rooTabView = rootVisualElement.Q<TabView>("rooTabView");
-            foreach (var container in animationContainer.animationContainers)
+            var rootTabView = rootVisualElement.Q<TabView>("rooTabView");
+            // var actionCategoryList = animContainer.GetAnimActionCategory(_selectAnimationAction.target);
+
+            for (int i = 0; i < animationContainer.animationContainers.Count; i++)
             {
+                AnimationCollection container = animationContainer.animationContainers[i];
                 var tab = new Tab(container.category);
-                rooTabView.Add(tab);
+                rootTabView.Add(tab);
+                var tabContainer = new VisualElement();
+                tabContainer.name = $"tabContainer_{i}";
+                tab.Add(tabContainer);
 
-                var actionCategoryList = UpdateActionCollectionContainer(container, tab);
+                var toolbarSearchField = new ToolbarSearchField();
+                toolbarSearchField.RegisterValueChangedCallback(OnSearchTextChanged);
+                tabContainer.Add(toolbarSearchField);
 
-                foreach (var categoryFoldout in actionCategoryList)
-                {
-                    tab.Add(categoryFoldout);
-                }
+                var grid = CreateGrid(tabContainer);
             }
+            rootTabView.activeTabChanged += (t1, t2) =>
+            {
+                UpdateSelectCollectionContainer();
+            };
+            UpdateSelectCollectionContainer();
         }
 
         private void BindActionBtns()
@@ -136,13 +148,14 @@ namespace Cr7Sund.TweenTimeLine.Editor
                 // var behaviourName = $"Cr7Sund.TweenTimeLine.{animUnit.tweenMethod}ControlBehaviour";
                 var trackName = $"Cr7Sund.TweenTimeLine.{animUnit.tweenMethod}ControlTrack";
                 var assetName = $"Cr7Sund.TweenTimeLine.{animUnit.tweenMethod}ControlAsset";
-                TabView rooTabView = rootVisualElement.Q<TabView>("rooTabView");
+                var rooTabView = rootVisualElement.Q<TabView>("rooTabView");
+
                 TweenTimelineManager.AddTrack(component,
-                    typeof(GraphicColorAControlBehaviour).Assembly.GetType(trackName),
-                    typeof(GraphicColorAControlBehaviour).Assembly.GetType(assetName),
+                    typeof(Graphic_ColorAControlBehaviour).Assembly.GetType(trackName),
+                    typeof(Graphic_ColorAControlBehaviour).Assembly.GetType(assetName),
                     trackInfo,
-                   rooTabView.selectedTabIndex == 0
-                 );
+                    rooTabView.selectedTabIndex == 0
+                );
             }
 
             TimelineEditor.Refresh(RefreshReason.ContentsAddedOrRemoved);
@@ -291,7 +304,11 @@ namespace Cr7Sund.TweenTimeLine.Editor
 
             // Update Target Field
             var componentField = container.Q<ObjectField>("TargetField");
-
+            if (componentField.value == null)
+            {
+                componentField.value = Selection.activeGameObject;
+                _selectAnimationAction.target = (GameObject)componentField.value;
+            }
             componentField.RegisterValueChangedCallback(evt =>
             {
                 _selectAnimationAction.target = (GameObject)evt.newValue;
@@ -304,9 +321,12 @@ namespace Cr7Sund.TweenTimeLine.Editor
         private void UpdateSelectCollectionContainer()
         {
             var tabView = rootVisualElement.Q<TabView>("rooTabView");
-            var activeTab = tabView.activeTab;
-            activeTab.Clear();
-            UpdateActionCollectionContainer(animationContainer.animationContainers[activeTab.tabIndex], activeTab);
+            var container = tabView.Q<VisualElement>($"tabContainer_{tabView.selectedTabIndex}");
+            var grid = container.Q<VisualElement>("grid");
+            // for some reason , active tab is not work
+            var animContainer = animationContainer.animationContainers[tabView.selectedTabIndex];
+            var actionCategoryList = animContainer.GetAnimActionCategory(_selectAnimationAction.target);
+            UpdateActionCollectionContainer(actionCategoryList, animContainer, grid);
         }
 
         private void CreateAnimUnits()
@@ -382,40 +402,42 @@ namespace Cr7Sund.TweenTimeLine.Editor
 
             // Destination Position Fields
             var componentValueType = animActionUnit.GetComponentValueType();
-            var endPosField = AniActionEditToolHelper.CreateValueField("StartValue", componentValueType, animActionUnit.EndPos, (newValue) =>
+            var endPosField = AniActionEditToolHelper.CreateValueField("EndValue", componentValueType, animActionUnit.EndPos, (newValue) =>
             {
                 animActionUnit.EndPos = newValue;
             });
             endPosField.name = "EndPosField";
-            var startPosField = AniActionEditToolHelper.CreateValueField("EndValue", componentValueType, animActionUnit.StartPos, (newValue) =>
+            var startPosField = AniActionEditToolHelper.CreateValueField("StartValue", componentValueType, animActionUnit.StartPos, (newValue) =>
             {
                 animActionUnit.StartPos = newValue;
             });
             startPosField.name = "StartPosField";
+            startPosField.style.display = (animActionUnit.isRelative) ? DisplayStyle.None : DisplayStyle.Flex;
             var paramsPart = animUnit.Q<VisualElement>("paramsPart");
-            paramsPart.Add(startPosField);
+
             paramsPart.Add(endPosField);
+            paramsPart.Add(startPosField);
 
             // Set the toggle
-            var toggle = animUnit.Q<Toggle>("useCurPos");
-            toggle.value = animActionUnit.useCurPos;
-            toggle.style.display = animActionUnit.useCurPos ? DisplayStyle.Flex : DisplayStyle.None;
+            var toggle = animUnit.Q<Toggle>("relative");
+            toggle.value = animActionUnit.isRelative;
+            // toggle.style.display = animActionUnit.isRelative ? DisplayStyle.Flex : DisplayStyle.None;
             toggle.RegisterValueChangedCallback(evt =>
             {
-                animActionUnit.useCurPos = evt.newValue;
+                animActionUnit.isRelative = evt.newValue;
+                startPosField.style.display = (animActionUnit.isRelative) ? DisplayStyle.None : DisplayStyle.Flex;
             });
 
             // Add the animUnit to the container
             container.Add(animUnit);
         }
 
-        private List<VisualElement> UpdateActionCollectionContainer(AnimationCollection animContainer, VisualElement container)
-        {
-            var actionCategoryList = animContainer.GetAnimActionCategory();
 
-            var foldouts = new List<VisualElement>();
-            container.Clear();
-            var grid = CreateGrid(container);
+        private void UpdateActionCollectionContainer(Dictionary<string, List<AnimationEffect>> actionCategoryList, AnimationCollection animCollections, VisualElement grid)
+        {
+            grid.Clear();
+
+
             foreach (var kvp in actionCategoryList)
             {
                 if (kvp.Value.Count > 0)
@@ -427,8 +449,6 @@ namespace Cr7Sund.TweenTimeLine.Editor
                     CreateGridItem(grid, item);
                 }
             }
-
-            return foldouts;
         }
 
         private VisualElement CreateGrid(VisualElement container)
@@ -438,7 +458,7 @@ namespace Cr7Sund.TweenTimeLine.Editor
             rootVisualElement.styleSheets.Add(styleSheet);
             var gridContainer = visualTreeAsset.Instantiate();
             container.Add(gridContainer);
-            return gridContainer.Q<VisualElement>("grid");
+            return gridContainer;
         }
 
         private void CreateCategoryTitle(string category, VisualElement container)
@@ -466,6 +486,7 @@ namespace Cr7Sund.TweenTimeLine.Editor
             // Clone the UXML and apply styles
             var item = visualTree.CloneTree().Q<VisualElement>("gridItem");
             item.styleSheets.Add(styleSheet);
+            item.EnableInClassList("Select",false);
 
             // Set the label text
             var label = item.Q<Label>("label");
@@ -477,9 +498,17 @@ namespace Cr7Sund.TweenTimeLine.Editor
 
             // Add the item to the grid
             grid.Add(item);
-
             // Register click event
-            item.RegisterCallback<ClickEvent>(ev => OnAnimationEffectSelect(animAction));
+            item.RegisterCallback<ClickEvent>(ev =>
+            {
+                if (selecGridItem != null)
+                {
+                    selecGridItem.EnableInClassList("Select",false);
+                }
+                selecGridItem = item;
+                selecGridItem.EnableInClassList("Select",true);
+                OnAnimationEffectSelect(animAction);
+            });
         }
 
 
@@ -493,6 +522,25 @@ namespace Cr7Sund.TweenTimeLine.Editor
         #endregion
 
         #region Actions
+        void OnSearchTextChanged(ChangeEvent<string> evt)
+        {
+
+            var tabView = rootVisualElement.Q<TabView>("rooTabView");
+            var container = tabView.Q<VisualElement>($"tabContainer_{tabView.selectedTabIndex}");
+            var grid = container.Q<VisualElement>("grid");
+            var animContainer = animationContainer.animationContainers[tabView.selectedTabIndex];
+            Dictionary<string, List<AnimationEffect>> actionCategoryList = null;
+            if (!string.IsNullOrEmpty(evt.newValue))
+            {
+                actionCategoryList = animContainer.FilterActionCategory(evt.newValue, _selectAnimationAction.target);
+            }
+            else
+            {
+                actionCategoryList = animContainer.GetAnimActionCategory(_selectAnimationAction.target);
+            }
+            UpdateActionCollectionContainer(actionCategoryList, animContainer, grid);
+        }
+
         private void OnAnimationEffectSelect(AnimationEffect animAction)
         {
             if (_selectAnimationAction.target == null)
@@ -502,13 +550,6 @@ namespace Cr7Sund.TweenTimeLine.Editor
             _selectAnimationAction.CopyFrom(animAction);
             UpdateConfigUI();
             CreateAnimUnits();
-        }
-
-        private void OpenMenu()
-        {
-            var menu = new GenericMenu();
-            menu.AddItem(new GUIContent("Play Tween"), false, () => PlayTween(_selectAnimationAction));
-            menu.ShowAsContext();
         }
 
         private void PlayTween(AnimationEffect animAction)

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cr7Sund.TweenTimeLine.Editor;
-using UnityEditor;
-using UnityEngine;
+using PrimeTween;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using UnityEngine.UIElements;
@@ -20,6 +19,7 @@ namespace Cr7Sund.TweenTimeLine
         public ClipBehaviourStateEnum BehaviourState { get; private set; }
         public bool IsSelect;
         public object initPos;
+        public Dictionary<int,object> markerInitPosDict;
 
         public ActionTrackHistory actionTrackHistory = new();
         public Action<IUniqueBehaviour, ClipBehaviourStateEnum> RecordAction { get; internal set; }
@@ -90,34 +90,75 @@ namespace Cr7Sund.TweenTimeLine
         }
     }
 
+    public class MarkInfo
+    {
+        public object UpdateValue;
+        public string FieldName;
+        public double Time;
+        public int InstanceID;
+
+        public MarkInfo(IValueMaker field)
+        {
+            UpdateValue = field.Value;
+            FieldName = field.FieldName;
+            Time = field.time;
+            InstanceID = field.instanceID;
+        }
+
+        public void Set(object target, object updateValue)
+        {
+            var fieldInfo = target.GetType().GetField(FieldName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            if (fieldInfo == null)
+            {
+                var propInfo = target.GetType().GetProperty(FieldName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                propInfo.SetMethod.Invoke(target, new object[] { updateValue });
+            }
+            else
+            {
+                fieldInfo.SetValue(target, updateValue);
+            }
+        }
+
+        public object Get(object target)
+        {
+            var fieldInfo = target.GetType().GetField(FieldName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            if (fieldInfo == null)
+            {
+                var propInfo = target.GetType().GetProperty(FieldName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                return propInfo.GetMethod.Invoke(target, null);
+            }
+            else
+            {
+                return fieldInfo.GetValue(target);
+            }
+        }
+
+    }
+
     public class ClipInfo : IDisposable
     {
         public double start;
         public double duration;
-        public AnimationCurve curve;
-        private PrimeTween.Tween _tween;
+        // public AnimationCurve curve;
+        public List<MarkInfo> valueMakers;
+        private PrimeTween.Sequence _sequence;
 
 
-        public PrimeTween.Tween tween { get => _tween; set => _tween = value; }
+        public PrimeTween.Sequence Sequence { get => _sequence; }
 
         public void Dispose()
         {
-            if (_tween.isAlive)
+            if (Sequence.isAlive)
             {
-                _tween.Stop();
+                Sequence.Stop();
             }
         }
 
         public void CreateTween(IUniqueBehaviour behaviour)
         {
-            if (_tween.isAlive)
+            if (Sequence.isAlive)
             {
-                _tween.Stop();
-            }
-
-            if (behaviour.StartPos.Equals(behaviour.EndPos))
-            {
-                return;
+                Sequence.Stop();
             }
 
             var trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[behaviour];
@@ -127,9 +168,18 @@ namespace Cr7Sund.TweenTimeLine
             }
 
             var target = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
+            var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[behaviour];
             var startValue = behaviour.StartPos;
-            _tween = behaviour.CreateTween(target, duration, startValue);
-            _tween.isPaused = true;
+            var newTween = behaviour.CreateTween(target, duration, startValue);
+            // newTween.isPaused = true;
+            _sequence = Sequence.Create().Chain(newTween);
+            _sequence.isPaused = true;
+            foreach (var valueMarker in clipInfo.valueMakers)
+            {
+                // another gc
+                float time = (float)valueMarker.Time;
+                _sequence.InsertCallback(time, valueMarker, (marker) => marker.Set(target, marker.UpdateValue));
+            }
         }
 
         public void PlayTween(UnityEngine.Object target)
@@ -138,7 +188,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 return;
             }
-            EditorTweenCenter.RegisterTween(_tween, target, (float)duration);
+            EditorTweenCenter.RegisterSequence(Sequence, target, (float)duration);
         }
     }
 
@@ -155,7 +205,6 @@ namespace Cr7Sund.TweenTimeLine
         public static Dictionary<IUniqueBehaviour, INotificationReceiver> NotificationReceiverDict = new();
         public static Dictionary<TrackAsset, UnityEngine.Object> TrackObjectDict = new();
         public static Dictionary<TrackAsset, List<IUniqueBehaviour>> TrackBehaviourDict = new();
-        public static Dictionary<UnityEngine.Object, TrackAsset> BindingTackDict = new();
         public static Dictionary<UnityEngine.Object, IUniqueBehaviour> ClipAssetBehaviourDict = new();
         public static Dictionary<PlayableAsset, TrackAsset> PlayableAssetTrackDict = new();
 

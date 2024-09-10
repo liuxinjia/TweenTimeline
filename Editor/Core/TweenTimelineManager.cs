@@ -110,7 +110,8 @@ namespace Cr7Sund.TweenTimeLine.Editor
             }
             else if (change == PlayModeStateChange.EnteredPlayMode)
             {
-                Application.targetFrameRate = (int)TimelineWindowExposer.GetTimelineFrameRate();
+                 Application.targetFrameRate = 60;
+                // Application.targetFrameRate = (int)TimelineWindowExposer.GetTimelineFrameRate();
             }
         }
         #endregion
@@ -119,7 +120,6 @@ namespace Cr7Sund.TweenTimeLine.Editor
         public static void InitPlayableBindings()
         {
             TweenTimeLineDataModel.TrackObjectDict.Clear();
-            TweenTimeLineDataModel.BindingTackDict.Clear();
 
             var playableDirector = GameObject.FindFirstObjectByType<PlayableDirector>();
             if (playableDirector != null && playableDirector.playableAsset != null)
@@ -139,7 +139,6 @@ namespace Cr7Sund.TweenTimeLine.Editor
                     if (binding == null) continue;
 
                     TweenTimeLineDataModel.TrackObjectDict.Add(trackAsset, binding);
-                    TweenTimeLineDataModel.BindingTackDict.Add(binding, trackAsset);
                 }
             }
         }
@@ -158,7 +157,7 @@ namespace Cr7Sund.TweenTimeLine.Editor
             TweenTimeLineDataModel.TrackBehaviourDict.Clear();
             TweenTimeLineDataModel.ClipInfoDicts.Clear();
             TweenTimeLineDataModel.ClipAssetBehaviourDict.Clear();
-            TweenTimeLineDataModel.NotificationReceiverDict.Clear();
+            // TweenTimeLineDataModel.NotificationReceiverDict.Clear();
             TweenTimeLineDataModel.groupTracks.Clear();
 
             TimelineWindowExposer.IteratePlayableAssets((playableAsset, trackAsset) =>
@@ -173,8 +172,32 @@ namespace Cr7Sund.TweenTimeLine.Editor
                     TweenTimeLineDataModel.groupTracks.Add(trackAsset as GroupTrack);
                 }
             });
+
+            TimelineWindowExposer.IterateClips((clip, trackAsset) =>
+            {
+                if (trackAsset is not IBaseTrack)
+                {
+                    var binComponent = TweenTimeLineDataModel.TrackObjectDict[trackAsset] as Component;
+                    if (trackAsset is CustomAnimationTrack animationTrack)
+                    {
+                        var animationPlayableAsset = clip.asset as CustomAnimationPlayableAsset;
+                        animationPlayableAsset.bindTarget = binComponent.transform.name;
+                    }
+                    else if (trackAsset is CustomAudioTrack customAudioTrack)
+                    {
+                        var animationPlayableAsset = clip.asset as CustomAudioPlayableAsset;
+                        animationPlayableAsset.bindTarget = binComponent.transform.name;
+                    }
+                }
+            });
+          
             TimelineWindowExposer.IterateClips((value, clip, trackAsset) =>
             {
+                if (trackAsset is not IBaseTrack)
+                {
+                    return;
+                }
+
                 var behaviour = value as IUniqueBehaviour;
                 if (behaviour == null) return;
                 if (!TweenTimeLineDataModel.TrackObjectDict.ContainsKey(trackAsset))
@@ -192,9 +215,20 @@ namespace Cr7Sund.TweenTimeLine.Editor
                 TweenTimeLineDataModel.ClipStateDict.Add(item.Item1, item.Item2);
             }
 
-            foreach (var item in TweenTimeLineDataModel.ClipAssetBehaviourDict)
+            foreach (var item in TweenTimeLineDataModel.TrackObjectDict)
             {
-                item.Value.BindTarget = item.Key.name;
+                var binComponent = item.Value as Component;
+                TrackAsset trackAsset = item.Key;
+                if (trackAsset is not IBaseTrack)
+                {
+                    continue;
+                }
+                var behaviourList = TweenTimeLineDataModel.TrackBehaviourDict[trackAsset];
+                foreach (var behaviour in behaviourList)
+                {
+                    behaviour.BindTarget = binComponent.gameObject.name;
+                    behaviour.BindType = binComponent.GetType().FullName;
+                }
             }
 
             RecreateTween();
@@ -218,12 +252,22 @@ namespace Cr7Sund.TweenTimeLine.Editor
         private static void BindClipAsset(TimelineClip clip, List<Tuple<IUniqueBehaviour, ClipBehaviourState>> validClipStateSet, IUniqueBehaviour behaviour, TrackAsset trackAsset)
         {
             TweenTimeLineDataModel.ClipAssetBehaviourDict.Add(clip.asset, behaviour);
-            var bindObj = TweenTimeLineDataModel.TrackObjectDict[trackAsset] as Component;
+
             var clipInfo = new ClipInfo()
             {
                 start = clip.start,
                 duration = clip.duration,
             };
+            clipInfo.valueMakers = new();
+            foreach (IMarker marker in trackAsset.GetMarkers())
+            {
+                if (marker is IValueMaker valueMaker
+                 && marker.time >= clip.start && marker.time <= clip.end)
+                {
+                    clipInfo.valueMakers.Add(new MarkInfo(valueMaker));
+                }
+            }
+
             TweenTimeLineDataModel.ClipInfoDicts.Add(behaviour, clipInfo);
 
             // state should keep when refresh
@@ -276,9 +320,28 @@ namespace Cr7Sund.TweenTimeLine.Editor
                 && !clipBehaviourState.IsPlaying
                 && !clipBehaviourState.IsRecording)
             {
-                if (TryGetTargetCurPos(behaviour, out var startValue))
-                    clipBehaviourState.initPos = startValue;
+                var target = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
+                clipBehaviourState.initPos = behaviour.Get(target);
+
+                clipBehaviourState.markerInitPosDict = new();
+                for (int i = 0; i < clipInfo.valueMakers.Count; i++)
+                {
+                    MarkInfo valueMarker = clipInfo.valueMakers[i];
+                    clipBehaviourState.markerInitPosDict[valueMarker.InstanceID] = valueMarker.Get(target);
+                }
             }
+
+            var validMarkers = new Dictionary<int, object>();
+            foreach (var valueMarker in clipInfo.valueMakers)
+            {
+                if (clipBehaviourState.markerInitPosDict.TryGetValue(valueMarker.InstanceID, out var v))
+                {
+                    validMarkers.Add(valueMarker.InstanceID, v);
+                }
+            }
+            clipBehaviourState.markerInitPosDict = validMarkers;
+
+
             validClipStateSet.Add(new(behaviour, clipBehaviourState));
         }
 
@@ -292,7 +355,7 @@ namespace Cr7Sund.TweenTimeLine.Editor
             }
             clipBehaviors.Add(behaviour);
 
-            TweenTimeLineDataModel.NotificationReceiverDict.Add(behaviour, new TweenTimelineReceiver());
+            // TweenTimeLineDataModel.NotificationReceiverDict.Add(behaviour, new TweenTimelineReceiver());
         }
 
         private static void RecreateTween()
@@ -301,16 +364,6 @@ namespace Cr7Sund.TweenTimeLine.Editor
             {
                 item.Value.CreateTween(item.Key);
             }
-        }
-
-        private static bool TryGetTargetCurPos(IUniqueBehaviour key, out object startValue)
-        {
-            startValue = null;
-            var trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[key];
-            var target = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
-            startValue = key.Get(target);
-
-            return true;
         }
 
         private static void InitPreTween()
@@ -323,7 +376,7 @@ namespace Cr7Sund.TweenTimeLine.Editor
                 var initMethod = typeof(PrimeTweenManager).GetMethod("init", BindingFlags.Instance | BindingFlags.NonPublic);
                 initMethod.Invoke(manager, new object[]
                 {
-                200
+                    200
                 });
                 PrimeTweenManager.Instance = manager;
             }
@@ -339,6 +392,10 @@ namespace Cr7Sund.TweenTimeLine.Editor
             }
             TimelineWindowExposer.IterateClips((clip, trackAsset) =>
             {
+                if (trackAsset is not IBaseTrack)
+                {
+                    return;
+                }
                 if (!TweenTimeLineDataModel.ClipAssetBehaviourDict.TryGetValue(clip.asset, out var behaviour)) return;
 
                 if (clip.end >= time && clip.start <= time)
@@ -511,7 +568,7 @@ namespace Cr7Sund.TweenTimeLine.Editor
             Undo.RecordObject(playableDirector.playableAsset, "Add Track");
             GroupTrack parentTrack = GetParentGroup(component, timelineAsset, isIn);
 
-            AdjustStartTime(component, ref trackInfo);
+            AdjustStartTime(component, trackAssetType, ref trackInfo);
 
             var trackAsset = AddTrackToTimeline(component, trackAssetType, timelineAsset, parentTrack);
             var clipMethod = typeof(TrackAsset).GetMethod("CreateClip", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -537,20 +594,27 @@ namespace Cr7Sund.TweenTimeLine.Editor
             TimelineWindowExposer.Bind(playableDirector, trackAsset, component);
         }
 
-        private static void AdjustStartTime(Component component, ref TrackInfo trackInfo)
+        private static void AdjustStartTime(Component component, Type trackAssetType, ref TrackInfo trackInfo)
         {
-            if (TweenTimeLineDataModel.BindingTackDict.TryGetValue(component, out var trackAsset) &&
-                TweenTimeLineDataModel.TrackBehaviourDict.TryGetValue(trackAsset, out var behaviourList))
+            foreach (var item in TweenTimeLineDataModel.TrackObjectDict)
             {
-                double clipEnd = 0;
-                foreach (var behaviour in behaviourList)
+                TrackAsset trackAsset = item.Key;
+                if (item.Value.Equals(component)
+                    && trackAssetType == trackAsset.GetType())
                 {
-                    var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[behaviour];
-                    clipEnd = Math.Max(clipEnd, clipInfo.start + clipInfo.duration);
+                    if (TweenTimeLineDataModel.TrackBehaviourDict.TryGetValue(trackAsset, out var behaviourList))
+                    {
+                        double clipEnd = 0;
+                        foreach (var behaviour in behaviourList)
+                        {
+                            var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[behaviour];
+                            clipEnd = Math.Max(clipEnd, clipInfo.start + clipInfo.duration);
+                        }
+                        trackInfo.start += clipEnd;
+                    }
+                    break;
                 }
-                trackInfo.start += clipEnd;
             }
-
         }
 
         private static GroupTrack GetParentGroup(Component component, TimelineAsset timelineAsset, bool isIn)
@@ -585,13 +649,15 @@ namespace Cr7Sund.TweenTimeLine.Editor
         public static TrackAsset AddTrackToTimeline(Component component, Type trackAssetType, TimelineAsset timelineAsset, GroupTrack groupTrack)
         {
             TrackAsset track = null;
-            if (TweenTimeLineDataModel.BindingTackDict.TryGetValue(component, out var trackAsset))
+            foreach (var item in TweenTimeLineDataModel.TrackObjectDict)
             {
-                if (trackAsset.GetType() == trackAssetType)
+                if (trackAssetType == item.Key.GetType())
                 {
-                    track = trackAsset;
+                    track = item.Key;
+                    break;
                 }
             }
+
             if (track == null)
             {
                 track = timelineAsset.CreateTrack(trackAssetType, groupTrack, "My New Animation Track");
@@ -611,12 +677,14 @@ namespace Cr7Sund.TweenTimeLine.Editor
             return null;
         }
 
-        public static void EnsureCanPreview()
+        public static bool EnsureCanPreview()
         {
             if (!InitTimeline())
             {
-                Debug.Log("Please open the timeLine window first");
+                // Debug.Log("Please open the timeLine window first");
+                return false;
             }
+            return true;
         }
 
         #region Utility

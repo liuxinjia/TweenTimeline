@@ -18,14 +18,14 @@ MonoBehaviour:
       image: crate_with_heart.png
       effectCategory: Fade
       target: {fileID: 0}
-      durationToken: 250
-      easeToken: 0
+      durationToken: 300
+      easeToken: 3
       animationSteps:
       - label: 
-        tweenMethod: GraphicColorA
+        tweenMethod: Graphic_ColorAControlBehaviour
         EndPos: 1.0f
         StartPos: 0.0f
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
     - label: Slide In
@@ -36,17 +36,17 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: MoveX
-        tweenMethod: RectTransformAnchoredPositionX
+        tweenMethod: RectTransform_AnchoredPositionXControlBehaviour
         EndPos: -250
         StartPos: 
-        useCurPos: 1
+        isRelative: 1
         startTimeOffset: 0
         animationTarget: {fileID: 0}
       - label: Alpha
-        tweenMethod: GraphicColorA
+        tweenMethod: Graphic_ColorAControlBehaviour
         EndPos: 1.0f
         StartPos: 0.0f
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
     - label: Grow In
@@ -57,17 +57,17 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: Scale
-        tweenMethod: TransformLocalScale
+        tweenMethod: Transform_LocalScaleControlBehaviour
         EndPos: (1.00, 1.00, 1.00)
         StartPos: (0.00, 0.00, 0.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
       - label: Fade
-        tweenMethod: GraphicColorA
+        tweenMethod: Graphic_ColorAControlBehaviour
         EndPos: 1.0f
         StartPos: 0.0f
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
     - label: Shrink In
@@ -78,17 +78,17 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: Scale
-        tweenMethod: TransformLocalScale
+        tweenMethod: Transform_LocalScaleControlBehaviour
         EndPos: (1.00, 1.00, 1.00)
         StartPos: (2.00, 2.00, 2.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
       - label: Fade
-        tweenMethod: GraphicColorA
+        tweenMethod: Graphic_ColorAControlBehaviour
         EndPos: 1.0f
         StartPos: 0.0f
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
     - label: Spin In
@@ -99,24 +99,24 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: Scale
-        tweenMethod: TransformLocalScale
+        tweenMethod: Transform_LocalScaleControlBehaviour
         EndPos: (1.00, 1.00, 1.00)
         StartPos: (0.50, 0.50, 0.50)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
       - label: Rotate
-        tweenMethod: TransformRotation
+        tweenMethod: Transform_RotationControlBehaviour
         EndPos: (0.00, 0.00, 0.00)
         StartPos: (0.00, 0.00, 0.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
       - label: Fade
-        tweenMethod: GraphicColorA
+        tweenMethod: Graphic_ColorAControlBehaviour
         EndPos: 1.0f
         StartPos: 0.0f
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
     - label: Twist In
@@ -127,24 +127,24 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: Scale
-        tweenMethod: TransformLocalScale
+        tweenMethod: Transform_LocalScaleControlBehaviour
         EndPos: (1.00, 1.00, 1.00)
         StartPos: (0.50, 0.50, 0.50)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
       - label: Rotate
-        tweenMethod: TransformRotation
+        tweenMethod: Transform_RotationControlBehaviour
         EndPos: (0.00, 0.00, 0.00)
         StartPos: (0.00, 0.00, 0.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
       - label: Fade
-        tweenMethod: GraphicColorA
+        tweenMethod: Graphic_ColorAControlBehaviour
         EndPos: 1.0f
         StartPos: 0.0f
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
     - label: Move & Scale In
@@ -155,24 +155,24 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: MoveX
-        tweenMethod: RectTransformAnchoredPositionX
+        tweenMethod: RectTransform_AnchoredPositionXControlBehaviour
         EndPos: -200
         StartPos: 
-        useCurPos: 1
+        isRelative: 1
         startTimeOffset: 400
         animationTarget: {fileID: 0}
       - label: Fade
-        tweenMethod: GraphicColorA
+        tweenMethod: Graphic_ColorAControlBehaviour
         EndPos: 1.0f
         StartPos: 0.0f
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 400
         animationTarget: {fileID: 0}
       - label: Scale
-        tweenMethod: TransformLocalScale
+        tweenMethod: Transform_LocalScaleControlBehaviour
         EndPos: (0.80, 0.80, 0.80)
         StartPos: (1.00, 1.00, 1.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: -400
         animationTarget: {fileID: 0}
     - label: Mask Reveal
@@ -183,10 +183,10 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: Padding
-        tweenMethod: RectMask2DPadding
+        tweenMethod: RectMask2D_PaddingControlBehaviour
         EndPos: (0.00, 0.00, 0.00, 0.00)
         StartPos: (100.00, 0.00, 0.00, 0.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 500
         animationTarget: {fileID: 0}
     - label: Mask Center
@@ -197,10 +197,10 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: PaddingCenter
-        tweenMethod: RectMask2DPadding
+        tweenMethod: RectMask2D_PaddingControlBehaviour
         EndPos: (0.00, 0.00, 0.00, 0.00)
         StartPos: (0.00, 50.00, 0.00, 50.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 500
         animationTarget: {fileID: 0}
     - label: Mask Resize
@@ -211,10 +211,10 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: PaddingResize
-        tweenMethod: RectMask2DPadding
+        tweenMethod: RectMask2D_PaddingControlBehaviour
         EndPos: (0.00, 0.00, 0.00, 0.00)
         StartPos: (50.00, 50.00, 50.00, 50.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 500
         animationTarget: {fileID: 0}
     - label: Mask Expand
@@ -225,10 +225,10 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: Softness
-        tweenMethod: RectMask2DSoftness
+        tweenMethod: RectMask2D_SoftnessControlBehaviour
         EndPos: (0.00, 0.00)
         StartPos: (50.00, 50.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 500
         animationTarget: {fileID: 0}
     category: In
@@ -241,10 +241,10 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: 
-        tweenMethod: GraphicColorA
+        tweenMethod: Graphic_ColorAControlBehaviour
         EndPos: 0.0f
         StartPos: 1.0f
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
     - label: Slide Out
@@ -255,17 +255,17 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: MoveX
-        tweenMethod: RectTransformAnchoredPositionX
+        tweenMethod: RectTransform_AnchoredPositionXControlBehaviour
         EndPos: 250
         StartPos: 
-        useCurPos: 1
+        isRelative: 1
         startTimeOffset: 0
         animationTarget: {fileID: 0}
       - label: Alpha
-        tweenMethod: GraphicColorA
+        tweenMethod: Graphic_ColorAControlBehaviour
         EndPos: 0.0f
         StartPos: 1.0f
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
     - label: Grow Out
@@ -276,17 +276,17 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: Scale
-        tweenMethod: TransformLocalScale
+        tweenMethod: Transform_LocalScaleControlBehaviour
         EndPos: (2.00, 2.00, 2.00)
         StartPos: (1.00, 1.00, 1.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
       - label: Fade
-        tweenMethod: GraphicColorA
+        tweenMethod: Graphic_ColorAControlBehaviour
         EndPos: 0.0f
         StartPos: 1.0f
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
     - label: Shrink Out
@@ -297,17 +297,17 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: Scale
-        tweenMethod: TransformLocalScale
+        tweenMethod: Transform_LocalScaleControlBehaviour
         EndPos: (0.00, 0.00, 0.00)
         StartPos: (1.00, 1.00, 1.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
       - label: Fade
-        tweenMethod: GraphicColorA
+        tweenMethod: Graphic_ColorAControlBehaviour
         EndPos: 0.0f
         StartPos: 1.0f
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
     - label: Spin Out
@@ -318,24 +318,24 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: Scale
-        tweenMethod: TransformLocalScale
+        tweenMethod: Transform_LocalScaleControlBehaviour
         EndPos: (0.50, 0.50, 0.50)
         StartPos: (1.00, 1.00, 1.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
       - label: Rotate
-        tweenMethod: TransformRotation
+        tweenMethod: Transform_RotationControlBehaviour
         EndPos: (0.00, 0.00, 0.00)
         StartPos: (0.00, 0.00, 0.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
       - label: Fade
-        tweenMethod: GraphicColorA
+        tweenMethod: Graphic_ColorAControlBehaviour
         EndPos: 0.0f
         StartPos: 1.0f
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
     - label: Twist Out
@@ -346,24 +346,24 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: Scale
-        tweenMethod: TransformLocalScale
+        tweenMethod: Transform_LocalScaleControlBehaviour
         EndPos: (0.50, 0.50, 0.50)
         StartPos: (1.00, 1.00, 1.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
       - label: Rotate
-        tweenMethod: TransformRotation
+        tweenMethod: Transform_RotationControlBehaviour
         EndPos: (0.00, 0.00, 0.00)
         StartPos: (0.00, 0.00, 0.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
       - label: Fade
-        tweenMethod: GraphicColorA
+        tweenMethod: Graphic_ColorAControlBehaviour
         EndPos: 0.0f
         StartPos: 1.0f
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 0
         animationTarget: {fileID: 0}
     - label: Move & Scale Out
@@ -374,24 +374,24 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: MoveX
-        tweenMethod: RectTransformAnchoredPositionX
+        tweenMethod: RectTransform_AnchoredPositionXControlBehaviour
         EndPos: 200
         StartPos: 
-        useCurPos: 1
+        isRelative: 1
         startTimeOffset: 400
         animationTarget: {fileID: 0}
       - label: Fade
-        tweenMethod: GraphicColorA
+        tweenMethod: Graphic_ColorAControlBehaviour
         EndPos: 0.0f
         StartPos: 1.0f
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 400
         animationTarget: {fileID: 0}
       - label: Scale
-        tweenMethod: TransformLocalScale
+        tweenMethod: Transform_LocalScaleControlBehaviour
         EndPos: (1.00, 1.00, 1.00)
         StartPos: (0.80, 0.80, 0.80)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: -400
         animationTarget: {fileID: 0}
     - label: Mask Unveil
@@ -402,10 +402,10 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: Padding
-        tweenMethod: RectMask2DPadding
+        tweenMethod: RectMask2D_PaddingControlBehaviour
         EndPos: (100.00, 0.00, 0.00, 0.00)
         StartPos: (0.00, 0.00, 0.00, 0.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 500
         animationTarget: {fileID: 0}
     - label: Mask Contract
@@ -416,10 +416,10 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: PaddingCenter
-        tweenMethod: RectMask2DPadding
+        tweenMethod: RectMask2D_PaddingControlBehaviour
         EndPos: (0.00, 50.00, 0.00, 50.00)
         StartPos: (0.00, 0.00, 0.00, 0.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 500
         animationTarget: {fileID: 0}
     - label: Mask Reduce
@@ -430,10 +430,10 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: PaddingResize
-        tweenMethod: RectMask2DPadding
+        tweenMethod: RectMask2D_PaddingControlBehaviour
         EndPos: (50.00, 50.00, 50.00, 50.00)
         StartPos: (0.00, 0.00, 0.00, 0.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 500
         animationTarget: {fileID: 0}
     - label: Mask Collapse
@@ -444,82 +444,1244 @@ MonoBehaviour:
       easeToken: 3
       animationSteps:
       - label: Softness
-        tweenMethod: RectMask2DSoftness
+        tweenMethod: RectMask2D_SoftnessControlBehaviour
         EndPos: (50.00, 50.00)
         StartPos: (0.00, 0.00)
-        useCurPos: 0
+        isRelative: 0
         startTimeOffset: 500
         animationTarget: {fileID: 0}
     category: Out
   - animationCollections:
-    - label: Move
-      image: custom_move_example.png
-      effectCategory: Transform
+    - label: range
+      image: custom_Light_Range_example.png
+      effectCategory: Light
       target: {fileID: 0}
       durationToken: 300
       easeToken: 3
       animationSteps:
-      - label: MoveX
-        tweenMethod: RectTransformAnchoredPositionX
-        EndPos: 500
-        StartPos: 0
-        useCurPos: 0
+      - label: range
+        tweenMethod: Light_RangeControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
         startTimeOffset: 0
         animationTarget: {fileID: 0}
-    - label: Scale
-      image: custom_scale_example.png
-      effectCategory: Transform
+    - label: shadowStrength
+      image: custom_Light_ShadowStrength_example.png
+      effectCategory: Light
       target: {fileID: 0}
       durationToken: 300
       easeToken: 3
       animationSteps:
-      - label: Scale
-        tweenMethod: TransformLocalScale
-        EndPos: (1.00, 1.00, 1.00)
-        StartPos: (2.00, 2.00, 2.00)
-        useCurPos: 0
+      - label: shadowStrength
+        tweenMethod: Light_ShadowStrengthControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
         startTimeOffset: 0
         animationTarget: {fileID: 0}
-    - label: Rotate
-      image: custom_rotate_example.png
-      effectCategory: Transform
+    - label: intensity
+      image: custom_Light_Intensity_example.png
+      effectCategory: Light
       target: {fileID: 0}
       durationToken: 300
       easeToken: 3
       animationSteps:
-      - label: Rotate
-        tweenMethod: TransformRotation
+      - label: intensity
+        tweenMethod: Light_IntensityControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: orthographicSize
+      image: custom_Camera_OrthographicSize_example.png
+      effectCategory: Camera
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: orthographicSize
+        tweenMethod: Camera_OrthographicSizeControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: backgroundColor
+      image: custom_Camera_BackgroundColor_example.png
+      effectCategory: Camera
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: backgroundColor
+        tweenMethod: Camera_BackgroundColorControlBehaviour
+        EndPos: RGBA(1.000, 1.000, 1.000, 1.000)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: aspect
+      image: custom_Camera_Aspect_example.png
+      effectCategory: Camera
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: aspect
+        tweenMethod: Camera_AspectControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: farClipPlane
+      image: custom_Camera_FarClipPlane_example.png
+      effectCategory: Camera
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: farClipPlane
+        tweenMethod: Camera_FarClipPlaneControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: fieldOfView
+      image: custom_Camera_FieldOfView_example.png
+      effectCategory: Camera
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: fieldOfView
+        tweenMethod: Camera_FieldOfViewControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: nearClipPlane
+      image: custom_Camera_NearClipPlane_example.png
+      effectCategory: Camera
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: nearClipPlane
+        tweenMethod: Camera_NearClipPlaneControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: pixelRect
+      image: custom_Camera_PixelRect_example.png
+      effectCategory: Camera
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: pixelRect
+        tweenMethod: Camera_PixelRectControlBehaviour
+        EndPos: (x:0.00, y:0.00, width:0.00, height:0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: rect
+      image: custom_Camera_Rect_example.png
+      effectCategory: Camera
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: rect
+        tweenMethod: Camera_RectControlBehaviour
+        EndPos: (x:0.00, y:0.00, width:0.00, height:0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: localRotation
+      image: custom_Transform_LocalRotation_example.png
+      effectCategory: 'Transformation '
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: localRotation
+        tweenMethod: Transform_LocalRotationControlBehaviour
         EndPos: (0.00, 0.00, 0.00)
-        StartPos: (0.00, 0.00, 0.00)
-        useCurPos: 0
+        StartPos: 
+        isRelative: 1
         startTimeOffset: 0
         animationTarget: {fileID: 0}
-    - label: Opacity
-      image: custom_opacity_example.png
-      effectCategory: Style
+    - label: localScale
+      image: custom_Transform_LocalScale_example.png
+      effectCategory: 'Transformation '
       target: {fileID: 0}
       durationToken: 300
       easeToken: 3
       animationSteps:
-      - label: Opacity
-        tweenMethod: GraphicColorA
-        EndPos: 0.0f
-        StartPos: 1.0f
-        useCurPos: 0
+      - label: localScale
+        tweenMethod: Transform_LocalScaleControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        isRelative: 1
         startTimeOffset: 0
         animationTarget: {fileID: 0}
-    - label: Resize
-      image: custom_resize_example.png
-      effectCategory: Other
+    - label: rotation
+      image: custom_Transform_Rotation_example.png
+      effectCategory: 'Transformation '
       target: {fileID: 0}
       durationToken: 300
       easeToken: 3
       animationSteps:
-      - label: Resize
-        tweenMethod: RectTransformSizeDelta
-        EndPos: (100.00, 100.00)
-        StartPos: (50.00, 50.00)
-        useCurPos: 0
+      - label: rotation
+        tweenMethod: Transform_RotationControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        isRelative: 1
         startTimeOffset: 0
         animationTarget: {fileID: 0}
-    category: Custom
+    - label: value
+      image: custom_Slider_Value_example.png
+      effectCategory: Slider
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: value
+        tweenMethod: Slider_ValueControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: GetNormalizedPosition()
+      image: custom_ScrollRect_GetNormalizedPosition_example.png
+      effectCategory: ScrollRect
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: GetNormalizedPosition()
+        tweenMethod: ScrollRect_GetNormalizedPositionControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: horizontalNormalizedPosition
+      image: custom_ScrollRect_HorizontalNormalizedPosition_example.png
+      effectCategory: ScrollRect
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: horizontalNormalizedPosition
+        tweenMethod: ScrollRect_HorizontalNormalizedPositionControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: verticalNormalizedPosition
+      image: custom_ScrollRect_VerticalNormalizedPosition_example.png
+      effectCategory: ScrollRect
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: verticalNormalizedPosition
+        tweenMethod: ScrollRect_VerticalNormalizedPositionControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: pivot.x
+      image: custom_RectTransform_PivotX_example.png
+      effectCategory: Basic Layout
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: pivot.x
+        tweenMethod: RectTransform_PivotXControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: pivot.y
+      image: custom_RectTransform_PivotY_example.png
+      effectCategory: Basic Layout
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: pivot.y
+        tweenMethod: RectTransform_PivotYControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: pivot
+      image: custom_RectTransform_Pivot_example.png
+      effectCategory: Basic Layout
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: pivot
+        tweenMethod: RectTransform_PivotControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: anchorMax
+      image: custom_RectTransform_AnchorMax_example.png
+      effectCategory: Basic Layout
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: anchorMax
+        tweenMethod: RectTransform_AnchorMaxControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: anchorMin
+      image: custom_RectTransform_AnchorMin_example.png
+      effectCategory: Basic Layout
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: anchorMin
+        tweenMethod: RectTransform_AnchorMinControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: anchoredPosition3D
+      image: custom_RectTransform_AnchoredPosition3D_example.png
+      effectCategory: Transformation (UI)
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: anchoredPosition3D
+        tweenMethod: RectTransform_AnchoredPosition3DControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: anchoredPosition3D.x
+      image: custom_RectTransform_AnchoredPosition3DX_example.png
+      effectCategory: Transformation (UI)
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: anchoredPosition3D.x
+        tweenMethod: RectTransform_AnchoredPosition3DXControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: anchoredPosition3D.y
+      image: custom_RectTransform_AnchoredPosition3DY_example.png
+      effectCategory: Transformation (UI)
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: anchoredPosition3D.y
+        tweenMethod: RectTransform_AnchoredPosition3DYControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: anchoredPosition3D.z
+      image: custom_RectTransform_AnchoredPosition3DZ_example.png
+      effectCategory: Transformation (UI)
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: anchoredPosition3D.z
+        tweenMethod: RectTransform_AnchoredPosition3DZControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: effectDistance
+      image: custom_Shadow_EffectDistance_example.png
+      effectCategory: Shadow
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: effectDistance
+        tweenMethod: Shadow_EffectDistanceControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: effectColor.a
+      image: custom_Shadow_EffectColorA_example.png
+      effectCategory: Shadow
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: effectColor.a
+        tweenMethod: Shadow_EffectColorAControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: effectColor
+      image: custom_Shadow_EffectColor_example.png
+      effectCategory: Shadow
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: effectColor
+        tweenMethod: Shadow_EffectColorControlBehaviour
+        EndPos: RGBA(1.000, 1.000, 1.000, 1.000)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: GetPreferredSize()
+      image: custom_LayoutElement_GetPreferredSize_example.png
+      effectCategory: LayoutElement
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: GetPreferredSize()
+        tweenMethod: LayoutElement_GetPreferredSizeControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: preferredWidth
+      image: custom_LayoutElement_PreferredWidth_example.png
+      effectCategory: LayoutElement
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: preferredWidth
+        tweenMethod: LayoutElement_PreferredWidthControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: preferredHeight
+      image: custom_LayoutElement_PreferredHeight_example.png
+      effectCategory: LayoutElement
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: preferredHeight
+        tweenMethod: LayoutElement_PreferredHeightControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: position
+      image: custom_Rigidbody_Position_example.png
+      effectCategory: Rigidbody
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: position
+        tweenMethod: Rigidbody_PositionControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: rotation
+      image: custom_Rigidbody_Rotation_example.png
+      effectCategory: Rigidbody
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: rotation
+        tweenMethod: Rigidbody_RotationControlBehaviour
+        EndPos: (0.00000, 0.00000, 0.00000, 1.00000)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: position
+      image: custom_Rigidbody2D_Position_example.png
+      effectCategory: Rigidbody2D
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: position
+        tweenMethod: Rigidbody2D_PositionControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: rotation
+      image: custom_Rigidbody2D_Rotation_example.png
+      effectCategory: Rigidbody2D
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: rotation
+        tweenMethod: Rigidbody2D_RotationControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: GetFlexibleSize()
+      image: custom_LayoutElement_GetFlexibleSize_example.png
+      effectCategory: LayoutElement
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: GetFlexibleSize()
+        tweenMethod: LayoutElement_GetFlexibleSizeControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: flexibleWidth
+      image: custom_LayoutElement_FlexibleWidth_example.png
+      effectCategory: LayoutElement
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: flexibleWidth
+        tweenMethod: LayoutElement_FlexibleWidthControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: flexibleHeight
+      image: custom_LayoutElement_FlexibleHeight_example.png
+      effectCategory: LayoutElement
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: flexibleHeight
+        tweenMethod: LayoutElement_FlexibleHeightControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: GetMinSize()
+      image: custom_LayoutElement_GetMinSize_example.png
+      effectCategory: LayoutElement
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: GetMinSize()
+        tweenMethod: LayoutElement_GetMinSizeControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: minWidth
+      image: custom_LayoutElement_MinWidth_example.png
+      effectCategory: LayoutElement
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: minWidth
+        tweenMethod: LayoutElement_MinWidthControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: minHeight
+      image: custom_LayoutElement_MinHeight_example.png
+      effectCategory: LayoutElement
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: minHeight
+        tweenMethod: LayoutElement_MinHeightControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: position
+      image: custom_Transform_Position_example.png
+      effectCategory: 'Transformation '
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: position
+        tweenMethod: Transform_PositionControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: position.x
+      image: custom_Transform_PositionX_example.png
+      effectCategory: 'Transformation '
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: position.x
+        tweenMethod: Transform_PositionXControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: position.y
+      image: custom_Transform_PositionY_example.png
+      effectCategory: 'Transformation '
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: position.y
+        tweenMethod: Transform_PositionYControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: position.z
+      image: custom_Transform_PositionZ_example.png
+      effectCategory: 'Transformation '
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: position.z
+        tweenMethod: Transform_PositionZControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: localPosition
+      image: custom_Transform_LocalPosition_example.png
+      effectCategory: 'Transformation '
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: localPosition
+        tweenMethod: Transform_LocalPositionControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: localPosition.x
+      image: custom_Transform_LocalPositionX_example.png
+      effectCategory: 'Transformation '
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: localPosition.x
+        tweenMethod: Transform_LocalPositionXControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: localPosition.y
+      image: custom_Transform_LocalPositionY_example.png
+      effectCategory: 'Transformation '
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: localPosition.y
+        tweenMethod: Transform_LocalPositionYControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: localPosition.z
+      image: custom_Transform_LocalPositionZ_example.png
+      effectCategory: 'Transformation '
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: localPosition.z
+        tweenMethod: Transform_LocalPositionZControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: color
+      image: custom_Graphic_Color_example.png
+      effectCategory: Graphic
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: color
+        tweenMethod: Graphic_ColorControlBehaviour
+        EndPos: RGBA(1.000, 1.000, 1.000, 1.000)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: color
+      image: custom_SpriteRenderer_Color_example.png
+      effectCategory: SpriteRenderer
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: color
+        tweenMethod: SpriteRenderer_ColorControlBehaviour
+        EndPos: RGBA(1.000, 1.000, 1.000, 1.000)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: color
+      image: custom_Material_Color_example.png
+      effectCategory: Material
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: color
+        tweenMethod: Material_ColorControlBehaviour
+        EndPos: RGBA(1.000, 1.000, 1.000, 1.000)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: color
+      image: custom_Light_Color_example.png
+      effectCategory: Light
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: color
+        tweenMethod: Light_ColorControlBehaviour
+        EndPos: RGBA(1.000, 1.000, 1.000, 1.000)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: anchoredPosition
+      image: custom_RectTransform_AnchoredPosition_example.png
+      effectCategory: Transformation (UI)
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: anchoredPosition
+        tweenMethod: RectTransform_AnchoredPositionControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: anchoredPosition.x
+      image: custom_RectTransform_AnchoredPositionX_example.png
+      effectCategory: Transformation (UI)
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: anchoredPosition.x
+        tweenMethod: RectTransform_AnchoredPositionXControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: anchoredPosition.y
+      image: custom_RectTransform_AnchoredPositionY_example.png
+      effectCategory: Transformation (UI)
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: anchoredPosition.y
+        tweenMethod: RectTransform_AnchoredPositionYControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: sizeDelta
+      image: custom_RectTransform_SizeDelta_example.png
+      effectCategory: Transformation (UI)
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: sizeDelta
+        tweenMethod: RectTransform_SizeDeltaControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: alpha
+      image: custom_CanvasGroup_Alpha_example.png
+      effectCategory: CanvasGroup
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: alpha
+        tweenMethod: CanvasGroup_AlphaControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: color.a
+      image: custom_Graphic_ColorA_example.png
+      effectCategory: Graphic
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: color.a
+        tweenMethod: Graphic_ColorAControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: color.a
+      image: custom_SpriteRenderer_ColorA_example.png
+      effectCategory: SpriteRenderer
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: color.a
+        tweenMethod: SpriteRenderer_ColorAControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: color.a
+      image: custom_Material_ColorA_example.png
+      effectCategory: Material
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: color.a
+        tweenMethod: Material_ColorAControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: mainTextureOffset
+      image: custom_Material_MainTextureOffset_example.png
+      effectCategory: Material
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: mainTextureOffset
+        tweenMethod: Material_MainTextureOffsetControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: mainTextureScale
+      image: custom_Material_MainTextureScale_example.png
+      effectCategory: Material
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: mainTextureScale
+        tweenMethod: Material_MainTextureScaleControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: fillAmount
+      image: custom_Image_FillAmount_example.png
+      effectCategory: Image
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: fillAmount
+        tweenMethod: Image_FillAmountControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: volume
+      image: custom_AudioSource_Volume_example.png
+      effectCategory: AudioSource
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: volume
+        tweenMethod: AudioSource_VolumeControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: pitch
+      image: custom_AudioSource_Pitch_example.png
+      effectCategory: AudioSource
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: pitch
+        tweenMethod: AudioSource_PitchControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: panStereo
+      image: custom_AudioSource_PanStereo_example.png
+      effectCategory: AudioSource
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: panStereo
+        tweenMethod: AudioSource_PanStereoControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: timeScale
+      image: custom_Tween_TimeScale_example.png
+      effectCategory: Tween
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: timeScale
+        tweenMethod: Tween_TimeScaleControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: timeScale
+      image: custom_Sequence_TimeScale_example.png
+      effectCategory: Sequence
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: timeScale
+        tweenMethod: Sequence_TimeScaleControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: GetResolvedStyleRect()
+      image: custom_VisualElement_GetResolvedStyleRect_example.png
+      effectCategory: VisualElement
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: GetResolvedStyleRect()
+        tweenMethod: VisualElement_GetResolvedStyleRectControlBehaviour
+        EndPos: (x:0.00, y:0.00, width:0.00, height:0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: position
+      image: custom_ITransform_Position_example.png
+      effectCategory: ITransform
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: position
+        tweenMethod: ITransform_PositionControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: rotation
+      image: custom_ITransform_Rotation_example.png
+      effectCategory: ITransform
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: rotation
+        tweenMethod: ITransform_RotationControlBehaviour
+        EndPos: (0.00000, 0.00000, 0.00000, 1.00000)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: scale
+      image: custom_ITransform_Scale_example.png
+      effectCategory: ITransform
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: scale
+        tweenMethod: ITransform_ScaleControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: layout.size
+      image: custom_VisualElement_LayoutSize_example.png
+      effectCategory: VisualElement
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: layout.size
+        tweenMethod: VisualElement_LayoutSizeControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: GetTopLeft()
+      image: custom_VisualElement_GetTopLeft_example.png
+      effectCategory: VisualElement
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: GetTopLeft()
+        tweenMethod: VisualElement_GetTopLeftControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: style.color.value
+      image: custom_VisualElement_StyleColorValue_example.png
+      effectCategory: VisualElement
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: style.color.value
+        tweenMethod: VisualElement_StyleColorValueControlBehaviour
+        EndPos: RGBA(1.000, 1.000, 1.000, 1.000)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: style.backgroundColor.value
+      image: custom_VisualElement_StyleBackgroundColorValue_example.png
+      effectCategory: VisualElement
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: style.backgroundColor.value
+        tweenMethod: VisualElement_StyleBackgroundColorValueControlBehaviour
+        EndPos: RGBA(1.000, 1.000, 1.000, 1.000)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: offsetMin
+      image: custom_RectTransform_OffsetMin_example.png
+      effectCategory: Basic Layout
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: offsetMin
+        tweenMethod: RectTransform_OffsetMinControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: offsetMin.x
+      image: custom_RectTransform_OffsetMinX_example.png
+      effectCategory: Basic Layout
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: offsetMin.x
+        tweenMethod: RectTransform_OffsetMinXControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: offsetMin.y
+      image: custom_RectTransform_OffsetMinY_example.png
+      effectCategory: Basic Layout
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: offsetMin.y
+        tweenMethod: RectTransform_OffsetMinYControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: offsetMax
+      image: custom_RectTransform_OffsetMax_example.png
+      effectCategory: Basic Layout
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: offsetMax
+        tweenMethod: RectTransform_OffsetMaxControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: offsetMax.x
+      image: custom_RectTransform_OffsetMaxX_example.png
+      effectCategory: Basic Layout
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: offsetMax.x
+        tweenMethod: RectTransform_OffsetMaxXControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: offsetMax.y
+      image: custom_RectTransform_OffsetMaxY_example.png
+      effectCategory: Basic Layout
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: offsetMax.y
+        tweenMethod: RectTransform_OffsetMaxYControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: maxVisibleCharacters
+      image: custom_TMP_Text_MaxVisibleCharacters_example.png
+      effectCategory: TMP_Text
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: maxVisibleCharacters
+        tweenMethod: TMP_Text_MaxVisibleCharactersControlBehaviour
+        EndPos: 0
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: padding
+      image: custom_RectMask2D_Padding_example.png
+      effectCategory: RectMask2D
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: padding
+        tweenMethod: RectMask2D_PaddingControlBehaviour
+        EndPos: (0.00, 0.00, 0.00, 0.00)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    - label: softness
+      image: custom_RectMask2D_Softness_example.png
+      effectCategory: RectMask2D
+      target: {fileID: 0}
+      durationToken: 300
+      easeToken: 3
+      animationSteps:
+      - label: softness
+        tweenMethod: RectMask2D_SoftnessControlBehaviour
+        EndPos: (0, 0)
+        StartPos: 
+        isRelative: 1
+        startTimeOffset: 0
+        animationTarget: {fileID: 0}
+    category: Base
