@@ -7,25 +7,23 @@ namespace Cr7Sund.TweenTimeLine
 {
     public class CurveLibraryCenter
     {
-        public const string CurWrapLibraryPath = "Assets/Plugins/TweenTimeline/Editor/Sample/AnimationCurves/CurveLibrary.asset";
-
         private CurveWrapperLibrary curveWrapperLibrary;
 
-        public CurveWrapperLibrary CreateCurveWrapperLibrary()
-        {
-            return CreateCurveWrapperLibrary(CurWrapLibraryPath);
-        }
-        public CurveWrapperLibrary CreateCurveWrapperLibrary(string path)
+        
+        public void CreateCurveWrapperLibrary(string path)
         {
             curveWrapperLibrary = AssetDatabase.LoadAssetAtPath<CurveWrapperLibrary>(path);
             if (curveWrapperLibrary == null)
             {
                 curveWrapperLibrary = ScriptableObject.CreateInstance<CurveWrapperLibrary>();
+                curveWrapperLibrary.Curves = new();
                 AssetDatabase.CreateAsset(curveWrapperLibrary, path);
                 AssetDatabase.SaveAssetIfDirty(curveWrapperLibrary);
             }
-            curveWrapperLibrary.Curves.Clear();
-            return curveWrapperLibrary;
+            else
+            {
+                curveWrapperLibrary.Curves.Clear();
+            }
         }
 
         public void ConvertClip(AnimationClip clip)
@@ -37,11 +35,6 @@ namespace Cr7Sund.TweenTimeLine
         public void GenCurveInfoDict()
         {
             curveWrapperLibrary.GenCurveInfoDict();
-        }
-
-        public bool TryGetCurve(string curveName, out CurveWrapper curveInfo)
-        {
-            return curveWrapperLibrary.curveDictionary.TryGetValue(curveName, out curveInfo);
         }
 
         private List<CurveWrapper> GenCurveInfos(AnimationClip clip)
@@ -71,7 +64,6 @@ namespace Cr7Sund.TweenTimeLine
 
             return curves;
         }
-
 
     }
 }

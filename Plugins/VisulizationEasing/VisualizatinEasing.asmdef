@@ -1,3 +1,4 @@
 {
-	"name": "VisualizatinEasing"
+	"name": "VisualizatinEasing",
+	"references":[ "GUID:6031b7335e341854e87dfd7470f4ab00" ]
 }

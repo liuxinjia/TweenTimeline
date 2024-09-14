@@ -11,23 +11,13 @@ using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.Timeline;
 
-namespace Cr7Sund.TweenTimeLine.Editor
+namespace Cr7Sund.TweenTimeLine
 {
-    public struct TrackInfo
-    {
-        public double start;
-        public double duration;
-
-        public EasingTokenPreset easePreset;
-        public object startPos;
-        public object endPos;
-    }
 
     public static class TweenTimelineManager
     {
         public static bool isPlay;
         public static bool isInit = false;
-        private static double _curTime = -10d; // -1 to indicate its 's start or not, since first the play don't call onTimeChange 
 
 
         public static bool InitTimeline()
@@ -72,7 +62,6 @@ namespace Cr7Sund.TweenTimeLine.Editor
             {
                 PreviewAllClip();
             }
-            _curTime = time;
         }
 
         private static void OnRebuildGraphChange()
@@ -110,7 +99,7 @@ namespace Cr7Sund.TweenTimeLine.Editor
             }
             else if (change == PlayModeStateChange.EnteredPlayMode)
             {
-                 Application.targetFrameRate = 60;
+                Application.targetFrameRate = 60;
                 // Application.targetFrameRate = (int)TimelineWindowExposer.GetTimelineFrameRate();
             }
         }
@@ -136,7 +125,12 @@ namespace Cr7Sund.TweenTimeLine.Editor
                     var trackAsset = output.sourceObject as TrackAsset;
                     if (trackAsset == null) continue;
                     var binding = playableDirector.GetGenericBinding(trackAsset);
-                    if (binding == null) continue;
+                    if (binding == null)
+                    {
+                        if (trackAsset is IBaseTrack)
+                            Debug.LogWarning($"{trackAsset} don't bind target");
+                        continue;
+                    }
 
                     TweenTimeLineDataModel.TrackObjectDict.Add(trackAsset, binding);
                 }
@@ -177,6 +171,10 @@ namespace Cr7Sund.TweenTimeLine.Editor
             {
                 if (trackAsset is not IBaseTrack)
                 {
+                    if (!TweenTimeLineDataModel.TrackObjectDict.ContainsKey(trackAsset))
+                    {
+                        return;
+                    }
                     var binComponent = TweenTimeLineDataModel.TrackObjectDict[trackAsset] as Component;
                     if (trackAsset is CustomAnimationTrack animationTrack)
                     {
@@ -190,7 +188,7 @@ namespace Cr7Sund.TweenTimeLine.Editor
                     }
                 }
             });
-          
+
             TimelineWindowExposer.IterateClips((value, clip, trackAsset) =>
             {
                 if (trackAsset is not IBaseTrack)
@@ -262,7 +260,7 @@ namespace Cr7Sund.TweenTimeLine.Editor
             foreach (IMarker marker in trackAsset.GetMarkers())
             {
                 if (marker is IValueMaker valueMaker
-                 && marker.time >= clip.start && marker.time <= clip.end)
+                    && marker.time >= clip.start && marker.time <= clip.end)
                 {
                     clipInfo.valueMakers.Add(new MarkInfo(valueMaker));
                 }
@@ -340,7 +338,6 @@ namespace Cr7Sund.TweenTimeLine.Editor
                 }
             }
             clipBehaviourState.markerInitPosDict = validMarkers;
-
 
             validClipStateSet.Add(new(behaviour, clipBehaviourState));
         }
@@ -648,6 +645,8 @@ namespace Cr7Sund.TweenTimeLine.Editor
 
         public static TrackAsset AddTrackToTimeline(Component component, Type trackAssetType, TimelineAsset timelineAsset, GroupTrack groupTrack)
         {
+            Assert.IsNotNull(trackAssetType, nameof(trackAssetType) + " != null");
+
             TrackAsset track = null;
             foreach (var item in TweenTimeLineDataModel.TrackObjectDict)
             {
@@ -668,11 +667,11 @@ namespace Cr7Sund.TweenTimeLine.Editor
         }
         #endregion
 
-        public static AnimationEditorWindow GetTimelineToolWindow()
+        public static TweenActionEditorWindow GetTimelineToolWindow()
         {
-            if (EditorWindow.HasOpenInstances<AnimationEditorWindow>())
+            if (EditorWindow.HasOpenInstances<TweenActionEditorWindow>())
             {
-                return EditorWindow.GetWindow<AnimationEditorWindow>();
+                return EditorWindow.GetWindow<TweenActionEditorWindow>();
             }
             return null;
         }
@@ -714,6 +713,11 @@ namespace Cr7Sund.TweenTimeLine.Editor
         public static Transform GetAttachRoot(Transform bindObj)
         {
             GameObject[] panels = GameObject.FindGameObjectsWithTag("Panel");
+            if (panels.Length < 0)
+            {
+                throw new Exception("Please assign the panel tag with Panel");
+            }
+
             foreach (var panel in panels)
             {
                 if (bindObj.IsChildOf(panel.transform))
@@ -721,6 +725,7 @@ namespace Cr7Sund.TweenTimeLine.Editor
                     return panel.transform;
                 }
             }
+
             throw new IndexOutOfRangeException();
         }
 

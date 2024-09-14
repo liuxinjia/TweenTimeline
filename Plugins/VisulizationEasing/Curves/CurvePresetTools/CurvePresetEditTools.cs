@@ -23,7 +23,7 @@ namespace Cr7Sund.Editor.CurvePreset
             var win = GetWindow<CurvePresetEditTools>();
         }
 
-        AnimationCurve m_Curve = null;
+        private AnimationCurve m_Curve = null;
         private Dictionary<string, AnimationCurve> curveDictionary = new Dictionary<string, AnimationCurve>();
         private UnityEngine.Object selectObject;
 
@@ -37,15 +37,12 @@ namespace Cr7Sund.Editor.CurvePreset
 
         private void CreateGUI()
         {
-            // 加載 UXML
             var visualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(AssetDatabase.GUIDToAssetPath(VisualTreeAssetGUID));
             visualTreeAsset.CloneTree(rootVisualElement);
 
-            // 加載 USS
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(StyleAssetGUID));
             rootVisualElement.styleSheets.Add(styleSheet);
 
-            // 綁定 UI 元素
             var objectField = rootVisualElement.Q<ObjectField>("objectField");
             objectField.objectType = typeof(UnityEditor.AndroidBuildType).Assembly.GetType("UnityEditor.CurvePresetLibrary");
             var curveListContainer = rootVisualElement.Q<ScrollView>("curveListContainer");
@@ -123,6 +120,11 @@ namespace Cr7Sund.Editor.CurvePreset
         public static Dictionary<string, AnimationCurve> GenerateCurveDict(UnityEngine.Object presetLibrary)
         {
             var curves = GetPresets(presetLibrary);
+            if (curves == null)
+            {
+                return null;
+            }
+
             Dictionary<string, AnimationCurve> curveDictionary = new();
             foreach (var item in curves)
             {
@@ -151,16 +153,21 @@ namespace Cr7Sund.Editor.CurvePreset
             {
                 switch (equation)
                 {
-                    //Equations
+                    // ease 
+                    // ----
                     // case EaseEquations.BounceEaseIn:
                     // case EaseEquations.BounceEaseInOut:
                     // case EaseEquations.BounceEaseOut:
                     // case EaseEquations.BounceEaseOutIn:
 
+                    //jitter
+                    // ----
                     case EaseEquations.Bounce:
-                        cp.m_SmoothTangentMaxAngle = 60f; break;
+                        cp.m_SmoothTangentMaxAngle = 60f;
+                        break;
                     default:
-                        cp.m_SmoothTangentMaxAngle = 180f; break;
+                        cp.m_SmoothTangentMaxAngle = 180f;
+                        break;
                 }
                 AnimationCurve ac = new AnimationCurve();
                 var easeAnimCurve = new EasingToAnimationCurve();
@@ -170,6 +177,11 @@ namespace Cr7Sund.Editor.CurvePreset
                 SaveSetting(ac, equation.ToString());
             }
 
+            if(!selectObject.name.EndsWith("EaseEquations"))
+            {
+                // see EasingTokenPresetLibraryEditor.cs
+                Debug.LogError("For the sake of god !!! Please end the file name with EaseEquations");
+            }
             AssetDatabase.SaveAssetIfDirty(selectObject);
             AssetDatabase.Refresh();
         }
@@ -179,7 +191,10 @@ namespace Cr7Sund.Editor.CurvePreset
             var presetLibrary = selectObject;
             Type type = presetLibrary.GetType();
             var addMethod = type.GetMethod("Add", BindingFlags.Public | BindingFlags.Instance);
-            addMethod.Invoke(presetLibrary, new object[] { animationCurve, curveName });
+            addMethod.Invoke(presetLibrary, new object[]
+            {
+                animationCurve, curveName
+            });
 
             EditorUtility.SetDirty(presetLibrary);
         }
@@ -218,7 +233,10 @@ namespace Cr7Sund.Editor.CurvePreset
             var presetLibrary = selectObject;
             Type type = presetLibrary.GetType();
             var addMethod = type.GetMethod("Replace", BindingFlags.Public | BindingFlags.Instance);
-            addMethod.Invoke(presetLibrary, new object[] { index, animationCurve });
+            addMethod.Invoke(presetLibrary, new object[]
+            {
+                index, animationCurve
+            });
 
             EditorUtility.SetDirty(presetLibrary);
         }
@@ -229,7 +247,10 @@ namespace Cr7Sund.Editor.CurvePreset
             var presetLibrary = selectObject;
             Type type = presetLibrary.GetType();
             var addMethod = type.GetMethod("Remove", BindingFlags.Public | BindingFlags.Instance);
-            addMethod.Invoke(presetLibrary, new object[] { index });
+            addMethod.Invoke(presetLibrary, new object[]
+            {
+                index
+            });
 
             EditorUtility.SetDirty(presetLibrary);
 
@@ -237,8 +258,16 @@ namespace Cr7Sund.Editor.CurvePreset
 
         public static IEnumerable GetPresets(UnityEngine.Object presetLibrary)
         {
+            if (presetLibrary == null)
+            {
+                return null;
+            }
             Type type = presetLibrary.GetType();
             var presets = type.GetField("m_Presets", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (presets == null)
+            {
+                return null;
+            }
             object input = presets.GetValue(presetLibrary);
 
             var enumerable = input as IEnumerable;

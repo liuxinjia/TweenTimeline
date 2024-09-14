@@ -1,0 +1,29 @@
+﻿.grid-item {
+    flex-direction: row;
+    align-items: center;
+    width: 45%; /* Width is 45% to ensure up to two items per row */
+    height: 100px; /* Height for each item */
+    margin-right: 10px;
+    margin-bottom: 10px;
+    background-color: #333333; /* Dark gray background color */
+}
+
+.grid-item #icon {
+    width: 96px;
+    height: 96px;
+    margin-right: 5px;
+}
+
+.grid-item #icon #gif {
+    width: 96px;
+    height: 96px;
+}
+
+.grid-item #label {
+    flex-grow: 1;
+    /* -unity-text-align: right; */
+}
+
+.grid-item.Select{
+    background-color: lawngreen;
+}

@@ -2,7 +2,6 @@
     "name": "Cr7Sund.TweenTimeLine",
     "rootNamespace": "",
     "references": [
-        "GUID:7118d245c1eaae147b3548c1ab19685f",
         "GUID:80ecb87cae9c44d19824e70ea7229748",
         "GUID:f06555f75b070af458a003d92f9efb00"
     ],

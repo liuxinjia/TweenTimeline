@@ -1,0 +1,109 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using UnityEngine;
+using UnityEngine.UIElements;
+namespace Cr7Sund.TweenTimeLine
+{
+    public class TweenTimelineDefine
+    {
+        public static string tweenLibraryPath => $"{BuiltInConfigEditorFolder}/TweenActionLibrary.asset";
+        public static string easingTokenPresetsPath => $"{BuiltInConfigRuntimeFolder}/EasingTokenPresets.asset";
+        public static string animTokenPresetsPath => $"{BuiltInConfigEditorFolder}/AnimTokenPresets.asset";
+
+        #region Window Style
+        public const string windowVisualTreeAssetGUID = "5d602cb17b57b46439b7bd1be265e07a";
+        public const string windowStyleGUID = "fb42482ea3524b845aae708f4c63ffc7";
+        public const string unitItemVisualTreeAssetGUID = "c0db593d4dafda847be427f46256930f";
+        public const string unitItemStyleGUID = "64e80b7565634e3469b5214321257731";
+        public const string gridVisualTreeAssetGUID = "f0b1d90a7f1c4214be7f11bb316bf762";
+        public const string gridItemStyleGUID = "bcf8978c76b6418ca38f4a57fe81056c";
+        public const string gridItemVisualTreeAssetGUID = "815c36bee7924d8dae6f349c09ca0b26";
+        public const string gridItemItemStyleGUID = "409d5890bb0d4c05acd7025f26b8d165";
+
+        public static Vector2 windowMaxSize = new Vector2(620f, 500f);
+        public static Background recordOnBackground;
+        public static Background recordOffBackground;
+        public static Background plaBackground;
+        public static Background stopBackground;
+ #endregion
+
+
+        private static Assembly customAssembly;
+
+        public static Assembly CustomAssembly =>
+            customAssembly ??= Assembly.Load(TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.CustomTweenAssemblyName));
+
+        #region Custom
+        // Assets/Plugins/TweenTimeline/Sample/RuntTime/CodeGens
+        public static string GenRuntimePath =>
+            $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.CustomTweenPath)}/RunTime/CodeGens";
+
+        // Assets/TweenTimeline/Customs/Editor/Datas
+        public static string EditorDataSourcePath =>
+            $"{CustomConfigEditorFolder}/Datas";
+        // Assets/TweenTimeline/Customs/Resources/Datas
+        public static string RuntimDataSourePath =>
+            $"{CustomConfigRuntimeFolder}/Datas";
+        #endregion
+        
+        #region Config
+        public static string BuiltInConfigPath =>
+            $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.BuiltInLibraryPath)}/BuiltInConfigs";
+        public static string CustomConfigPath =>
+            $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.BuiltInLibraryPath)}/Customs";
+        public static string CurveWrapLibraryPath =>
+            $"{BuiltInConfigPath}/CurveLibrary.asset";
+
+        // Assets/Plugins/TweenTimeline/Sample/Editor/CustomTracks
+        public static string CustomControlTacksFolder => 
+        $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.CustomTweenPath)}/Editor/CustomTracks";
+        public static string BuiltInControlTacksFolder
+        {
+            get
+            {
+                var builtInCustomFolder = FolderLocationChecker.GetFolderPath("Assets/Plugins/TweenTimeline/Editor/CustomTracks");
+                if (string.IsNullOrEmpty(builtInCustomFolder))
+                {
+                    builtInCustomFolder = FolderLocationChecker.GetFolderPath("Editor/CustomTracks");
+                }
+                return builtInCustomFolder;
+            }
+        }
+
+        public static string CustomConfigEditorFolder => $"{CustomConfigPath}/Editor";
+        public static string CustomConfigRuntimeFolder => $"{CustomConfigPath}/Resources";
+        public static string BuiltInConfigEditorFolder => $"{BuiltInConfigPath}/Editor";
+        public static string BuiltInConfigRuntimeFolder => $"{BuiltInConfigPath}/Resources";
+
+        public static string BuiltInCurvePresetFolder => $"{BuiltInConfigEditorFolder}/CurvePresets";
+        public static string CustomCurvePresetFolder => $"{CustomConfigEditorFolder}/CurvePresets";
+
+
+        private static Type[] derivedTokenTypes;
+        public static Type[] DerivedEaseTokenTypes
+        {
+            get
+            {
+                if (derivedTokenTypes == null)
+                {
+                    var baseType = typeof(BaseEasingTokenPreset);
+                    var assemblies = new List<Assembly>();
+                    assemblies.Add(typeof(MaterialEasingTokenPreset).Assembly);
+                    var customAssembyName = TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.CustomTweenAssemblyName);
+                    assemblies.Add(Assembly.Load(customAssembyName));
+
+                    derivedTokenTypes = assemblies
+                        .SelectMany(assembly => assembly.GetTypes())
+                        .Where(type => baseType.IsAssignableFrom(type) && !type.IsAbstract)
+                        .ToArray();
+                }
+
+                return derivedTokenTypes;
+            }
+        }
+  #endregion
+    }
+
+}

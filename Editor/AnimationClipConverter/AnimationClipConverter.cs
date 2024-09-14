@@ -5,14 +5,11 @@ using System.Reflection;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Experimental.AI;
 
 namespace Cr7Sund.TweenTimeLine
 {
     public static class AnimationClipConverter
     {
-        public const string TweenConfigGUID = "6f93bbb0aec8a6640a0e7680745f1d32";
-        private static Dictionary<string, ComponentValuePair> tweenGenConfigs = new();
         public static Dictionary<Type, Dictionary<string, string>> ReplaceProperty = new Dictionary<Type, Dictionary<string, string>>()
         {
             {
@@ -28,71 +25,12 @@ namespace Cr7Sund.TweenTimeLine
             // { typeof(SkeletonGraphic), new Dictionary<string, string> { { "m_Color", "color" } } },
             // { typeof(UIParticle), new Dictionary<string, string> { { "m_Scale3D", "scale3D" } } },
         };
-
-
-        [MenuItem("Tools/ConvertClip")]
-        public static void ConvertClip()
+        public static readonly HashSet<string> _ignoreName = new HashSet<string>()
         {
-            var clip = Selection.activeObject as AnimationClip;
-            InitTweenConfigs();
+            "enabled",
+            "_endPos"
+        };
 
-            var curveLibrary = new CurveLibraryCenter();
-            curveLibrary.CreateCurveWrapperLibrary();
-            curveLibrary.ConvertClip(clip);
-            curveLibrary.GenCurveInfoDict();
-
-            GenClipInfos(clip, curveLibrary);
-        }
-
-
-        public static List<GenClipInfo> GenClipInfos(AnimationClip clip, CurveLibraryCenter curveLibrary)
-        {
-            List<GenClipInfo> clipInfos = new();
-            var keyWrapper = GenerateKeyFrameDatas(clip);
-            string clipName = clip.name;
-
-            foreach (var animTargetInfo in keyWrapper.Objects)
-            {
-                foreach (var typeKeyFrames in animTargetInfo.Types)
-                {
-                    foreach (PropertyKeyframes frameProperty in typeKeyFrames.Properties)
-                    {
-                        string targetTypeName, tweenMethod, curveName;
-                        GetClipInfoName(clipName, typeKeyFrames.Type, frameProperty.PropertyName,
-                        out targetTypeName, out tweenMethod, out curveName);
-                        if (string.IsNullOrEmpty(curveName))
-                        {
-                            continue;
-                        }
-                        if (!curveLibrary.TryGetCurve(curveName, out var existingCurve))
-                        {
-                            Debug.LogError($"Curve not found for: {curveName}");
-                            continue; // Skip to the next iteration
-                        }
-
-                        // RectTransformSizeDeltaControlTrack
-                        var clipInfo = new GenClipInfo()
-                        {
-                            Duration =
-                                clip.length,
-                            EaseName =
-                                curveName,
-                            TweenMethod =
-                                tweenMethod,
-                            EndValue =
-                                frameProperty.Keyframes[0].Value, // the curve is inverse
-                            BindType = targetTypeName,
-                            StartValue =
-                                frameProperty.Keyframes[frameProperty.Keyframes.Count - 1].Value
-                        };
-
-                        clipInfos.Add(clipInfo);
-                    }
-                }
-            }
-
-            return clipInfos;
-        }
 
         public static GenClipInfo GenClipInfo(string targetObject, string propertyName, AnimationClip clip, KeyframeDataWrapper keyWrapper)
         {
@@ -102,7 +40,7 @@ namespace Cr7Sund.TweenTimeLine
             foreach (ObjectKeyframes animTargetInfo in keyWrapper.Objects)
             {
                 if (!string.IsNullOrEmpty(animTargetInfo.ObjectKey) &&
-                  animTargetInfo.ObjectKey != targetObject)
+                    animTargetInfo.ObjectKey != targetObject)
                 {
                     continue;
                 }
@@ -117,7 +55,7 @@ namespace Cr7Sund.TweenTimeLine
 
                         string targetTypeName, tweenMethod, curveName;
                         GetClipInfoName(clipName, typeKeyFrames.Type, frameProperty.PropertyName,
-                        out targetTypeName, out tweenMethod, out curveName);
+                            out targetTypeName, out tweenMethod, out curveName);
                         if (string.IsNullOrEmpty(curveName))
                         {
                             continue;
@@ -158,7 +96,7 @@ namespace Cr7Sund.TweenTimeLine
             foreach (ObjectKeyframes animTargetInfo in keyWrapper.Objects)
             {
                 if (!string.IsNullOrEmpty(animTargetInfo.ObjectKey) &&
-                 animTargetInfo.ObjectKey != targetObject)
+                    animTargetInfo.ObjectKey != targetObject)
                 {
                     continue;
                 }
@@ -200,7 +138,7 @@ namespace Cr7Sund.TweenTimeLine
                         Path = binding.path,
                         Type = new SerializableType(binding.type),
                     };
-                    AnimationClipConverter.MapProperty(binding.type, ref data.Property);
+                    MapProperty(binding.type, ref data.Property);
 
                     var value = keyframeDataList.Find(t1 => t1.ObjectKey == binding.path);
                     if (value == null)
@@ -231,18 +169,6 @@ namespace Cr7Sund.TweenTimeLine
         }
 
 
-        public static void InitTweenConfigs()
-        {
-            tweenGenConfigs = new();
-            var tweenConfig = AssetDatabase.LoadAssetAtPath<TweenGenConfig>(AssetDatabase.GUIDToAssetPath(TweenConfigGUID));
-            foreach (var item in tweenConfig.componentValuePairs)
-            {
-                string key = $"{item.GetPropertyMethod.ToUpper()}";
-                if (!tweenGenConfigs.ContainsKey(key))
-                    tweenGenConfigs.Add(key, item);
-            }
-        }
-
         public static void GetClipInfoName(string clipName, Type targetType, string propertyName, out string targetTypeName, out string tweenMethod, out string curveName)
         {
             clipName = clipName.Replace(" ", "");
@@ -263,23 +189,19 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
 
-        public static HashSet<string> ignoreName = new HashSet<string>() {
-              "enabled",
-             "_endPos" };
-
         private static string GetTweenMethod(string propertyName, out string targetType)
         {
             targetType = null;
 
             string key = $"{propertyName.ToUpper()}";
-            if (tweenGenConfigs.ContainsKey(key))
+            if (TweenConfigCacher.tweenGenInfoCaches.ContainsKey(key))
             {
-                targetType = tweenGenConfigs[key].ComponentType;
-                return tweenGenConfigs[key].PreTweenMethod;
+                targetType = TweenConfigCacher.tweenGenInfoCaches[key].ComponentType;
+                return TweenConfigCacher.tweenGenInfoCaches[key].GetTweenMethod();
             }
             else
             {
-                if (!ignoreName.Contains(propertyName))
+                if (!_ignoreName.Contains(propertyName))
                     Debug.LogError($"Dont find  tween method : {propertyName}");
                 return string.Empty;
             }
@@ -324,7 +246,6 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
 
-
         private static string GetVariableName(string input)
         {
             string[] parts = input.Split('.');
@@ -358,48 +279,6 @@ namespace Cr7Sund.TweenTimeLine
             }
             string result = string.Join(".", parts);
             return result;
-        }
-
-
-
-        private static (bool isStruct, Type currentType) GetFieldType(Type objectType, string propertyPath)
-        {
-            if (objectType == null || string.IsNullOrEmpty(propertyPath))
-            {
-                return (false, null);
-            }
-
-            string[] properties = propertyPath.Split('.');
-            bool isStruct = false;
-            Type currentType = objectType;
-
-            for (var index = 0; index < properties.Length; index++)
-            {
-                var property = properties[index];
-                PropertyInfo propertyInfo = currentType.GetProperty(property, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                if (propertyInfo != null)
-                {
-                    currentType = propertyInfo.PropertyType;
-                }
-                else
-                {
-                    FieldInfo fieldInfo = currentType.GetField(property, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    if (fieldInfo != null)
-                    {
-                        currentType = fieldInfo.FieldType;
-                    }
-                }
-
-                if (properties.Length > 1 && index == properties.Length - 2)
-                {
-                    if (currentType.IsValueType)
-                    {
-                        isStruct = true;
-                    }
-                }
-            }
-
-            return (isStruct, currentType);
         }
 
     }
