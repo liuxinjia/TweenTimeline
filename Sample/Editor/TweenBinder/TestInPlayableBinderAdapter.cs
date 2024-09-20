@@ -7,9 +7,9 @@ namespace Cr7Sund.TweenTimeLine
     {
         public void OnGUI()
         {
-            if (GUI.Button(new Rect(10, 10, 150, 100), "Canvas_1InTween"))
+            if (GUI.Button(new Rect(10, 10, 150, 100), "HomePanelInTween"))
             {
-                GenerateTween.Canvas_1OutTween(this);
+                GenerateTween.HomePanel_InTween(this);
             }
         }
     }

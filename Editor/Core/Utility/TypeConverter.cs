@@ -65,6 +65,15 @@ public static class TypeConverter
             {
                 return new Vector2(x, y);
             }
+            if (components.Length == 3)
+            {
+                if (float.TryParse(components[0], out float vx) &&
+                    float.TryParse(components[1], out float vy) &&
+                    float.TryParse(components[2], out float vz))
+                {
+                    return new Vector2(vx, vy);
+                }
+            }
         }
         else if (targetType == typeof(Vector2Int))
         {
@@ -191,11 +200,23 @@ public static class TypeConverter
             if (startValue is Vector2 vector2Value)
             {
                 var deltaComponents = deltaString.Trim('(', ')').Split(',');
-                if (deltaComponents.Length == 2 &&
-                    float.TryParse(deltaComponents[0], out float dx) &&
-                    float.TryParse(deltaComponents[1], out float dy))
+                if (deltaComponents.Length == 2)
                 {
-                    return new Vector2(vector2Value.x + dx, vector2Value.y + dy);
+                    if (float.TryParse(deltaComponents[0], out float dx) &&
+                    float.TryParse(deltaComponents[1], out float dy))
+                    {
+                        return new Vector2(vector2Value.x + dx, vector2Value.y + dy);
+                    }
+                }
+
+                if (deltaComponents.Length == 3)
+                {
+                    if (float.TryParse(deltaComponents[0], out float dx) &&
+                        float.TryParse(deltaComponents[1], out float dy) &&
+                        float.TryParse(deltaComponents[2], out float dz))
+                    {
+                        return new Vector2(vector2Value.x + dx, vector2Value.y + dy);
+                    }
                 }
             }
         }
@@ -204,11 +225,22 @@ public static class TypeConverter
             if (startValue is Vector2Int vector2Value)
             {
                 var deltaComponents = deltaString.Trim('(', ')').Split(',');
-                if (deltaComponents.Length == 2 &&
-                    int.TryParse(deltaComponents[0], out int dx) &&
-                    int.TryParse(deltaComponents[1], out int dy))
+                if (deltaComponents.Length == 2)
                 {
-                    return new Vector2Int(vector2Value.x + dx, vector2Value.y + dy);
+                    if (int.TryParse(deltaComponents[0], out int dx) &&
+                                       int.TryParse(deltaComponents[1], out int dy))
+                    {
+                        return new Vector2Int(vector2Value.x + dx, vector2Value.y + dy);
+                    }
+                }
+                if (deltaComponents.Length == 3)
+                {
+                    if (float.TryParse(deltaComponents[0], out float dx) &&
+                        float.TryParse(deltaComponents[1], out float dy) &&
+                        float.TryParse(deltaComponents[2], out float dz))
+                    {
+                        return new Vector2(vector2Value.x + dx, vector2Value.y + dy);
+                    }
                 }
             }
         }

@@ -32,16 +32,51 @@ namespace Cr7Sund.TweenTimeLine
             get => tokenKey;
         }
 
+        public MaterialEasingTokenPreset()
+        {
+            animationCurve = AnimationCurve.Constant(0, 1, 0);
+        }
+
 
         public override void Init(Enum enumType, EasingWrapper easing)
         {
             tokenKey = (MaterialEasingToken)enumType;
             animationCurve = easing.Curve;
         }
-
-        public MaterialEasingTokenPreset()
+        public override BaseEasingTokenPreset GetReverseEasing(EasingTokenPresetLibrary easingTokenPresetLibrary)
         {
-            animationCurve = AnimationCurve.Constant(0, 1, 0);
+            switch (tokenKey)
+            {
+                case MaterialEasingToken.StandardAccelerate:
+                    return easingTokenPresetLibrary.GetEasePreset(MaterialEasingToken.StandardDecelerate);
+                case MaterialEasingToken.StandardDecelerate:
+                    return easingTokenPresetLibrary.GetEasePreset(MaterialEasingToken.StandardAccelerate);
+                case MaterialEasingToken.EmphasizedAccelerate:
+                    return easingTokenPresetLibrary.GetEasePreset(MaterialEasingToken.EmphasizedDecelerate);
+                case MaterialEasingToken.EmphasizedDecelerate:
+                    return easingTokenPresetLibrary.GetEasePreset(MaterialEasingToken.EmphasizedAccelerate);
+                case MaterialEasingToken.Standard:
+                    return easingTokenPresetLibrary.GetEasePreset(MaterialEasingToken.Emphasized);
+                case MaterialEasingToken.Emphasized:
+                    return easingTokenPresetLibrary.GetEasePreset(MaterialEasingToken.Standard);
+                default:
+                    return base.GetReverseEasing(easingTokenPresetLibrary);
+            }
+        }
+
+
+
+        public override double GetReverseDuration(double duration, int isIn)
+        {
+            if (tokenKey == MaterialEasingToken.StandardAccelerate
+                || tokenKey == MaterialEasingToken.StandardDecelerate)
+            {
+                double delta = 0.05;
+                delta *= Mathf.Sign(isIn);
+                return duration + delta;
+            }
+
+            return base.GetReverseDuration(duration, isIn);
         }
     }
 

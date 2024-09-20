@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using PrimeTween;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Cr7Sund.TweenTimeLine
 {
@@ -15,49 +16,65 @@ namespace Cr7Sund.TweenTimeLine
 
         public bool TryGetEasePreset(string easeName, out Easing resultEase)
         {
-            var findIndex = -1;
-            findIndex = easingTokenPresets.FindIndex(token => token.Name.Equals(easeName));
-            if (findIndex >= 0)
+            if (Enum.TryParse<PrimeTween.Ease>(easeName, out var builtInEase))
             {
-                resultEase = easingTokenPresets[findIndex].Easing;
+                resultEase = builtInEase;
                 return true;
             }
             else
             {
-                resultEase = PrimeTween.Ease.Linear;
-                return false;
-            }
-        }
-        public AnimationCurve GetEaseAnimationCurve(string easeToken)
-        {
-            if (Enum.TryParse<JitterEasingToken>(easeToken.ToString(), out var jitterEasingToken))
-            {
-                var jitterEasingTokenPreset = GetEasePreset(jitterEasingToken);
-                if (jitterEasingTokenPreset != null)
-                    return jitterEasingTokenPreset.Curve;
-            }
-            else if (Enum.TryParse<MaterialEasingToken>(easeToken.ToString(), out var materialEasingToken))
-            {
-                var materialEasingTokenPreset = GetEasePreset(materialEasingToken);
-                if (materialEasingTokenPreset != null)
-                    return materialEasingTokenPreset.Curve;
-            }
+                Assert.IsNotNull(easingTokenPresets);
 
-            return AnimationCurve.Constant(0, 1, 1);
+                var findIndex = -1;
+                findIndex = easingTokenPresets.FindIndex(token => token.Name.Equals(easeName));
+                if (findIndex >= 0)
+                {
+                    resultEase = easingTokenPresets[findIndex].Easing;
+                    return true;
+                }
+                else
+                {
+                    throw new Exception($"Invalid Ease Name {easeName}");
+                }
+            }
         }
+
+
+#if UNITY_EDITOR
+
         public JitterEasingTokenPreset GetEasePreset(JitterEasingToken easeToken)
         {
-            return easingTokenPresets
+            var targetEase = easingTokenPresets
                 .OfType<JitterEasingTokenPreset>()
-                .FirstOrDefault(token => token.Name == easeToken.ToString() && token.tokenKey == easeToken);
+                .First(token => token.tokenKey == easeToken);
+
+
+            var easeTokenPreset = Activator.CreateInstance<JitterEasingTokenPreset>();
+            easeTokenPreset.tokenKey = easeToken;
+            easeTokenPreset.animationCurve = targetEase.animationCurve;
+            return easeTokenPreset;
         }
 
         public MaterialEasingTokenPreset GetEasePreset(MaterialEasingToken easeToken)
         {
-            return easingTokenPresets
+            var targetEase = easingTokenPresets
                 .OfType<MaterialEasingTokenPreset>()
-                .FirstOrDefault(token => token.Name == easeToken.ToString() && token.tokenKey == easeToken);
+                .First(token => token.tokenKey == easeToken);
+
+            var easeTokenPreset = Activator.CreateInstance<MaterialEasingTokenPreset>();
+            easeTokenPreset.tokenKey = easeToken;
+            easeTokenPreset.animationCurve = targetEase.animationCurve;
+            return easeTokenPreset;
         }
+
+        public EaseTokenPreset GetEasePreset(PrimeTween.Ease ease)
+        {
+            EaseTokenPreset easeTokenPreset = Activator.CreateInstance<EaseTokenPreset>();
+            easeTokenPreset.tokenKey = ease;
+            return easeTokenPreset;
+        }
+#endif
+
 
         internal AnimationCurve GetAnimationCurve(string easeName)
         {

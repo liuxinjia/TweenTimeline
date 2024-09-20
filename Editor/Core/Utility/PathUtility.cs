@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 
-namespace Cr7Sund.TweenTimeLine
+namespace Cr7Sund
 {
     public static class PathUtility
     {

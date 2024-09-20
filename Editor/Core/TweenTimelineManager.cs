@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using Cr7Sund.Timeline.Extension;
 using PrimeTween;
 using UnityEditor;
@@ -10,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.Timeline;
+using System.Linq;
 
 namespace Cr7Sund.TweenTimeLine
 {
@@ -17,8 +16,8 @@ namespace Cr7Sund.TweenTimeLine
     public static class TweenTimelineManager
     {
         public static bool isPlay;
+        public static double timeLineTime;
         public static bool isInit = false;
-
 
         public static bool InitTimeline()
         {
@@ -42,6 +41,8 @@ namespace Cr7Sund.TweenTimeLine
         [InitializeOnLoadMethod]
         static void OnInitTweenLineManager()
         {
+            AssemblyReloadEvents.afterAssemblyReload -= OnAfterAssemblyReload;
+            AssemblyReloadEvents.afterAssemblyReload += OnAfterAssemblyReload;
             EditorApplication.playModeStateChanged -= TweenTimelineManager.OnPlayModeChanged;
             EditorApplication.playModeStateChanged += TweenTimelineManager.OnPlayModeChanged;
         }
@@ -58,10 +59,11 @@ namespace Cr7Sund.TweenTimeLine
             double time = TimelineWindowExposer.GetSequenceTime();
             UpdateTimeCache();
 
-            if (!isPlay)
+            if (!isPlay && timeLineTime != time)
             {
                 PreviewAllClip();
             }
+            timeLineTime = time;
         }
 
         private static void OnRebuildGraphChange()
@@ -71,16 +73,28 @@ namespace Cr7Sund.TweenTimeLine
 
         private static void OnPlayStateChange(bool isPlay)
         {
-            TweenTimelineManager.isPlay = isPlay;
+            SetPlay(isPlay);
             // Debug.Log("IsPlay " + isPlay);
-
             if (isPlay)
             {
                 TweenTimelineManager.PlayAllClip();
             }
             else
             {
-                ResetDefaultAllClip();
+                ResetDefaultAllClipWhenStop();
+            }
+        }
+
+        private static void SetPlay(bool isPlay)
+        {
+            TweenTimelineManager.isPlay = isPlay;
+        }
+
+        private static void OnAfterAssemblyReload()
+        {
+            if (GetActionEditorWindow() != null)
+            {
+                InitTimeline();
             }
         }
 
@@ -100,6 +114,10 @@ namespace Cr7Sund.TweenTimeLine
             else if (change == PlayModeStateChange.EnteredPlayMode)
             {
                 Application.targetFrameRate = 60;
+                if (GetActionEditorWindow() != null)
+                {
+                    InitTimeline();
+                }
                 // Application.targetFrameRate = (int)TimelineWindowExposer.GetTimelineFrameRate();
             }
         }
@@ -221,11 +239,13 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     continue;
                 }
-                var behaviourList = TweenTimeLineDataModel.TrackBehaviourDict[trackAsset];
-                foreach (var behaviour in behaviourList)
+                if (!TweenTimeLineDataModel.TrackBehaviourDict.TryGetValue(trackAsset, out var behaviourList)) return;
                 {
-                    behaviour.BindTarget = binComponent.gameObject.name;
-                    behaviour.BindType = binComponent.GetType().FullName;
+                    foreach (var behaviour in behaviourList)
+                    {
+                        behaviour.BindTarget = binComponent.gameObject.name;
+                        behaviour.BindType = binComponent.GetType().FullName;
+                    }
                 }
             }
 
@@ -302,7 +322,7 @@ namespace Cr7Sund.TweenTimeLine
                         var stateInfo = TweenTimeLineDataModel.ClipStateDict[uniqueBehaviour];
                         if (targetState == ClipBehaviourStateEnum.Recording)
                         {
-                            ActionCenters.MoveToEndPos(uniqueBehaviour);
+                            ActionCenters.MoveToRecordPos(uniqueBehaviour);
                         }
                         else
                         {
@@ -314,20 +334,9 @@ namespace Cr7Sund.TweenTimeLine
 
                 TweenTimeLineDataModel.ClipStateDict.Add(behaviour, clipBehaviourState);
             }
-            if (!clipBehaviourState.IsPreview
-                && !clipBehaviourState.IsPlaying
-                && !clipBehaviourState.IsRecording)
-            {
-                var target = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
-                clipBehaviourState.initPos = behaviour.Get(target);
 
-                clipBehaviourState.markerInitPosDict = new();
-                for (int i = 0; i < clipInfo.valueMakers.Count; i++)
-                {
-                    MarkInfo valueMarker = clipInfo.valueMakers[i];
-                    clipBehaviourState.markerInitPosDict[valueMarker.InstanceID] = valueMarker.Get(target);
-                }
-            }
+            ResetInitPos(behaviour);
+            ResetMarkFieldNames(behaviour);
 
             var validMarkers = new Dictionary<int, object>();
             foreach (var valueMarker in clipInfo.valueMakers)
@@ -340,6 +349,40 @@ namespace Cr7Sund.TweenTimeLine
             clipBehaviourState.markerInitPosDict = validMarkers;
 
             validClipStateSet.Add(new(behaviour, clipBehaviourState));
+        }
+
+        public static void ResetInitPos(IUniqueBehaviour behaviour)
+        {
+            TrackAsset trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[behaviour];
+            ClipBehaviourState clipBehaviourState = TweenTimeLineDataModel.ClipStateDict[behaviour];
+
+            if (!clipBehaviourState.IsPreview
+                && !clipBehaviourState.IsPlaying
+                && !clipBehaviourState.IsRecording)
+            {
+                var target = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
+                clipBehaviourState.initPos = behaviour.Get(target);
+            }
+        }
+
+        private static void ResetMarkFieldNames(IUniqueBehaviour behaviour)
+        {
+            TrackAsset trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[behaviour];
+            ClipBehaviourState clipBehaviourState = TweenTimeLineDataModel.ClipStateDict[behaviour];
+            var target = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
+            var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[behaviour];
+
+            if (!clipBehaviourState.IsPreview
+                && !clipBehaviourState.IsPlaying
+                && !clipBehaviourState.IsRecording)
+            {
+                clipBehaviourState.markerInitPosDict = new();
+                for (int i = 0; i < clipInfo.valueMakers.Count; i++)
+                {
+                    MarkInfo valueMarker = clipInfo.valueMakers[i];
+                    clipBehaviourState.markerInitPosDict[valueMarker.InstanceID] = valueMarker.Get(target);
+                }
+            }
         }
 
         private static void BindTrackAsset(TrackAsset asset, IUniqueBehaviour behaviour)
@@ -357,6 +400,7 @@ namespace Cr7Sund.TweenTimeLine
 
         private static void RecreateTween()
         {
+            ReussablePrimeTweens();
             foreach (var item in TweenTimeLineDataModel.ClipInfoDicts)
             {
                 item.Value.CreateTween(item.Key);
@@ -408,11 +452,6 @@ namespace Cr7Sund.TweenTimeLine
 
         private static void TryGetTweenManager(out PrimeTweenManager manager)
         {
-            if (Application.isPlaying)
-            {
-                manager = PrimeTweenManager.Instance;
-                return;
-            }
             var curScene = SceneManager.GetActiveScene();
             manager = GameObject.FindFirstObjectByType<PrimeTweenManager>();
             if (manager != null)
@@ -453,8 +492,24 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
 
+        public static void ResetDefaultAllClipWhenStop()
+        {
+            ChangeTweenManagerState(ClipBehaviourStateEnum.Default);
+            foreach (var item in TweenTimeLineDataModel.ClipStateDict)
+            {
+                // avoid state change when chagne select object when recording
+                if (item.Value.BehaviourState == ClipBehaviourStateEnum.Recording)
+                {
+                    continue;
+                }
+                ResetDefaultClip(item.Key);
+            }
+        }
+
         public static void PreviewAllClip()
         {
+            ReussablePrimeTweens();
+
             ChangeTweenManagerState(ClipBehaviourStateEnum.Preview);
             foreach (var item in TweenTimeLineDataModel.ClipStateDict)
             {
@@ -479,7 +534,6 @@ namespace Cr7Sund.TweenTimeLine
 
             stateInfo.ChangeState(key,
                 ClipBehaviourStateEnum.Default);
-
         }
 
         public static void PlayClip(IUniqueBehaviour key)
@@ -494,6 +548,15 @@ namespace Cr7Sund.TweenTimeLine
             stateInfo.ToggleState(key, ClipBehaviourStateEnum.Playing);
         }
 
+        public static void ToggleAllPLayClips(bool controlPlay = false)
+        {
+            ToggleTweenManagerState(ClipBehaviourStateEnum.Playing);
+            foreach (var item in TweenTimeLineDataModel.ClipStateDict)
+            {
+                TogglePlayClip(item.Key);
+            }
+        }
+
         public static void RecordClip(IUniqueBehaviour key)
         {
             ClipBehaviourState stateInfo = TweenTimeLineDataModel.ClipStateDict[key];
@@ -506,8 +569,10 @@ namespace Cr7Sund.TweenTimeLine
             stateInfo.ToggleState(key, ClipBehaviourStateEnum.Recording);
         }
 
-        public static void PlayAllClip()
+        public static void PlayAllClip(bool controlPlay = false)
         {
+            ReussablePrimeTweens();
+
             ChangeTweenManagerState(ClipBehaviourStateEnum.Playing);
             foreach (var item in TweenTimeLineDataModel.ClipStateDict)
             {
@@ -515,11 +580,28 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
 
+        public static void ReussablePrimeTweens()
+        {
+            if (PrimeTweenManager.Instance)
+            {
+                PrimeTweenManager.Instance.Update();
+            }
+        }
+
         private static void ChangeTweenManagerState(ClipBehaviourStateEnum behaviourStateType)
         {
             // Debug.Log(behaviourStateType + "===>" + TweenTimeLineDataModel.StateInfo.BehaviourState);
             TweenTimeLineDataModel.StateInfo.ChangeState(null, behaviourStateType);
-            var window = GetTimelineToolWindow();
+            var window = GetActionEditorWindow();
+            if (window != null)
+                window.RefreshBtns();
+        }
+
+        private static void ToggleTweenManagerState(ClipBehaviourStateEnum behaviourStateType)
+        {
+            // Debug.Log(behaviourStateType + "===>" + TweenTimeLineDataModel.StateInfo.BehaviourState);
+            TweenTimeLineDataModel.StateInfo.ToggleState(null, behaviourStateType);
+            var window = GetActionEditorWindow();
             if (window != null)
                 window.RefreshBtns();
         }
@@ -538,10 +620,7 @@ namespace Cr7Sund.TweenTimeLine
         public static void ToggleRecordAllSelectClip()
         {
             TweenTimeLineDataModel.StateInfo.IsSelect = true;
-            if (TweenTimeLineDataModel.StateInfo.BehaviourState == ClipBehaviourStateEnum.Recording)
-                ChangeTweenManagerState(ClipBehaviourStateEnum.Default);
-            else
-                ChangeTweenManagerState(ClipBehaviourStateEnum.Recording);
+            ToggleTweenManagerState(ClipBehaviourStateEnum.Recording);
 
             foreach (var item in TweenTimeLineDataModel.ClipStateDict)
             {
@@ -557,26 +636,45 @@ namespace Cr7Sund.TweenTimeLine
             TimelineWindowExposer.PlayEditTimeline();
         }
 
-        public static void AddTrack(Component component, Type trackAssetType, Type assetType, TrackInfo trackInfo, bool isIn)
+        public static void AddTrack(Component component, string trackRootName, Type trackAssetType, Type assetType,
+            TrackInfoContext trackInfo, bool isIn, bool createNewTrack)
         {
             PlayableDirector playableDirector = GameObject.FindFirstObjectByType<PlayableDirector>();
             TimelineAsset timelineAsset = playableDirector.playableAsset as TimelineAsset;
 
             Undo.RecordObject(playableDirector.playableAsset, "Add Track");
-            GroupTrack parentTrack = GetParentGroup(component, timelineAsset, isIn);
+
+            GroupTrack parentTrack = GetParentGroup(trackRootName, timelineAsset, isIn);
 
             AdjustStartTime(component, trackAssetType, ref trackInfo);
+            AddTrackWithParents(component, trackAssetType, assetType, trackInfo, createNewTrack, parentTrack);
+        }
 
-            var trackAsset = AddTrackToTimeline(component, trackAssetType, timelineAsset, parentTrack);
+        public static TrackAsset AddTrackWithParents(Component component, Type trackAssetType, Type clipAssetType, TrackInfoContext trackInfo, bool createNewTrack, TrackAsset parentTrack)
+        {
+            PlayableDirector playableDirector = GameObject.FindFirstObjectByType<PlayableDirector>();
+            TimelineAsset timelineAsset = playableDirector.playableAsset as TimelineAsset;
+            TrackAsset trackAsset = AddTrackToTimeline(component, trackAssetType, timelineAsset, parentTrack, createNewTrack);
             var clipMethod = typeof(TrackAsset).GetMethod("CreateClip", BindingFlags.Instance | BindingFlags.NonPublic);
-            TimelineClip clip = clipMethod.Invoke(trackAsset, new object[]
+
+            foreach (var clipInfo in trackInfo.clipInfos)
             {
-                assetType
-            }) as TimelineClip;
+                TimelineClip clip = clipMethod.Invoke(trackAsset, new object[]
+                {
+                    clipAssetType
+                }) as TimelineClip;
+                AddClip(clipInfo, clip);
+            }
 
-            clip.start = trackInfo.start;
-            clip.duration = trackInfo.duration;
+            TimelineWindowExposer.Bind(playableDirector, trackAsset, component);
 
+            return trackAsset;
+        }
+
+        private static void AddClip(ClipInfoContext clipContextInfo, TimelineClip clip)
+        {
+            clip.start = clipContextInfo.start;
+            clip.duration = clipContextInfo.duration;
 
             if (!TimelineWindowExposer.GetBehaviourValue(clip.asset, out var value))
             {
@@ -584,14 +682,12 @@ namespace Cr7Sund.TweenTimeLine
             }
 
             var behaviour = value as IUniqueBehaviour;
-            behaviour.EndPos = trackInfo.endPos;
-            behaviour.StartPos = trackInfo.startPos;
-            behaviour.EasePreset = trackInfo.easePreset;
-
-            TimelineWindowExposer.Bind(playableDirector, trackAsset, component);
+            behaviour.EndPos = clipContextInfo.endPos;
+            behaviour.StartPos = clipContextInfo.startPos;
+            behaviour.EasePreset = clipContextInfo.easePreset;
         }
 
-        private static void AdjustStartTime(Component component, Type trackAssetType, ref TrackInfo trackInfo)
+        private static void AdjustStartTime(Component component, Type trackAssetType, ref TrackInfoContext trackInfo)
         {
             foreach (var item in TweenTimeLineDataModel.TrackObjectDict)
             {
@@ -607,67 +703,102 @@ namespace Cr7Sund.TweenTimeLine
                             var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[behaviour];
                             clipEnd = Math.Max(clipEnd, clipInfo.start + clipInfo.duration);
                         }
-                        trackInfo.start += clipEnd;
+
+                        foreach (var clipInfoContext in trackInfo.clipInfos)
+                        {
+                            clipInfoContext.start += clipEnd;
+                        }
                     }
                     break;
                 }
             }
         }
 
-        private static GroupTrack GetParentGroup(Component component, TimelineAsset timelineAsset, bool isIn)
+        public static GroupTrack GetParentGroup(string grouTrackName, TimelineAsset timelineAsset, bool isIn)
         {
-            GroupTrack parentTrack = null;
-            var trackRoot = GetAttachRoot(component.transform);
-            var parentTrackIndex = TweenTimeLineDataModel.groupTracks.FindIndex(track => track.name == trackRoot.name);
-            if (parentTrackIndex < 0)
-            {
-                string rootTrackName = isIn ? "In" : "Out";
+            string rootTrackName = isIn ? TweenTimelineDefine.InDefine : TweenTimelineDefine.OutDefine;
 
-                GroupTrack rootParentTrack = null;
-                var grandParentTrackIndex = TweenTimeLineDataModel.groupTracks.FindIndex(track => track.name == rootTrackName);
-                if (grandParentTrackIndex < 0)
-                {
-                    rootParentTrack = timelineAsset.CreateTrack<GroupTrack>(rootTrackName);
-                }
-                else
-                {
-                    rootParentTrack = TweenTimeLineDataModel.groupTracks[grandParentTrackIndex];
-                }
-                parentTrack = timelineAsset.CreateTrack<GroupTrack>(rootParentTrack, trackRoot.name);
+            GroupTrack rootParentTrack = null;
+            var grandParentTrackIndex = TweenTimeLineDataModel.groupTracks.FindIndex(track => track.name == rootTrackName);
+            if (grandParentTrackIndex < 0)
+            {
+                rootParentTrack = timelineAsset.CreateTrack<GroupTrack>(rootTrackName);
             }
             else
             {
-                parentTrack = TweenTimeLineDataModel.groupTracks[parentTrackIndex];
+                rootParentTrack = TweenTimeLineDataModel.groupTracks[grandParentTrackIndex];
             }
 
-            return parentTrack;
+            return CreatGroupAsset(grouTrackName, timelineAsset, rootParentTrack);
         }
 
-        public static TrackAsset AddTrackToTimeline(Component component, Type trackAssetType, TimelineAsset timelineAsset, GroupTrack groupTrack)
+        public static GroupTrack CreatGroupAsset(string grouTrackName, TimelineAsset timelineAsset, TrackAsset parentTrack)
+        {
+            GroupTrack groupTrack = null;
+
+            bool MatchGroup(GroupTrack track)
+            {
+                if (track.name == grouTrackName)
+                {
+                    var root = GetTrackRoot(track);
+                    if (parentTrack == null)
+                    {
+                        return true;
+                    }
+                    var parentRoot = GetTrackRoot(parentTrack);
+
+                    return root.name == parentRoot.name;
+                }
+                return false;
+            }
+
+            var groupTrackIndex = TweenTimeLineDataModel.groupTracks.FindIndex(MatchGroup);
+            if (groupTrackIndex < 0)
+            {
+                groupTrack = timelineAsset.CreateTrack<GroupTrack>(parentTrack, grouTrackName);
+            }
+            else
+            {
+                groupTrack = TweenTimeLineDataModel.groupTracks[groupTrackIndex];
+            }
+
+            return groupTrack;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="component"></param>
+        /// <param name="trackAssetType"></param>
+        /// <param name="timelineAsset"></param>
+        /// <param name="groupTrack"></param>
+        /// <param name="createNewTrack">For example, if in different direction, it should be false</param>
+        /// <returns></returns>
+        public static TrackAsset AddTrackToTimeline(
+            Component component, Type trackAssetType,
+            TimelineAsset timelineAsset, TrackAsset groupTrack, bool createNewTrack)
         {
             Assert.IsNotNull(trackAssetType, nameof(trackAssetType) + " != null");
 
-            TrackAsset track = null;
-            foreach (var item in TweenTimeLineDataModel.TrackObjectDict)
+            TrackAsset track = FindExistTrackAsset(component, trackAssetType);
+            if (track == null || createNewTrack)
             {
-                if (trackAssetType == item.Key.GetType())
-                {
-                    track = item.Key;
-                    break;
-                }
-            }
-
-            if (track == null)
-            {
-                track = timelineAsset.CreateTrack(trackAssetType, groupTrack, "My New Animation Track");
+                track = timelineAsset.CreateTrack(trackAssetType, groupTrack, $"{component.gameObject.name}Track");
                 Debug.Log("Track added: " + track.name);
             }
 
             return track;
         }
+
+        public static TrackAsset FindExistTrackAsset(Component component, Type trackAssetType)
+        {
+            return TweenTimeLineDataModel.TrackObjectDict.FirstOrDefault(item =>
+                item.Key.GetType() == trackAssetType
+                && item.Value == component).Key;
+        }
         #endregion
 
-        public static TweenActionEditorWindow GetTimelineToolWindow()
+        public static TweenActionEditorWindow GetActionEditorWindow()
         {
             if (EditorWindow.HasOpenInstances<TweenActionEditorWindow>())
             {
@@ -727,6 +858,68 @@ namespace Cr7Sund.TweenTimeLine
             }
 
             throw new IndexOutOfRangeException();
+        }
+
+        public static TrackAsset GetTrackRoot(TrackAsset trackAsset)
+        {
+            if (trackAsset == null)
+            {
+                return null;
+            }
+            var trackAssetParent = trackAsset.parent as TrackAsset;
+
+            if (trackAssetParent == null)
+            {
+                return trackAsset;
+            }
+
+            return GetTrackRoot(trackAssetParent);
+        }
+
+        public static int GetPanelTracks(IEnumerable<TrackAsset> tracks, out List<TrackAsset> trackHierarchy, out TrackAsset rootTrack)
+        {
+            int isIn = -10;
+            rootTrack = null;
+            trackHierarchy = new List<TrackAsset>();
+            foreach (var track in tracks)
+            {
+                rootTrack = TweenTimelineManager.GetTrackRoot(track);
+                int inDir = rootTrack.name == TweenTimelineDefine.InDefine ? 1
+                         : (rootTrack.name == TweenTimelineDefine.OutDefine ? -1 : 0);
+
+                if (isIn == -10)
+                {
+                    isIn = inDir;
+                }
+                else
+                {
+                    if (inDir != isIn)
+                    {
+                        throw new InvalidOperationException($"A different track was detected: {track.name} vs {rootTrack.name}.");
+                    }
+                }
+
+                if (track.name == rootTrack.name)
+                {
+                    trackHierarchy.Clear();
+                    trackHierarchy.AddRange(rootTrack.GetChildTracks());
+                    break;
+                }
+                if (track.parent.name == rootTrack.name)
+                {
+                    if (!trackHierarchy.Contains(track))
+                    {
+                        trackHierarchy.Add(track);
+                    }
+                }
+            }
+
+            if (trackHierarchy.Count <= 0)
+            {
+                throw new System.Exception("Please select panel track");
+            }
+
+            return isIn;
         }
 
         public static void SelectBeforeToggle(IUniqueBehaviour behaviour)

@@ -19,18 +19,30 @@ namespace Cr7Sund.TweenTimeLine
         private EasingTokenPresetLibrary _easingTokenPresetLibrary;
         private TweenActionEffect _selectTweenAction = new();
         private Sequence _curSequence;
+        private string _updateSequenveID;
         private VisualElement selecGridItem;
+        private string _curRestID;
 
 
-        // [ContextMenu("GameObject/AnimationEditor")]
-        [MenuItem("GameObject/Animation Editor %T", priority = 1)]
+        [MenuItem("GameObject/TweenAction Editor %T", priority = 1)]
         public static void ShowWindow()
         {
+            TweenTimelineManager.InitTimeline();
+
             var window = GetWindow<TweenActionEditorWindow>();
             window.maxSize = TweenTimelineDefine.windowMaxSize;
             window.minSize = TweenTimelineDefine.windowMaxSize;
         }
 
+        [ContextMenu("GameObject/TweenAction Editor %T")]
+        public static void OpenAnimationEditorWindow()
+        {
+            TweenTimelineManager.InitTimeline();
+
+            var window = GetWindow<TweenActionEditorWindow>();
+            window.maxSize = TweenTimelineDefine.windowMaxSize;
+            window.minSize = TweenTimelineDefine.windowMaxSize;
+        }
         #region LifeTime
         public void OnEnable()
         {
@@ -41,13 +53,8 @@ namespace Cr7Sund.TweenTimeLine
             // AssemblyReloadEvents.beforeAssemblyReload += OnBeforeAssemblyReload;
 
             LoadAssets();
-            InitTimeline();
         }
 
-        private void InitTimeline()
-        {
-            TweenTimelineManager.InitTimeline();
-        }
 
         public void OnDestroy()
         {
@@ -55,14 +62,12 @@ namespace Cr7Sund.TweenTimeLine
             TweenTimelineManager.TryRemoveTweenManager();
         }
 
-        private void OnBeforeAssemblyReload()
-        {
-            Close();
-        }
+
         #endregion
 
         public void CreateGUI()
         {
+
             var visualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(AssetDatabase.GUIDToAssetPath(TweenTimelineDefine.windowVisualTreeAssetGUID));
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(TweenTimelineDefine.windowStyleGUID));
             rootVisualElement.styleSheets.Add(styleSheet);
@@ -120,6 +125,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 AssertTimelineOpen();
                 CheckValidTarget();
+                CancelTween();
                 AddTracks(_selectTweenAction);
             };
             createEffectBtn.clicked += CreateNewAnimEffect;
@@ -133,11 +139,21 @@ namespace Cr7Sund.TweenTimeLine
             {
                 return;
             }
+
+            var trackInfoDict = new Dictionary<string, TrackInfoContext>();
+            var trackRoot = BindUtility.GetAttachRoot(selectTweenAction.target.transform);
+            string trackRootName = trackRoot.name;
             foreach (var animUnit in selectTweenAction.animationSteps)
             {
-                TrackInfo trackInfo;
-                Component component;
-                animUnit.GetAnimUnitTrackInfo(selectTweenAction, _easingTokenPresetLibrary, out trackInfo, out component);
+                if (!trackInfoDict.TryGetValue(animUnit.tweenMethod, out var trackInfo))
+                {
+                    trackInfo = new TrackInfoContext();
+                    trackInfo.clipInfos = new List<ClipInfoContext>();
+                    trackInfoDict.Add(animUnit.tweenMethod, trackInfo);
+                }
+                animUnit.GetAnimUnitClipInfo(selectTweenAction, _easingTokenPresetLibrary, out var clipInfo, out var component);
+                trackInfo.clipInfos.Add(clipInfo);
+
                 Type componentType = animUnit.GetComponentType();
                 component = selectTweenAction.target.GetComponent(componentType);
                 // var behaviourName = $"Cr7Sund.TweenTimeLine.{animUnit.tweenMethod}ControlBehaviour";
@@ -145,13 +161,25 @@ namespace Cr7Sund.TweenTimeLine
                 var trackName = $"Cr7Sund.{componentType.Name}Tween.{animUnitTweenMethod}ControlTrack";
                 var assetName = $"Cr7Sund.{componentType.Name}Tween.{animUnitTweenMethod}ControlAsset";
                 var rooTabView = rootVisualElement.Q<TabView>("rooTabView");
-
                 Assembly assembly = TweenActionStep.GetTweenTrackAssembly(trackName);
+                Type trackAssetType = assembly.GetType(trackName);
+
+                bool createNewTrack = false;
+                bool alwaysCreateNewTrack = TweenTimelinePreferencesProvider.GetBool(ActionEditorSettings.AlwaysCreateTrack);
+                if (!alwaysCreateNewTrack &&
+                    TweenTimelineManager.FindExistTrackAsset(component, trackAssetType) != null)
+                {
+                    createNewTrack = EditorUtility.DisplayDialog($"Create New Track",
+                    $"A same track of{component.name} {trackAssetType.Name}  is already exists. \n (Tip: You can toggle the behavior to allowed always create a new track)", "Create New Track", "Attend on the existed");
+                }
+
                 TweenTimelineManager.AddTrack(component,
-                    assembly.GetType(trackName),
+                    trackRootName,
+                    trackAssetType,
                     assembly.GetType(assetName),
                     trackInfo,
-                    rooTabView.selectedTabIndex == 0
+                    rooTabView.selectedTabIndex == 0,
+                    createNewTrack
                 );
             }
 
@@ -178,11 +206,39 @@ namespace Cr7Sund.TweenTimeLine
             {
                 AssertTimelineOpen();
                 var previousState = TweenTimeLineDataModel.StateInfo.BehaviourState;
-                TweenTimelineManager.Play();
-                if (previousState == TweenTimeLineDataModel.StateInfo.BehaviourState)
+
+                // https://discussions.unity.com/t/animation-events-on-last-frame-arent-fired-in-timeline-when-its-the-last-frame-of-the-timeline/768636/9
+                // Timeline is inclusive of the first frame of clips and exclusive of the last, meaning that an active clip that starts exactly at 0 and ends at exactly frame N, will be disabled at frame N.
+                if (Application.isPlaying)
                 {
-                    Debug.Log("please check the timeline is valid");
+                    TweenTimelineManager.ToggleAllPLayClips();
                 }
+                else
+                {
+                    if (!string.IsNullOrEmpty(_curRestID))
+                    {
+                        EditorTweenCenter.UnRegisterEditorTimer(_curRestID);
+                        TweenTimelineManager.ToggleAllPLayClips();
+                    }
+
+                    float dealyResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DealyResetTime);
+                    TweenTimelineManager.ToggleAllPLayClips();
+
+                    _curRestID = EditorTweenCenter.RegisterDelayCallback(this,
+                      (float)TimelineWindowExposer.GetPlayDuration() + dealyResetTime,
+                     (t, elapsedTime) =>
+                     {
+                         TweenTimelineManager.ToggleAllPLayClips();
+                         _curRestID = string.Empty;
+                     });
+                     
+                    // TweenTimelineManager.Play();
+                }
+
+                // if (previousState == TweenTimeLineDataModel.StateInfo.BehaviourState)
+                // {
+                //     Debug.Log($"try to change into the same state {previousState}, please check the timeline is valid");
+                // }
             });
 
             recordBtn.RegisterCallback<ClickEvent>(_ =>
@@ -494,15 +550,19 @@ namespace Cr7Sund.TweenTimeLine
             // Set the image icon
             var img = item.Q<Image>("icon");
             var extension = Path.GetExtension(animAction.image);
-            if (extension == ".gif"
-            && File.Exists(animAction.image))
+            bool showGUI = TweenTimelinePreferencesProvider.GetBool(ActionEditorSettings.EnableGifPreview);
+            if (showGUI &&
+                 extension == ".gif"
+                 && File.Exists(animAction.image))
             {
+                img.Clear();
                 GifUIControl gif = new GifUIControl(animAction.image);
                 gif.name = "gif";
                 img.Add(gif);
             }
             else
             {
+                img.Clear();
                 img.style.backgroundImage = AniActionEditToolHelper.LoadImageFromPath(animAction.image);
             }
 
@@ -546,7 +606,6 @@ namespace Cr7Sund.TweenTimeLine
         #region Actions
         void OnSearchTextChanged(ChangeEvent<string> evt)
         {
-
             var tabView = rootVisualElement.Q<TabView>("rooTabView");
             var container = tabView.Q<VisualElement>($"tabContainer_{tabView.selectedTabIndex}");
             var grid = container.Q<VisualElement>("grid");
@@ -605,12 +664,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 return;
             }
-
-            if (_curSequence.isAlive)
-            {
-                _curSequence.Complete();
-                _curSequence.Stop();
-            }
+            CancelTween();
 
             _curSequence = Sequence.Create();
             var onResetActions = new List<Action>();
@@ -620,7 +674,8 @@ namespace Cr7Sund.TweenTimeLine
 
                 if (animUnit.startTimeOffset < 0)
                 {
-                    _curSequence.Group(Sequence.Create().ChainDelay(AniActionEditToolHelper.ConvertDuration(animUnit.startTimeOffset)).Chain(tween));
+                    _curSequence.Group(Sequence.Create().
+                    ChainDelay(AniActionEditToolHelper.ConvertDuration(animUnit.startTimeOffset)).Chain(tween));
                 }
                 else
                 {
@@ -629,7 +684,8 @@ namespace Cr7Sund.TweenTimeLine
                 onResetActions.Add(onResetAction);
             }
 
-            _curSequence.ChainDelay(0.8f).OnComplete(() =>
+            float dealyResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DealyResetTime);
+            _curSequence.ChainDelay(dealyResetTime).OnComplete(() =>
             {
                 foreach (var item in onResetActions)
                 {
@@ -637,7 +693,16 @@ namespace Cr7Sund.TweenTimeLine
                 }
             });
 
-            EditorTweenCenter.RegisterSequence(_curSequence, animAction.target, animAction.ConvertDuration() + 1f);
+            _updateSequenveID = EditorTweenCenter.RegisterSequence(_curSequence, animAction.target, animAction.ConvertDuration() + 1f);
+        }
+        private void CancelTween()
+        {
+            if (_curSequence.isAlive)
+            {
+                _curSequence.Complete();
+                _curSequence.Stop();
+            }
+            EditorTweenCenter.UnRegisterEditorTimer(_updateSequenveID);
         }
         #endregion
     }

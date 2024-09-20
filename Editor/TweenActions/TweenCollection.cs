@@ -22,7 +22,7 @@ namespace Cr7Sund.TweenTimeLine
 
             foreach (var action in animationCollections)
             {
-                if (!action.label.Contains(filterName)) continue;
+                if (!action.label.ToLower().Contains(filterName.ToLower())) continue;
 
                 bool containsComponent = false;
                 foreach (var actionUnit in action.animationSteps)
@@ -86,6 +86,10 @@ namespace Cr7Sund.TweenTimeLine
 
                     var component = selectGO.GetComponent((Type)componentType);
                     containsComponent = component != null;
+                    if (!containsComponent)
+                    {
+                        break;
+                    }
                 }
 
                 if (containsComponent)

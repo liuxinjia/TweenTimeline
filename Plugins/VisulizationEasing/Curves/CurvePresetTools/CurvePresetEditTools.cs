@@ -85,9 +85,13 @@ namespace Cr7Sund.Editor.CurvePreset
             {
                 return;
             }
+
+            curveDictionary = new Dictionary<string, AnimationCurve>();
+            GenerateCurveDict(selectObject, curveDictionary);
+
             VisualElement curveListContainer = rootVisualElement.Q<VisualElement>("curveListContainer");
             curveListContainer.Clear();
-            curveDictionary = GenerateCurveDict(selectObject);
+
             foreach (var item in curveDictionary)
             {
                 // Create curve field UI element
@@ -117,15 +121,14 @@ namespace Cr7Sund.Editor.CurvePreset
             }
         }
 
-        public static Dictionary<string, AnimationCurve> GenerateCurveDict(UnityEngine.Object presetLibrary)
+        public static void GenerateCurveDict(UnityEngine.Object easingLibrary, in Dictionary<string, AnimationCurve> curveDictionary)
         {
-            var curves = GetPresets(presetLibrary);
+            var curves = GetPresets(easingLibrary);
             if (curves == null)
             {
-                return null;
+                return;
             }
 
-            Dictionary<string, AnimationCurve> curveDictionary = new();
             foreach (var item in curves)
             {
                 var curveValue = item.GetType().GetField("m_Curve", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -140,7 +143,6 @@ namespace Cr7Sund.Editor.CurvePreset
                 }
             }
 
-            return curveDictionary;
         }
 
         void CreatePresets()
@@ -177,7 +179,7 @@ namespace Cr7Sund.Editor.CurvePreset
                 SaveSetting(ac, equation.ToString());
             }
 
-            if(!selectObject.name.EndsWith("EaseEquations"))
+            if (!selectObject.name.EndsWith("EaseEquations"))
             {
                 // see EasingTokenPresetLibraryEditor.cs
                 Debug.LogError("For the sake of god !!! Please end the file name with EaseEquations");

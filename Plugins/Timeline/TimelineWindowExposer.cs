@@ -219,6 +219,12 @@ namespace Cr7Sund.Timeline.Extension
             return TimelineWindow.instance.state.editSequence.time;
         }
 
+        public static double GetPlayDuration()
+        {
+            // TODO : get current edit duration, excluding mute one
+            return TimelineWindow.instance.state.editSequence.duration;
+        }
+
         public static bool GetBehaviourValue(object clipAsset, out System.Object behaviour)
         {
             behaviour = null;

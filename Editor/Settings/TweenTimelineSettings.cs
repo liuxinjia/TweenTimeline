@@ -1,11 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 namespace Cr7Sund.TweenTimeLine
 {
+    public enum ActionEditorSettings
+    {
+        EnableGifPreview,
+        AlwaysCreateTrack,
+        DealyResetTime, // you can not close the automatic reset action, bu you can control the delay time of reset action
+    }
+    public enum TweenElemenSettings
+    {
+        [Description("Panel")]
+        PanelPostFix,
+        [Description("Composite")]
+        CompositePostFix,
+    }
 
     public enum TweenPreferenceDefine
     {
@@ -43,13 +57,64 @@ namespace Cr7Sund.TweenTimeLine
 
         public List<PreferSettingData> settings = new List<PreferSettingData>();
 
-
+        public static Dictionary<Enum, object> _customPairs = new Dictionary<Enum, object>()
+        {
+            {TweenElemenSettings.CompositePostFix, "Composite"},
+            {TweenElemenSettings.PanelPostFix, "Panel"},
+            {ActionEditorSettings.EnableGifPreview, true},
+            {ActionEditorSettings.AlwaysCreateTrack, false},
+            {ActionEditorSettings.DealyResetTime, 1.0f},
+        };
 
         public void Reset()
         {
+            foreach (var item in Enum.GetValues(typeof(ActionEditorSettings)))
+            {
+                AddSetting(item.ToString(), "Action Editor ", string.Empty);
+            }
+
+            foreach (var item in Enum.GetValues(typeof(TweenElemenSettings)))
+            {
+                AddSetting(item.ToString(), "Tween Element ", string.Empty);
+            }
+
             foreach (var item in Enum.GetValues(typeof(TweenPreferenceDefine)))
             {
                 AddSetting(item.ToString(), "Custom ", string.Empty);
+            }
+
+            foreach (var item in _customPairs)
+            {
+                UpdateValue(item.Key.ToString(), item.Value);
+            }
+        }
+
+        public void UpdateValue<T>(string key, T defaultValue)
+        {
+            if (defaultValue == null)
+            {
+                return;
+            }
+
+            var settingType = defaultValue.GetType().FullName;
+            var existingSetting = this.settings.FirstOrDefault(s => s.key == key);
+            existingSetting.settingType = settingType;
+
+            if (defaultValue == null)
+            {
+            }
+            else if (defaultValue is bool boolValue)
+            {
+                EditorPrefs.SetBool(key, boolValue);
+            }
+            else if (defaultValue is float floatValue)
+            {
+                EditorPrefs.SetFloat(key, floatValue);
+            }
+            else if (defaultValue is string stringValue)
+            {
+                if (!string.IsNullOrEmpty(stringValue))
+                    EditorPrefs.SetString(key, stringValue);
             }
 
         }
@@ -58,6 +123,7 @@ namespace Cr7Sund.TweenTimeLine
         {
             this.AddSetting<T>(label, label, category, defaultValue);
         }
+
 
         public void AddSetting<T>(string label, string key, string category, T defaultValue)
         {
@@ -80,27 +146,9 @@ namespace Cr7Sund.TweenTimeLine
                     key = key,
                     settingType = settingType,
                 });
-
-                if (defaultValue == null)
-                {
-                }
-                else if (defaultValue is bool boolValue)
-                {
-                    EditorPrefs.SetBool(key, boolValue);
-                }
-                else if (defaultValue is float floatValue)
-                {
-                    EditorPrefs.SetFloat(key, floatValue);
-                }
-                else if (defaultValue is string stringValue)
-                {
-                    if (!string.IsNullOrEmpty(stringValue))
-                        EditorPrefs.SetString(key, stringValue);
-                }
-
-                EditorUtility.SetDirty(this);
-                AssetDatabase.SaveAssets();
             }
+
+            UpdateValue<T>(key, defaultValue);
         }
     }
 }

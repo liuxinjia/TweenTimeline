@@ -55,19 +55,21 @@ namespace Cr7Sund.TweenTimeLine
         public static string GetFolderPath(string folderName)
         {
             // Check in Assets
-            string assetsPath = Path.Combine(Application.dataPath, folderName);
+            var assetFolder = folderName.Replace("Assets/", "");
+            string assetsPath = Path.Combine(Application.dataPath, assetFolder);
             if (Directory.Exists(assetsPath))
             {
                 return assetsPath;
             }
 
             // Check in Packages
+            var packageFolder = folderName.Replace("Assets/Plugins/", "");
             string packagesPath = Path.Combine(Application.dataPath, "..", "Packages");
             string[] packageDirectories = Directory.GetDirectories(packagesPath);
 
             foreach (string packageDir in packageDirectories)
             {
-                string potentialPath = Path.Combine(packageDir, folderName);
+                string potentialPath = Path.Combine(packageDir, packageFolder);
                 if (Directory.Exists(potentialPath))
                 {
                     return potentialPath;

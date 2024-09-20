@@ -12,8 +12,9 @@ namespace Cr7Sund.TweenTimeLine
     [CanEditMultipleObjects]
     public class BaseControlTrackAssetInspector : UnityEditor.Editor
     {
-        private VisualElement _root;
+        private VisualElement container;
         private IUniqueBehaviour _behaviour;
+        private string _curRestID;
         private const string VisualTreeAssetGUID = "84a8ec30493bd7e4497a1eff081adb6f";
         private const string styleGUID = "cfde41d1fc9c9cc40bf3a8ed4778c5fc";
 
@@ -34,19 +35,32 @@ namespace Cr7Sund.TweenTimeLine
                 return base.CreateInspectorGUI();
             }
 
-            _root = new VisualElement();
+            var root = new VisualElement();
+            container = new VisualElement();
 
             var visualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(AssetDatabase.GUIDToAssetPath(VisualTreeAssetGUID));
             VisualElement labelFromUXML = visualTreeAsset.Instantiate();
             var styleAsset = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(styleGUID));
             labelFromUXML.styleSheets.Add(styleAsset);
-            _root.Add(labelFromUXML);
+            container.Add(labelFromUXML);
 
-            DrawRecordHistory(_root.Query<VisualElement>("CommandContainers"));
-            DrawTrackProperties(_root.Query<VisualElement>("SettingsContainers"));
+            var behaviour = value as IUniqueBehaviour;
+            var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[behaviour];
+            float duration = (float)clipInfo.duration;
+            float start = (float)clipInfo.start;
+            // if ((float)Math.Round(duration, 3) != duration
+            // || (float)Math.Round(start, 3) != start)
+            // {
+            //     HelpBox helpBox = new HelpBox($"Clip end is invalid seconds {duration} {start}.  Note: The time is rounded to 3 decimal places to avoid precision issues. \n If you change it , the warning remains. Try to switch inspector", HelpBoxMessageType.Warning);
+            //     root.Add(helpBox);
+            // }
 
+            DrawRecordHistory(container.Query<VisualElement>("CommandContainers"));
+            DrawTrackProperties(container.Query<VisualElement>("SettingsContainers"));
             DrawBtns();
-            return _root;
+
+            root.Add(container);
+            return root;
         }
 
         private void DrawRecordHistory(VisualElement container)
@@ -96,13 +110,10 @@ namespace Cr7Sund.TweenTimeLine
             container.Add(endPosProp);
             container.Add(startPosProp);
         }
-       
+
         private VisualElement DrawEasePresetField()
         {
-            // 获取所有 BaseEasingTokenPreset 的派生类
             var derivedEaseTokenTypes = TweenTimelineDefine.DerivedEaseTokenTypes;
-
-
             Type currentType = _easePresetProp.managedReferenceValue?.GetType();
 
             string[] typeNames = derivedEaseTokenTypes.Select(t => t.Name).ToArray();
@@ -134,12 +145,12 @@ namespace Cr7Sund.TweenTimeLine
             return container;
         }
 
-  #region Buttons
+        #region Buttons
         private void DrawBtns()
         {
-            var preViewBtn = _root.Q<Button>("preViewBtn");
-            var recordBtn = _root.Q<Button>("recordBtn");
-            Button playBtn = _root.Q<Button>("playBtn");
+            var preViewBtn = container.Q<Button>("preViewBtn");
+            var recordBtn = container.Q<Button>("recordBtn");
+            Button playBtn = container.Q<Button>("playBtn");
             if (!TimelineWindowExposer.GetBehaviourValue(target, out var value))
             {
                 return;
@@ -152,28 +163,46 @@ namespace Cr7Sund.TweenTimeLine
 
             playBtn.RegisterCallback<ClickEvent>(_ =>
             {
+                if (!string.IsNullOrEmpty(_curRestID))
+                {
+                    EditorTweenCenter.UnRegisterEditorTimer(_curRestID);
+                    TweenTimelineManager.TogglePlayClip(behaviour);
+                }
+
                 var stateInfo = TweenTimeLineDataModel.ClipStateDict[behaviour];
                 var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[behaviour];
                 TweenTimelineManager.TogglePlayClip(behaviour);
 
                 // Yeah! it cost more gc compare to create sequence
-                EditorTweenCenter.RegisterDelayCallback(target, (float)clipInfo.duration + 0.8f, (t, elapsedTime) => TweenTimelineManager.TogglePlayClip(behaviour));
+                float dealyResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DealyResetTime);
+                _curRestID = EditorTweenCenter.RegisterDelayCallback(target,
+                 (float)clipInfo.duration + dealyResetTime,
+                  (t, elapsedTime) =>
+                  {
+                      TweenTimelineManager.TogglePlayClip(behaviour); _curRestID = string.Empty;
+                  });
             });
 
             recordBtn.RegisterCallback<ClickEvent>(_ =>
             {
                 var stateInfo = TweenTimeLineDataModel.ClipStateDict[behaviour];
+                var trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[behaviour];
+                var trackTarget = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
                 TweenTimelineManager.SelectBeforeToggle(behaviour);
                 TweenTimelineManager.ToggleRecordClip(behaviour);
+                if (stateInfo.BehaviourState == ClipBehaviourStateEnum.Recording)
+                {
+                    Selection.activeObject = trackTarget;
+                }
             });
             RefreshBtns();
         }
 
         public void RefreshBtns()
         {
-            var preViewBtn = _root.Q<Button>("preViewBtn");
-            var recordBtn = _root.Q<Button>("recordBtn");
-            Button playBtn = _root.Q<Button>("playBtn");
+            var preViewBtn = container.Q<Button>("preViewBtn");
+            var recordBtn = container.Q<Button>("recordBtn");
+            Button playBtn = container.Q<Button>("playBtn");
 
             if (!TimelineWindowExposer.GetBehaviourValue(target, out var value))
             {
@@ -192,8 +221,8 @@ namespace Cr7Sund.TweenTimeLine
 
         private void RefreshBtnImges()
         {
-            Button playBtn = _root.Q<Button>("playBtn");
-            var recordBtn = _root.Q<Button>("recordBtn");
+            Button playBtn = container.Q<Button>("playBtn");
+            var recordBtn = container.Q<Button>("recordBtn");
 
             playBtn.iconImage = TweenTimeLineDataModel.StateInfo.IsPlaying ? TweenTimelineDefine.plaBackground : TweenTimelineDefine.stopBackground;
             recordBtn.iconImage = TweenTimeLineDataModel.StateInfo.IsRecording ? TweenTimelineDefine.recordOnBackground : TweenTimelineDefine.recordOffBackground;
@@ -215,7 +244,7 @@ namespace Cr7Sund.TweenTimeLine
 
             RefreshBtnImges();
 
-            var listView = _root.Q<ListView>("historyList");
+            var listView = container.Q<ListView>("historyList");
             listView.Rebuild();
         }
         #endregion

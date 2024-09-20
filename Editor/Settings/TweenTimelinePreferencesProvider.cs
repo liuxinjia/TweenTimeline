@@ -1,11 +1,8 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
-using UnityEditor.UIElements;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace Cr7Sund.TweenTimeLine
 {
@@ -119,8 +116,8 @@ namespace Cr7Sund.TweenTimeLine
         }
 
 
-        public static bool GetBool(TweenPreferenceDefine key, bool defaultValue) => EditorPrefs.GetBool(key.ToString());
-        public static float GetFloat(TweenPreferenceDefine key) => EditorPrefs.GetFloat(key.ToString());
-        public static string GetString(TweenPreferenceDefine key) => EditorPrefs.GetString(key.ToString());
+        public static bool GetBool(Enum key) => EditorPrefs.GetBool(key.ToString());
+        public static float GetFloat(Enum key) => EditorPrefs.GetFloat(key.ToString());
+        public static string GetString(Enum key) => EditorPrefs.GetString(key.ToString());
     }
 }

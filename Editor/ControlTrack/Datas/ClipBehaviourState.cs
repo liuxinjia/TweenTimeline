@@ -44,7 +44,7 @@ namespace Cr7Sund.TweenTimeLine
             // stop Other Action First
             DoAction(behaviour, targetState);
 
-            // Debug.Log(targetState + " " + BehaviourState);
+            UnityEngine.Debug.Log($"Target:{targetState} , Prev: {BehaviourState}");
 
             this.BehaviourState = targetState;
 
@@ -56,6 +56,11 @@ namespace Cr7Sund.TweenTimeLine
         {
             if (behaviour == null) return;
 
+            var trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[behaviour];
+            if (trackAsset.mutedInHierarchy)
+            {
+                return;
+            }
             switch (this.BehaviourState)
             {
                 case ClipBehaviourStateEnum.Default:

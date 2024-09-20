@@ -24,9 +24,10 @@ namespace Cr7Sund.TweenTimeLine
 
         public void CreateTween(IUniqueBehaviour behaviour)
         {
-            if (Sequence.isAlive)
+            if (_sequence.isAlive)
             {
-                Sequence.Stop();
+                _sequence.releaseTweens();
+                _sequence.Stop();
             }
 
             var trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[behaviour];
@@ -38,8 +39,14 @@ namespace Cr7Sund.TweenTimeLine
             var target = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
             var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[behaviour];
             var startValue = behaviour.StartPos;
+
+            if (target == null)
+            {
+                return;
+            }
             var newTween = behaviour.CreateTween(target, duration, startValue);
             // newTween.isPaused = true;
+
             _sequence = Sequence.Create().Chain(newTween);
             _sequence.isPaused = true;
             foreach (var valueMarker in clipInfo.valueMakers)
@@ -56,6 +63,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 return;
             }
+
             EditorTweenCenter.RegisterSequence(Sequence, target, (float)duration);
         }
     }

@@ -12,7 +12,7 @@ namespace Cr7Sund.TweenTimeLine
 
         private TweenCollection CreateOutAnimationCollection()
         {
-            var outAnimationCollection = new TweenCollection("Out");
+            var outAnimationCollection = new TweenCollection(TweenTimelineDefine.OutDefine);
 
             // Fade Out
             outAnimationCollection.animationCollections.Add(new TweenActionEffect("Fade Out", "Fade")
@@ -37,10 +37,10 @@ namespace Cr7Sund.TweenTimeLine
         {
             new TweenActionStep
             {
-                EndPos = "250",
+                EndPos = new Vector2(250, 0).ToString(), // 修改为 Vector2
                 StartPos = string.Empty,
-         isRelative = true,
-          tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionXControlBehaviour>(),
+                isRelative = true,
+                tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionControlBehaviour>(),
                 label = "MoveX",
             },
             new TweenActionStep
@@ -56,7 +56,7 @@ namespace Cr7Sund.TweenTimeLine
             // Grow Out
             outAnimationCollection.animationCollections.Add(new TweenActionEffect("Grow Out", "Scale")
             {
-                image = "Assets/Plugins/TweenTimeline/Editor/Res/GrowOut.gif",
+                image = "Assets/TweenTimeline/BuiltInConfigs/Editor Default Resources/Gifs/GrowOut.gif",
                 animationSteps = new List<TweenActionStep>
         {
             new TweenActionStep
@@ -168,10 +168,10 @@ namespace Cr7Sund.TweenTimeLine
         {
             new TweenActionStep
             {
-                EndPos = "200",
+                EndPos = new Vector3(200, 0, 0).ToString(),
                 StartPos = string.Empty,
-isRelative = true,
-                tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionXControlBehaviour>(),
+                isRelative = true,
+                tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionControlBehaviour>(), // 更新控制行为
                 label = "MoveX",
                 startTimeOffset = 400f,
             },

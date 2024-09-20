@@ -41,7 +41,7 @@
 }
 
 .paramsPart .unity-vector2-field__input .unity-float-field__input {
-    min-width: 44px;
+    min-width: 85px;
 }
 
 .paramsPart .unity-color-field__input {

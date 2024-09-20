@@ -1,6 +1,5 @@
 using System;
 using Cr7Sund.Timeline.Extension;
-using Cr7Sund.TweenTimeLine;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -69,7 +68,6 @@ namespace Cr7Sund.TweenTimeLine
             set => _bindType = value; // {{ edit_1 }}
         }
 
-
         public override void OnBehaviourPlay(Playable playable, FrameData info)
         {
             // when drag don't publish event
@@ -95,7 +93,6 @@ namespace Cr7Sund.TweenTimeLine
 
             ExecuteTween(playable, info, playerData);
         }
-
 
         public object Get(System.Object target)
         {
@@ -144,8 +141,6 @@ namespace Cr7Sund.TweenTimeLine
         protected abstract object OnGet(TTarget target);
         protected abstract void OnSet(TTarget target, TValue intValue);
         protected abstract PrimeTween.Tween OnCreateTween(TTarget target, double duration, TValue startValue);
-
-
         public override int GetHashCode()
         {
             return ID.GetHashCode();

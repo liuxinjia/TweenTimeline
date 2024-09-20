@@ -27,7 +27,7 @@ namespace Cr7Sund.TweenTimeLine
         public static Background recordOffBackground;
         public static Background plaBackground;
         public static Background stopBackground;
- #endregion
+        #endregion
 
 
         private static Assembly customAssembly;
@@ -47,7 +47,7 @@ namespace Cr7Sund.TweenTimeLine
         public static string RuntimDataSourePath =>
             $"{CustomConfigRuntimeFolder}/Datas";
         #endregion
-        
+
         #region Config
         public static string BuiltInConfigPath =>
             $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.BuiltInLibraryPath)}/BuiltInConfigs";
@@ -57,7 +57,7 @@ namespace Cr7Sund.TweenTimeLine
             $"{BuiltInConfigPath}/CurveLibrary.asset";
 
         // Assets/Plugins/TweenTimeline/Sample/Editor/CustomTracks
-        public static string CustomControlTacksFolder => 
+        public static string CustomControlTacksFolder =>
         $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.CustomTweenPath)}/Editor/CustomTracks";
         public static string BuiltInControlTacksFolder
         {
@@ -72,13 +72,13 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
 
-        public static string CustomConfigEditorFolder => $"{CustomConfigPath}/Editor";
+        public static string CustomConfigEditorFolder => $"{CustomConfigPath}/Editor Default Resources";
         public static string CustomConfigRuntimeFolder => $"{CustomConfigPath}/Resources";
-        public static string BuiltInConfigEditorFolder => $"{BuiltInConfigPath}/Editor";
+        public static string BuiltInConfigEditorFolder => $"{BuiltInConfigPath}/Editor Default Resources";
         public static string BuiltInConfigRuntimeFolder => $"{BuiltInConfigPath}/Resources";
 
-        public static string BuiltInCurvePresetFolder => $"{BuiltInConfigEditorFolder}/CurvePresets";
-        public static string CustomCurvePresetFolder => $"{CustomConfigEditorFolder}/CurvePresets";
+        public static string BuiltInCurvePresetFolder => $"{BuiltInConfigEditorFolder}/CurvePresets/Editor";
+        public static string CustomCurvePresetFolder => $"{CustomConfigEditorFolder}/CurvePresets/Editor";
 
 
         private static Type[] derivedTokenTypes;
@@ -103,7 +103,13 @@ namespace Cr7Sund.TweenTimeLine
                 return derivedTokenTypes;
             }
         }
-  #endregion
+        #endregion
+
+        #region  StringDefine
+        public const string InDefine = "In";
+        public const string OutDefine = "Out";
+
+        #endregion
     }
 
 }

@@ -22,7 +22,7 @@ namespace Cr7Sund.TweenTimeLine
         public static Dictionary<IUniqueBehaviour, ClipBehaviourState> ClipStateDict = new();
         public static Dictionary<IUniqueBehaviour, TrackAsset> PlayBehaviourTrackDict = new();
         public static Dictionary<IUniqueBehaviour, INotificationReceiver> NotificationReceiverDict = new();
-        public static Dictionary<TrackAsset, UnityEngine.Object> TrackObjectDict = new();
+        public static Dictionary<TrackAsset, UnityEngine.Object> TrackObjectDict = new(); //type is  Component
         public static Dictionary<TrackAsset, List<IUniqueBehaviour>> TrackBehaviourDict = new();
         public static Dictionary<UnityEngine.Object, IUniqueBehaviour> ClipAssetBehaviourDict = new();
         public static Dictionary<PlayableAsset, TrackAsset> PlayableAssetTrackDict = new();

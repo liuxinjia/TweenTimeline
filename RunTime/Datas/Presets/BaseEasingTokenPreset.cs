@@ -26,5 +26,17 @@ namespace Cr7Sund.TweenTimeLine
         public abstract AnimationCurve Curve { get; }
 
         public abstract void Init(Enum enumType, EasingWrapper easing);
+
+        public virtual BaseEasingTokenPreset GetReverseEasing(EasingTokenPresetLibrary easingTokenPresetLibrary)
+        {
+            return this;
+        }
+
+        public virtual double GetReverseDuration(double duration, int isIn)
+        {
+            double delta = 0.1;
+            delta *= Mathf.Sign(isIn);
+            return duration + delta;
+        }
     }
 }

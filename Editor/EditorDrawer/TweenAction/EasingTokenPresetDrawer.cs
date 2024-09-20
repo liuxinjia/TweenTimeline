@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
-using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Cr7Sund.TweenTimeLine
@@ -11,12 +11,10 @@ namespace Cr7Sund.TweenTimeLine
     public class EasingTokenPresetDrawer : PropertyDrawer
     {
         private string tokenKeyPropertyPath = "tokenKey";
-        private string curePropertyPath = "animationCurve";
+        private string curvePropertyPath = "animationCurve";
 
-        private EasingTokenPresetLibrary _easingTokenPresetLibrary;
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            _easingTokenPresetLibrary = AssetDatabase.LoadAssetAtPath<EasingTokenPresetLibrary>(TweenTimelineDefine.easingTokenPresetsPath);
             return DrawEasePresetField(property);
         }
 
@@ -36,15 +34,20 @@ namespace Cr7Sund.TweenTimeLine
 
                 if (selectedType != currentType)
                 {
+                    // 1. since EasingTokenPresetLibrary also use this
+                    // to avoid change EasingTokenPresetLibrary
+                    // we don't use reference 
+                    // 2. we need to store it and don'want to chane the unique instance at library
                     var easePropInstance = Activator.CreateInstance(selectedType) as BaseEasingTokenPreset;
                     _easePresetProp.managedReferenceValue = easePropInstance;
 
-                    var cureProperty = _easePresetProp.FindPropertyRelative(curePropertyPath);
+                    var cureProperty = _easePresetProp.FindPropertyRelative(curvePropertyPath);
                     var tokenProperty = _easePresetProp.FindPropertyRelative(tokenKeyPropertyPath);
-                    if (tokenProperty != null && _easingTokenPresetLibrary != null)
+                    if (cureProperty != null)
                     {
-                        cureProperty.animationCurveValue = _easingTokenPresetLibrary.GetEaseAnimationCurve(easePropInstance.Name);
+                        cureProperty.animationCurveValue = GetEaseAnimationCurve(easePropInstance.Name);
                     }
+                    // tokenProperty.enumValueIndex = enumValues.IndexOf();
 
                     _easePresetProp.serializedObject.ApplyModifiedProperties();
                     _easePresetProp.serializedObject.Update();
@@ -62,39 +65,67 @@ namespace Cr7Sund.TweenTimeLine
 
         private VisualElement CreateEasePresetField(SerializedProperty _easePresetProp, Type presetType)
         {
-            var cureProperty = _easePresetProp.FindPropertyRelative(curePropertyPath);
+            var cureProperty = _easePresetProp.FindPropertyRelative(curvePropertyPath);
             var tokenProperty = _easePresetProp.FindPropertyRelative(tokenKeyPropertyPath);
-
             if (tokenProperty == null)
             {
                 return new PropertyField(_easePresetProp);
             }
 
             var curveField = new CurveField();
+            curveField.name = "EasingCurve";
             curveField.style.minHeight = 200;
-            curveField.BindProperty(cureProperty);
+            if (cureProperty != null)
+            {
+                curveField.BindProperty(cureProperty);
+            }
+            else
+            {
+                string presetName = tokenProperty.enumNames[tokenProperty.enumValueIndex];
+                presetName = GetCurveName(presetName);
 
-            var enumType = presetType.GetField(tokenKeyPropertyPath, BindingFlags.Instance | BindingFlags.Public);
-            var enumValues = Enum.GetNames(enumType.FieldType).ToList<string>();
+                curveField.value = GetEaseAnimationCurve(presetName);
+            }
+            curveField.SetEnabled(false);
 
+            var enumValues = tokenProperty.enumDisplayNames.ToList<string>();
             int currentIndex = tokenProperty.enumValueIndex;
-            var popField = new PopupField<string>("EaseToken", enumValues, currentIndex);
+            PopupField<string> popField = new PopupField<string>("EaseToken", enumValues, currentIndex);
             popField.RegisterValueChangedCallback(evt =>
             {
-                if (_easingTokenPresetLibrary)
-                {
-                    curveField.value = _easingTokenPresetLibrary.GetEaseAnimationCurve(evt.newValue);
-                }
+                string curveName = GetCurveName(evt.newValue);
+                curveField.value = GetEaseAnimationCurve(curveName);
                 tokenProperty.enumValueIndex = enumValues.IndexOf(evt.newValue);
                 _easePresetProp.serializedObject.ApplyModifiedProperties();
                 _easePresetProp.serializedObject.Update();
             });
 
             var container = new VisualElement();
-            container.Add(curveField);
             container.Add(popField);
+            container.Add(curveField);
             return container;
         }
+        private static string GetCurveName(string curveName)
+        {
+            string evtNewValue = curveName.Replace(" ", "");
+            return evtNewValue;
+        }
 
+        private AnimationCurve GetEaseAnimationCurve(string curveName)
+        {
+            if (EasingTokenPresetsFactory.easeToEquationsMap.ContainsKey(curveName))
+            {
+                curveName = EasingTokenPresetsFactory.easeToEquationsMap[curveName];
+            }
+
+            if (EasingTokenPresetLibraryEditor.CurveDictionary.ContainsKey(curveName))
+            {
+                return EasingTokenPresetLibraryEditor.CurveDictionary[curveName];
+            }
+            else
+            {
+                return AnimationCurve.Constant(0, 1, 1);
+            }
+        }
     }
 }

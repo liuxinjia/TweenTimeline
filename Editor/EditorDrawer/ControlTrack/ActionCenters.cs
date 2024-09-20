@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor.Timeline;
 
 namespace Cr7Sund.TweenTimeLine
 {
@@ -40,7 +41,7 @@ namespace Cr7Sund.TweenTimeLine
             if (curValue == null) return;
             if (!key.EndPos.Equals(curValue))
             {
-                clipState.actionTrackHistory.Add(key.EndPos);
+                clipState.actionTrackHistory.Add( key.EndPos);
             }
             key.EndPos = curValue;
         }
@@ -55,7 +56,7 @@ namespace Cr7Sund.TweenTimeLine
             }
             var target = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
 
-            if (!clipInfo.Sequence.isAlive)
+            // if (!clipInfo.Sequence.isAlive) -- since we use editor update, make sure the tween will be restart
             {
                 clipInfo.CreateTween(key);
             }
@@ -79,13 +80,13 @@ namespace Cr7Sund.TweenTimeLine
         internal static void StartPreview(IUniqueBehaviour key)
         {
             var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[key];
-            if (!clipInfo.Sequence.isAlive)
+            // if (!clipInfo.Sequence.isAlive) 
             {
                 clipInfo.CreateTween(key);
             }
         }
 
-        internal static void MoveToEndPos(IUniqueBehaviour key)
+        internal static void MoveToRecordPos(IUniqueBehaviour key)
         {
             var trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[key];
             var target = TweenTimeLineDataModel.TrackObjectDict[trackAsset];

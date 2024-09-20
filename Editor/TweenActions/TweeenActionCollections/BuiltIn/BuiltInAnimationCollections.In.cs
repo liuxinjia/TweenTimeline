@@ -7,19 +7,19 @@ using UnityEngine;
 
 namespace Cr7Sund.TweenTimeLine
 {
-    public  partial class TweenActionContainerBuilder
+    public partial class TweenActionContainerBuilder
     {
         private TweenCollection CreateInAnimationCollection()
         {
-            var inAnimationCollection = new TweenCollection("In");
+            var inAnimationCollection = new TweenCollection(TweenTimelineDefine.InDefine);
 
             List<TweenActionEffect> animationCollections = inAnimationCollection.animationCollections;
 
-            // 添加 "In" 类别的动画预设
+            // 添加 TweenTimelineDefine.InDefine 类别的动画预设
             // Fade In
             animationCollections.Add(new TweenActionEffect("Fade In", "Fade")
             {
-                image = "Assets/Plugins/TweenTimeline/Editor/Res/FadeIn.gif",
+                image = "Assets/TweenTimeline/BuiltInConfigs/Editor Default Resources/Gifs/FadeIn.gif",
                 animationSteps = new List<TweenActionStep>
             {
                 new TweenActionStep
@@ -34,15 +34,15 @@ namespace Cr7Sund.TweenTimeLine
             // Slide In
             animationCollections.Add(new TweenActionEffect("Slide In", "Fade")
             {
-                image = "Assets/Plugins/TweenTimeline/Editor/Res/SlideIn.gif",
+                image = "Assets/TweenTimeline/BuiltInConfigs/Editor Default Resources/Gifs/SlideIn.gif",
                 animationSteps = new List<TweenActionStep>
         {
             new TweenActionStep
             {
-                EndPos = "-250",
+                EndPos = new Vector3(-250, 0, 0).ToString(),
                 StartPos = string.Empty,
-            isRelative = true,
-                tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionXControlBehaviour>(),
+                isRelative = true,
+                tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionControlBehaviour>(), // 更新控制行为
                 label = "MoveX",
             },
             new TweenActionStep
@@ -58,7 +58,7 @@ namespace Cr7Sund.TweenTimeLine
             // Grow In
             animationCollections.Add(new TweenActionEffect("Grow In", "Scale")
             {
-                image = "Assets/Plugins/TweenTimeline/Editor/Res/GrowIn.gif",
+                image = "Assets/TweenTimeline/BuiltInConfigs/Editor Default Resources/Gifs/GrowIn.gif",
                 animationSteps = new List<TweenActionStep>
         {
             new TweenActionStep
@@ -170,10 +170,10 @@ namespace Cr7Sund.TweenTimeLine
         {
             new TweenActionStep
             {
-                EndPos = "-200",
+                EndPos = new Vector3(-200, 0, 0).ToString(),
                 StartPos = string.Empty,
-isRelative = true,
-                tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionXControlBehaviour>(),
+                isRelative = true,
+                tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionControlBehaviour>(), // 更新控制行为
                 label = "MoveX",
                 startTimeOffset = 400f,
             },
@@ -199,7 +199,7 @@ isRelative = true,
             // Mask Reveal
             animationCollections.Add(new TweenActionEffect("Mask Reveal", "Mask")
             {
-                image = "Assets/Plugins/TweenTimeline/Editor/Res/MaskReveal.gif",
+                image = "Assets/TweenTimeline/BuiltInConfigs/Editor Default Resources/Gifs/MaskReveal.gif",
                 durationToken = DurationToken.Medium2,
                 animationSteps = new List<TweenActionStep>
         {

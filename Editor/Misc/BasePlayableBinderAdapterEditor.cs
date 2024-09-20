@@ -11,24 +11,23 @@ namespace Cr7Sund.TweenTimeLine
         public static void Reset(BasePlayableBinderAdapter binderAdapter)
         {
             TweenTimelineManager.InitPlayableBindings();
-            // PlayableDirector playableDirector = GameObject.FindFirstObjectByType<PlayableDirector>();
-            // if (playableDirector == null)
-            // {
-            //     return;
-            // };
 
             binderAdapter._cacheList = new();
             IterateRecursive(binderAdapter.transform, (child) =>
             {
-                // foreach (var item in TweenTimeLineDataModel.TrackObjectDict)
-                // {
-                //     var component = item.Value as Component;
-                //     if (component.transform == child)
-                //     {
-                if (!binderAdapter._cacheList.Contains(child.gameObject))
-                    binderAdapter._cacheList.Add(child.gameObject);
-                //     }
-                // }
+                // if (binderAdapter._cacheList.FindIndex
+                //     (trans=> trans.GetInstanceID()==child.GetInstanceID()) == -1    )
+                //        binderAdapter._cacheList.Add(child.gameObject);
+
+                foreach (var item in TweenTimeLineDataModel.TrackObjectDict)
+                {
+                    var component = item.Value as Component;
+                    if (component.transform == child)
+                    {
+                        if (!binderAdapter._cacheList.Contains(child.gameObject))
+                            binderAdapter._cacheList.Add(child.gameObject);
+                    }
+                }
             });
 
             binderAdapter.easingTokenPresetLibrary = AssetDatabase.LoadAssetAtPath<EasingTokenPresetLibrary>(

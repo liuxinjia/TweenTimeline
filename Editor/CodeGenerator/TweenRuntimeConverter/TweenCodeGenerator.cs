@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using UnityEngine.Timeline;
 using System;
 using Cr7Sund.Timeline.Extension;
+using UnityEngine.Assertions;
 
 namespace Cr7Sund.TweenTimeLine
 {
@@ -70,11 +71,11 @@ namespace Cr7Sund.TweenTimeLine
 
                 EditorUtility.DisplayProgressBar("Generating Code", $"Generating {sequence.parentTrackName}Tween", progress);
 
-                await writer.WriteLineAsync($"    public static void {sequence.parentTrackName}Tween(ITweenBinding binding)");
+                await writer.WriteLineAsync($"    public static Sequence {sequence.parentTrackName}Tween(ITweenBinding binding)");
                 await writer.WriteLineAsync("    {");
 
                 // Multiple trackInfos, use Sequence.Create()
-                await writer.WriteLineAsync("        Sequence.Create()");
+                await writer.WriteLineAsync("        return Sequence.Create()");
 
                 for (int j = 0; j < sequence.trackInfos.Count; j++)
                 {
@@ -168,13 +169,27 @@ namespace Cr7Sund.TweenTimeLine
         {
             string parentTrackName = string.Empty;
             var parent = trackAsset.parent as GroupTrack;
+            string panelPostFix = TweenTimelinePreferencesProvider.GetString(TweenElemenSettings.PanelPostFix);
+            while (parent != null)
+            {
+                if (parent.name.EndsWith(panelPostFix))
+                {
+                    parentTrackName = parent.name;
+                    break;
+                }
+                parent = parent.parent as GroupTrack;
+            }
+
+            Assert.IsNotNull(parentTrackName, $"{trackAsset.name} should be endWith {panelPostFix}");
+
             if (parent != null)
             {
-                parentTrackName += parent.name;
                 var root = parent.parent as GroupTrack;
                 if (root != null)
                 {
-                    parentTrackName += root.name;
+                    Assert.IsTrue(root.name == TweenTimelineDefine.InDefine || root.name == TweenTimelineDefine.OutDefine, $"the {parent.name} 's parent track shouble be in or out");
+
+                    parentTrackName = $"{parentTrackName}_{root.name}";
                 }
             }
 
@@ -186,7 +201,7 @@ namespace Cr7Sund.TweenTimeLine
             // string builtInTweenMethods = @"C:\Users\liux4\Documents\UnityProjects\MyMiniGame\Assets\Plugins\TweenTimeline\Editor\Customs";
             await constructMethodDict(TweenTimelineDefine.CustomControlTacksFolder);
             await constructMethodDict(TweenTimelineDefine.BuiltInControlTacksFolder);
- 
+
             async Task constructMethodDict(string controlFolder)
             {
                 await ConstructContentDict(controlFolder);
@@ -383,9 +398,20 @@ namespace Cr7Sund.TweenTimeLine
                 var behaviour = value as IUniqueBehaviour;
                 // var componentType = AniActionEditToolHelper.GetFirstGenericType(behaviour.GetType()).ToString();
                 var methodContent = _contentDict[behaviour.GetType().Name];
+                BaseEasingTokenPreset easePreset = behaviour.EasePreset;
+
+                if (easePreset == null)
+                {
+                    throw new Exception($"clipAsset has null easePreset,  {behaviour.BindTarget} {clipAsset.displayName}, {trackAsset.timelineAsset.name}");
+                }
+
+                // we need to remove the delay time of TimeLineManager
+                // since we the ui sequene should be async
+                // float start = (float)(clipAsset.start - trackAsset.start);
+                float start = (float)clipAsset.start;
                 var genClipInfo = new GenClipInfo
                 {
-                    DelayTime = (float)clipAsset.start,
+                    DelayTime = start,
                     Duration = (float)clipAsset.duration,
                     EndValue = behaviour.EndPos,
                     StartValue = behaviour.StartPos,
@@ -393,7 +419,7 @@ namespace Cr7Sund.TweenTimeLine
                     BindName = behaviour.BindTarget,
                     TweenMethod = methodContent.Item1,
                     CustomTweenMethod = methodContent.Item2,
-                    EaseName = behaviour.EasePreset.Name,
+                    EaseName = easePreset.Name,
                 };
 
                 foreach (IMarker marker in trackAsset.GetMarkers())
