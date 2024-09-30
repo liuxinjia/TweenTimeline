@@ -11,6 +11,7 @@ namespace Cr7Sund.TweenTimeLine
         public static string tweenLibraryPath => $"{BuiltInConfigEditorFolder}/TweenActionLibrary.asset";
         public static string easingTokenPresetsPath => $"{BuiltInConfigRuntimeFolder}/EasingTokenPresets.asset";
         public static string animTokenPresetsPath => $"{BuiltInConfigEditorFolder}/AnimTokenPresets.asset";
+        public static string componentTweenCollectionPath => $"{BuiltInConfigEditorFolder}/ComponentTweenCollection.asset";
 
         #region Window Style
         public const string windowVisualTreeAssetGUID = "5d602cb17b57b46439b7bd1be265e07a";
@@ -40,6 +41,10 @@ namespace Cr7Sund.TweenTimeLine
         public static string GenRuntimePath =>
             $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.CustomTweenPath)}/RunTime/CodeGens";
 
+        // Assets\Plugins\TweenTimeline\Sample\Editor\Configs
+        public static string SampleEditorPath =>
+            $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.CustomTweenPath)}/Editor/Configs";
+
         // Assets/TweenTimeline/Customs/Editor/Datas
         public static string EditorDataSourcePath =>
             $"{CustomConfigEditorFolder}/Datas";
@@ -50,9 +55,9 @@ namespace Cr7Sund.TweenTimeLine
 
         #region Config
         public static string BuiltInConfigPath =>
-            $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.BuiltInLibraryPath)}/BuiltInConfigs";
+            $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.BuiltInLibraryPath)}BuiltInConfigs";
         public static string CustomConfigPath =>
-            $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.BuiltInLibraryPath)}/Customs";
+            $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.BuiltInLibraryPath)}Customs";
         public static string CurveWrapLibraryPath =>
             $"{BuiltInConfigPath}/CurveLibrary.asset";
 
@@ -80,6 +85,8 @@ namespace Cr7Sund.TweenTimeLine
         public static string BuiltInCurvePresetFolder => $"{BuiltInConfigEditorFolder}/CurvePresets/Editor";
         public static string CustomCurvePresetFolder => $"{CustomConfigEditorFolder}/CurvePresets/Editor";
 
+        public static string BuiltInGIFPresetFolder => $"{BuiltInConfigEditorFolder}/Gifs";
+        public static string CustomGIFPresetFolder => $"{CustomConfigEditorFolder}/Gifs";
 
         private static Type[] derivedTokenTypes;
         public static Type[] DerivedEaseTokenTypes
@@ -108,7 +115,30 @@ namespace Cr7Sund.TweenTimeLine
         #region  StringDefine
         public const string InDefine = "In";
         public const string OutDefine = "Out";
+        public const string PanelTag = "Panel";
+        public const string CompositeTag = "Composite";
+        public static Dictionary<string, Type> UIComponentTypeMatch = new(){
+           { "Btn", typeof(UnityEngine.UI.Button)},
+           { "Button", typeof(UnityEngine.UI.Button)},
+           { "Image", typeof(UnityEngine.UI.Image)},
+           { "Text", typeof(UnityEngine.UI.Text)},
+           { "Slider", typeof(UnityEngine.UI.Slider)},
+           { "Toggle", typeof(UnityEngine.UI.Toggle)},
+           { "Dropdown", typeof(UnityEngine.UI.Dropdown)},
+           { "InputField", typeof(UnityEngine.UI.InputField)},
+           { "Scrollbar", typeof(UnityEngine.UI.Scrollbar)},
+           { "ScrollRect", typeof(UnityEngine.UI.ScrollRect)},
+           { "Mask", typeof(UnityEngine.UI.Mask)},
+           { "RawImage", typeof(UnityEngine.UI.RawImage)},
+           { "RectMask2D", typeof(UnityEngine.UI.RectMask2D)},
+           { "GridLayoutGroup", typeof(UnityEngine.UI.GridLayoutGroup)},
+           { "ContentSizeFitter", typeof(UnityEngine.UI.ContentSizeFitter)},
+           { "LayoutElement", typeof(UnityEngine.UI.LayoutElement)},
+           { "LayoutGroup", typeof(UnityEngine.UI.LayoutGroup)},
+           { "CanvasGroup", typeof(UnityEngine.CanvasGroup)}
+        };
 
+        public const string IsActiveFieleName = "isActive";
         #endregion
     }
 

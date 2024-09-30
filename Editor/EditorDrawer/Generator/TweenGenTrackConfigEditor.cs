@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.Threading.Tasks;
 using Cr7Sund.TweenTimeLine;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -44,6 +46,8 @@ public class TweenGenTrackConfigEditor : Editor
         _listView.style.maxHeight = 9 * _listView.fixedItemHeight;
         _container.Add(_listView);
 
+        var config = (TweenGenTrackConfig)target;
+        _filteredComponentValuePairs = new List<TweenComponentData>(config.componentDatas);
         RefreshListView();
     }
 
@@ -52,6 +56,11 @@ public class TweenGenTrackConfigEditor : Editor
     {
         var config = (TweenGenTrackConfig)target;
 
+        if (string.IsNullOrEmpty(searchText))
+        {
+            return;
+        }
+        
         _filteredComponentValuePairs = config.componentDatas
             .FindAll(pair =>
                 FuzzyMatch(pair.GetPropertyMethod, searchText)
@@ -74,8 +83,7 @@ public class TweenGenTrackConfigEditor : Editor
 
     private void RefreshListView()
     {
-        var config = (TweenGenTrackConfig)target;
-        _filteredComponentValuePairs = new List<TweenComponentData>(config.componentDatas);
+
         _listView.itemsSource = _filteredComponentValuePairs;
         _listView.RefreshItems();
         _listView.Rebuild();

@@ -114,6 +114,11 @@ namespace Cr7Sund.TweenTimeLine
 
             var tokenEnum = presetType.GetField("tokenKey",
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+            if (!tokenEnum.FieldType.IsEnum)
+            {
+                return;
+            }
+
             var enums = Enum.GetValues(tokenEnum.FieldType);
 
             foreach (object item in enums)
@@ -137,8 +142,8 @@ namespace Cr7Sund.TweenTimeLine
                 }
 
                 AnimationCurve animationCurve = curveDictionary[presetName];
-                presetLibrary.easingTokenPresets.Add(instance);
-                instance.Init((Enum)item, new EasingWrapper(animationCurve));
+                instance.Init(item.ToString(), new EasingWrapper(animationCurve));
+                presetLibrary.AddPreset(instance);
             }
         }
 

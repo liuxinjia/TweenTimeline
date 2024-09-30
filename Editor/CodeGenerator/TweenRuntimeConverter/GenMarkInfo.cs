@@ -1,4 +1,6 @@
-﻿namespace Cr7Sund.TweenTimeLine
+﻿using UnityEngine;
+
+namespace Cr7Sund.TweenTimeLine
 {
     public class GenMarkInfo
     {
@@ -18,6 +20,7 @@
             this.value = ConvertValue(valueMaker.Value);
             this.filedName = valueMaker.FieldName;
         }
+
         public static string ConvertValue(object value)
         {
             if (value is bool boolValue)
@@ -31,6 +34,10 @@
             else if (value is float floatValue)
             {
                 return $"{floatValue}f";
+            }
+            else if (value is Sprite sprite )
+            {
+                return sprite == null ? string.Empty:  $"\"{sprite.name}\"";
             }
             return value.ToString(); // Default conversion
         }

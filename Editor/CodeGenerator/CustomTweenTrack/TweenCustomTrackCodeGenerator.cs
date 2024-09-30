@@ -12,8 +12,8 @@ namespace Cr7Sund.TweenTimeLine
             Parallel.ForEach(parameters, parameter =>
             {
                 string typeName = GetTypeName(parameter.ComponentType);
-                string processedPropertyMethod = ProcessPropertyMethod(parameter.GetPropertyMethod);
-                string identifier = $"{typeName}_{processedPropertyMethod}";
+                // string processedPropertyMethod = ProcessPropertyMethod(parameter.GetPropertyMethod);
+                string identifier = TweenCustomTrackCodeGenerator.GetTweenBehaviourIdentifier(parameter);
                 string includeNamespaceName = GetNamespaceName(parameter.ComponentType);
 
                 string controlAssetFolder = Path.Combine(outputPath, "ControlAsset", includeNamespaceName.Replace('.', Path.DirectorySeparatorChar), typeName);
@@ -105,7 +105,8 @@ namespace {namespaceName}
 ";
         }
 
-        private static string GenerateControlCustomBehaviourCode(string namespaceName, string includeNameSpace, string identifier, string componentType, string valueType, string getPropertyMethod, string setPropertyMethod, string tweenMethod, string customTweenMethod)
+        private static string GenerateControlCustomBehaviourCode(string namespaceName, string includeNameSpace, string identifier, string componentType, string valueType, string getPropertyMethod,
+         string setPropertyMethod, string tweenMethod, string customTweenMethod)
         {
             string customNamespaceName = string.Empty;
             if (includeNameSpace != "UnityEngine" &&
@@ -128,7 +129,7 @@ namespace {namespaceName}
         {{
             return PrimeTween.Tween.{tweenMethod}(target, startValue: startValue,
                   ease: PrimEase, endValue: _endPos, duration: (float)duration, 
-                  onValueChange: (t, updateValue) => t.{customTweenMethod});
+                  onValueChange: (target, updateValue) => {customTweenMethod});
         }}
 
         protected override object OnGet({componentType} target)
@@ -152,6 +153,8 @@ namespace {namespaceName}
             {
                 customNamespaceName = $"using {includeNameSpace};";
             }
+
+            var rand = new System.Random();
             return $@"
 using System;
 using UnityEngine;
@@ -161,7 +164,9 @@ using Cr7Sund.TweenTimeLine;
 namespace {namespaceName}
 {{
     [TrackClipType(typeof({identifier}ControlAsset))]
+    [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof({componentType}))]
+    [TrackColor({GetRandomDoubleUsingNext(rand)}f, {GetRandomDoubleUsingNext(rand)}f, {GetRandomDoubleUsingNext(rand)}f)]
     public class {identifier}ControlTrack : TrackAsset,IBaseTrack
     {{
 
@@ -192,5 +197,16 @@ namespace {namespaceName}
             return string.Join(string.Empty, parts);
         }
 
+        public static string GetTweenBehaviourIdentifier(TweenComponentData tweenComponentData)
+        {
+            string typeName = GetTypeName(tweenComponentData.ComponentType);
+            string processedPropertyMethod = ProcessPropertyMethod(tweenComponentData.GetPropertyMethod);
+            return $"{typeName}_{processedPropertyMethod}";
+        }
+
+        public static double GetRandomDoubleUsingNext(System.Random random)
+        {
+            return random.Next(0, 1001) / 1000.0;
+        }
     }
 }

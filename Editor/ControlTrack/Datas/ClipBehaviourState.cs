@@ -44,7 +44,7 @@ namespace Cr7Sund.TweenTimeLine
             // stop Other Action First
             DoAction(behaviour, targetState);
 
-            UnityEngine.Debug.Log($"Target:{targetState} , Prev: {BehaviourState}");
+            // UnityEngine.Debug.Log($"Target:{targetState} , Prev: {BehaviourState}");
 
             this.BehaviourState = targetState;
 

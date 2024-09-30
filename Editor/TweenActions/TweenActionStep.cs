@@ -26,12 +26,12 @@ namespace Cr7Sund.TweenTimeLine
         {
         }
 
-        public TweenActionStep(string endPos, string startPos, string methodName)
-        {
-            EndPos = endPos;
-            StartPos = startPos;
-            tweenMethod = methodName;
-        }
+        // public TweenActionStep(string endPos, string startPos, string methodName)
+        // {
+        //     EndPos = endPos;
+        //     StartPos = startPos;
+        //     tweenMethod = methodName;
+        // }
 
         public Type GetComponentType()
         {
@@ -43,8 +43,7 @@ namespace Cr7Sund.TweenTimeLine
 
         public Type GetTweenBehaviourType()
         {
-            var methodName = $"{tweenMethod}";
-            string fullTypeName = GetMethodFullType(methodName);
+            string fullTypeName = GetMethodFullType(tweenMethod);
             Assembly assembly = GetTweenTrackAssembly(fullTypeName);
 
             return assembly.GetType(fullTypeName);
@@ -133,29 +132,13 @@ namespace Cr7Sund.TweenTimeLine
             clipInfo.easePreset = easingTokenPresetLibrary.GetEasePreset(animActionEaseToken);
         }
 
-        public object GetCurPos(TweenActionEffect animAction, EasingTokenPresetLibrary easingTokenPresetLibrary)
-        {
-            Type tweenBehaviourType;
-            Component component;
-            MethodInfo createTweenMethodInfo, getMethodInfo, setMethodInfo;
-            object target;
-            GetTweenMethodInfo(animAction, easingTokenPresetLibrary, out tweenBehaviourType, out var clpInfo, out component, out createTweenMethodInfo, out getMethodInfo, out setMethodInfo, out target);
-
-            var initPos = getMethodInfo.Invoke(target, new[]
-            {
-                component
-            });
-
-            return initPos;
-        }
-
         public Tween GenerateTween(TweenActionEffect animAction, EasingTokenPresetLibrary easingTokenPresetLibrary, out Action onResetAction)
         {
             Type tweenBehaviourType;
             Component component;
             MethodInfo createTweenMethodInfo, getMethodInfo, setMethodInfo;
             object target;
-            GetTweenMethodInfo(animAction, easingTokenPresetLibrary, out tweenBehaviourType, out var trackInfo, 
+            GetTweenMethodInfo(animAction, easingTokenPresetLibrary, out tweenBehaviourType, out var trackInfo,
             out component, out createTweenMethodInfo, out getMethodInfo, out setMethodInfo, out target);
 
             // Reflectively set properties from AnimationSettings
@@ -166,6 +149,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 component
             });
+
             destPosFieldInfo.SetValue(target, trackInfo.endPos);
             easeFieldInfo.SetValue(target, trackInfo.easePreset);
 

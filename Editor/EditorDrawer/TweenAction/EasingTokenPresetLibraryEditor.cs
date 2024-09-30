@@ -55,6 +55,7 @@ namespace Cr7Sund.TweenTimeLine
 
             foreach (var presetType in derivedTypes)
             {
+
                 EasingTokenPresetsFactory.GenerateEasingTokenPresets(
                     easingTokenPresetLibrary,
                     presetType,

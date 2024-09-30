@@ -135,8 +135,11 @@ namespace Cr7Sund.TweenTimeLine
 
             if (objectValue == null || objectValue.GetType() != type)
             {
-                Debug.LogWarning($"{objectValue} is not type {type}");
-                objectValue = Activator.CreateInstance(type);
+                if (type != typeof(Quaternion))
+                {
+                    Debug.LogWarning($"{objectValue} is not type {type}");
+                    objectValue = Activator.CreateInstance(type);
+                }
             }
             if (type == typeof(Vector3))
             {
@@ -249,12 +252,10 @@ namespace Cr7Sund.TweenTimeLine
             else if (type == typeof(Quaternion))
             {
                 var element = new Vector3Field();
-                Quaternion euler = default;
                 if (objectValue is Vector3 vector3)
                 {
-                    euler = Quaternion.Euler(vector3);
+                    element.value = vector3;
                 }
-                element.value = euler.eulerAngles;
                 element.label = label; // 设置 label
                 element.RegisterValueChangedCallback(evt =>
                 {

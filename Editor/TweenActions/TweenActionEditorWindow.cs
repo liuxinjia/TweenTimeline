@@ -14,15 +14,14 @@ namespace Cr7Sund.TweenTimeLine
 {
     public class TweenActionEditorWindow : EditorWindow
     {
-        private AnimTokenPresets animTokenPresets;
+        private AnimTokenPresets _animTokenPresets;
         private TweenActionLibrary _tweenActionContainer;
         private EasingTokenPresetLibrary _easingTokenPresetLibrary;
         private TweenActionEffect _selectTweenAction = new();
         private Sequence _curSequence;
         private string _updateSequenveID;
-        private VisualElement selecGridItem;
+        private VisualElement _selecGridItem;
         private string _curRestID;
-
 
         [MenuItem("GameObject/TweenAction Editor %T", priority = 1)]
         public static void ShowWindow()
@@ -67,12 +66,12 @@ namespace Cr7Sund.TweenTimeLine
 
         public void CreateGUI()
         {
-
             var visualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(AssetDatabase.GUIDToAssetPath(TweenTimelineDefine.windowVisualTreeAssetGUID));
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(TweenTimelineDefine.windowStyleGUID));
             rootVisualElement.styleSheets.Add(styleSheet);
             TemplateContainer root = visualTreeAsset.Instantiate();
             rootVisualElement.Add(root);
+
 
             UpdateConfigUI(_selectTweenAction);
             CreateAnimUnits(_selectTweenAction);
@@ -103,9 +102,9 @@ namespace Cr7Sund.TweenTimeLine
             }
             rootTabView.activeTabChanged += (t1, t2) =>
             {
-                UpdateSelectCollectionContainer();
+                UpdateTargetComponnet();
             };
-            UpdateSelectCollectionContainer();
+            UpdateTargetComponnet();
         }
 
         private void BindActionBtns()
@@ -132,7 +131,6 @@ namespace Cr7Sund.TweenTimeLine
             DrawToolBtns();
         }
 
-
         private void AddTracks(TweenActionEffect selectTweenAction)
         {
             if (selectTweenAction == null)
@@ -142,41 +140,43 @@ namespace Cr7Sund.TweenTimeLine
 
             var trackInfoDict = new Dictionary<string, TrackInfoContext>();
             var trackRoot = BindUtility.GetAttachRoot(selectTweenAction.target.transform);
-            string trackRootName = trackRoot.name;
             foreach (var animUnit in selectTweenAction.animationSteps)
             {
+                animUnit.GetAnimUnitClipInfo(selectTweenAction, _easingTokenPresetLibrary, 
+                out var clipInfo, out var component);
+                Type componentType = animUnit.GetComponentType();
+                string animUnitTweenMethod = animUnit.tweenMethod.Replace("ControlBehaviour", "");
+                var trackName = $"Cr7Sund.{componentType.Name}Tween.{animUnitTweenMethod}ControlTrack";
+                Assembly assembly = TweenActionStep.GetTweenTrackAssembly(trackName);
+                Type trackType = assembly.GetType(trackName);
+                var assetName = $"Cr7Sund.{componentType.Name}Tween.{animUnitTweenMethod}ControlAsset";
+                var trackAssetType = assembly.GetType(assetName);
                 if (!trackInfoDict.TryGetValue(animUnit.tweenMethod, out var trackInfo))
                 {
                     trackInfo = new TrackInfoContext();
+                    trackInfo.component = component;
+                    trackInfo.trackType = trackType;
+                    trackInfo.trackAssetType = trackAssetType;
                     trackInfo.clipInfos = new List<ClipInfoContext>();
                     trackInfoDict.Add(animUnit.tweenMethod, trackInfo);
                 }
-                animUnit.GetAnimUnitClipInfo(selectTweenAction, _easingTokenPresetLibrary, out var clipInfo, out var component);
                 trackInfo.clipInfos.Add(clipInfo);
 
-                Type componentType = animUnit.GetComponentType();
-                component = selectTweenAction.target.GetComponent(componentType);
                 // var behaviourName = $"Cr7Sund.TweenTimeLine.{animUnit.tweenMethod}ControlBehaviour";
-                string animUnitTweenMethod = animUnit.tweenMethod.Replace("ControlBehaviour", "");
-                var trackName = $"Cr7Sund.{componentType.Name}Tween.{animUnitTweenMethod}ControlTrack";
-                var assetName = $"Cr7Sund.{componentType.Name}Tween.{animUnitTweenMethod}ControlAsset";
+
                 var rooTabView = rootVisualElement.Q<TabView>("rooTabView");
-                Assembly assembly = TweenActionStep.GetTweenTrackAssembly(trackName);
-                Type trackAssetType = assembly.GetType(trackName);
 
                 bool createNewTrack = false;
                 bool alwaysCreateNewTrack = TweenTimelinePreferencesProvider.GetBool(ActionEditorSettings.AlwaysCreateTrack);
                 if (!alwaysCreateNewTrack &&
-                    TweenTimelineManager.FindExistTrackAsset(component, trackAssetType) != null)
+                    TweenTimelineManager.FindExistTrackAsset(component, trackType) != null)
                 {
                     createNewTrack = EditorUtility.DisplayDialog($"Create New Track",
-                    $"A same track of{component.name} {trackAssetType.Name}  is already exists. \n (Tip: You can toggle the behavior to allowed always create a new track)", "Create New Track", "Attend on the existed");
+                    $"A same track of{component.name} {trackType.Name}  is already exists. \n (Tip: You can toggle the behavior to allowed always create a new track)", "Create New Track", "Attend on the existed");
                 }
 
-                TweenTimelineManager.AddTrack(component,
-                    trackRootName,
-                    trackAssetType,
-                    assembly.GetType(assetName),
+                TweenTimelineManager.AddTrack(
+                    trackRoot,
                     trackInfo,
                     rooTabView.selectedTabIndex == 0,
                     createNewTrack
@@ -231,7 +231,7 @@ namespace Cr7Sund.TweenTimeLine
                          TweenTimelineManager.ToggleAllPLayClips();
                          _curRestID = string.Empty;
                      });
-                     
+
                     // TweenTimelineManager.Play();
                 }
 
@@ -331,7 +331,7 @@ namespace Cr7Sund.TweenTimeLine
         {
             var container = rootVisualElement.Q<VisualElement>("ConfigContainer");
 
-            var animSettingType = animTokenPresets.GetAnimationSettingType(selectTweenAction.durationToken, selectTweenAction.easeToken);
+            var animSettingType = _animTokenPresets.GetAnimationSettingType(selectTweenAction.durationToken, selectTweenAction.easeToken);
             CreateSettingParisField(container);
 
             // Update Duration Field
@@ -361,13 +361,13 @@ namespace Cr7Sund.TweenTimeLine
             componentField.RegisterValueChangedCallback(evt =>
             {
                 selectTweenAction.target = (GameObject)evt.newValue;
-                UpdateSelectCollectionContainer();
+                UpdateTargetComponnet();
             });
 
             ToggleTweenAnimParis(durationField, easeField, animSettingType);
         }
 
-        private void UpdateSelectCollectionContainer()
+        private void UpdateTargetComponnet()
         {
             var tabView = rootVisualElement.Q<TabView>("rooTabView");
             var container = tabView.Q<VisualElement>($"tabContainer_{tabView.selectedTabIndex}");
@@ -400,7 +400,7 @@ namespace Cr7Sund.TweenTimeLine
         private void CreateSettingParisField(VisualElement container)
         {
             var animationSettingField = container.Q<EnumField>("AnimTokenPreset");
-            var animSettingType = animTokenPresets.GetAnimationSettingType(_selectTweenAction.durationToken, _selectTweenAction.easeToken);
+            var animSettingType = _animTokenPresets.GetAnimationSettingType(_selectTweenAction.durationToken, _selectTweenAction.easeToken);
             animationSettingField.value = animSettingType;
             animationSettingField.RegisterValueChangedCallback(evt =>
             {
@@ -413,7 +413,7 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     return;
                 }
-                var settings = animTokenPresets.GetSettings(selectedSettingType);
+                var settings = _animTokenPresets.GetSettings(selectedSettingType);
                 _selectTweenAction.durationToken = settings.duration;
                 _selectTweenAction.easeToken = settings.easing;
 
@@ -493,6 +493,9 @@ namespace Cr7Sund.TweenTimeLine
             grid.Clear();
 
 
+            var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(AssetDatabase.GUIDToAssetPath(TweenTimelineDefine.gridItemVisualTreeAssetGUID));
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(TweenTimelineDefine.gridItemItemStyleGUID));
+
             foreach (var kvp in actionCategoryList)
             {
                 if (kvp.Value.Count > 0)
@@ -501,7 +504,8 @@ namespace Cr7Sund.TweenTimeLine
                 }
                 foreach (var item in kvp.Value)
                 {
-                    CreateGridItem(grid, item);
+                    CreateGridItem(grid, item,
+                    visualTree, styleSheet);
                 }
             }
         }
@@ -532,12 +536,9 @@ namespace Cr7Sund.TweenTimeLine
             container.Add(categoryLabel);
         }
 
-        private void CreateGridItem(VisualElement grid, TweenActionEffect animAction)
+        private void CreateGridItem(VisualElement grid, TweenActionEffect animAction,
+         VisualTreeAsset visualTree, StyleSheet styleSheet)
         {
-            // Load the UXML file
-            var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(AssetDatabase.GUIDToAssetPath(TweenTimelineDefine.gridItemVisualTreeAssetGUID));
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(AssetDatabase.GUIDToAssetPath(TweenTimelineDefine.gridItemItemStyleGUID));
-
             // Clone the UXML and apply styles
             var item = visualTree.CloneTree().Q<VisualElement>("gridItem");
             item.styleSheets.Add(styleSheet);
@@ -551,6 +552,7 @@ namespace Cr7Sund.TweenTimeLine
             var img = item.Q<Image>("icon");
             var extension = Path.GetExtension(animAction.image);
             bool showGUI = TweenTimelinePreferencesProvider.GetBool(ActionEditorSettings.EnableGifPreview);
+
             if (showGUI &&
                  extension == ".gif"
                  && File.Exists(animAction.image))
@@ -565,7 +567,6 @@ namespace Cr7Sund.TweenTimeLine
                 img.Clear();
                 img.style.backgroundImage = AniActionEditToolHelper.LoadImageFromPath(animAction.image);
             }
-
 
             // Add the item to the grid
             grid.Add(item);
@@ -583,12 +584,12 @@ namespace Cr7Sund.TweenTimeLine
                 // left Click
                 else if (ev.button == 0)
                 {
-                    if (selecGridItem != null)
+                    if (_selecGridItem != null)
                     {
-                        selecGridItem.EnableInClassList("Select", false);
+                        _selecGridItem.EnableInClassList("Select", false);
                     }
-                    selecGridItem = item;
-                    selecGridItem.EnableInClassList("Select", true);
+                    _selecGridItem = item;
+                    _selecGridItem.EnableInClassList("Select", true);
                     OnAnimationEffectSelect(animAction);
                 }
             });
@@ -599,7 +600,7 @@ namespace Cr7Sund.TweenTimeLine
             LoadBtnsAssets();
             _easingTokenPresetLibrary = AssetDatabase.LoadAssetAtPath<EasingTokenPresetLibrary>(TweenTimelineDefine.easingTokenPresetsPath);
             _tweenActionContainer = AssetDatabase.LoadAssetAtPath<TweenActionLibrary>(TweenTimelineDefine.tweenLibraryPath);
-            animTokenPresets = AssetDatabase.LoadAssetAtPath<AnimTokenPresets>(TweenTimelineDefine.animTokenPresetsPath);
+            _animTokenPresets = AssetDatabase.LoadAssetAtPath<AnimTokenPresets>(TweenTimelineDefine.animTokenPresetsPath);
         }
         #endregion
 

@@ -18,6 +18,7 @@ namespace Cr7Sund.Timeline.Extension
         public static bool IteratePlayableAssets(Action<PlayableAsset, TrackAsset> iterateAction)
         {
             var timelineWindow = TimelineWindow.instance;
+
             if (timelineWindow == null)
             {
                 return false;
@@ -138,7 +139,12 @@ namespace Cr7Sund.Timeline.Extension
             {
                 return false;
             }
-            var tracks = editSequence.asset.GetRootTracks();
+            return IterateTrackAssets(iterateAction, editSequence.asset);
+        }
+
+        static bool IterateTrackAssets(Action<TrackAsset> iterateAction, TimelineAsset asset)
+        {
+            var tracks = asset.GetRootTracks();
 
             iterateTrackAsset(iterateAction, tracks);
 
@@ -225,6 +231,10 @@ namespace Cr7Sund.Timeline.Extension
             return TimelineWindow.instance.state.editSequence.duration;
         }
 
+        public static PlayableDirector GetCurDirector()
+        {
+            return TimelineWindow.instance.state.editSequence.director;
+        }
         public static bool GetBehaviourValue(object clipAsset, out System.Object behaviour)
         {
             behaviour = null;

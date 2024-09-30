@@ -35,7 +35,11 @@
             {
                 return null;
             }
-            
+
+            if (FieldName == TweenTimelineDefine.IsActiveFieleName)
+            {
+                return UpdateValue;
+            }
             var fieldInfo = target.GetType().GetField(FieldName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
             if (fieldInfo == null)
             {

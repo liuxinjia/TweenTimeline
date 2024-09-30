@@ -52,17 +52,22 @@ namespace Cr7Sund.TweenTimeLine
         private async void Gen(TweenGenTrackConfig tweenGenTrackConfig)
         {
             var configPath = AssetDatabase.GetAssetPath(tweenGenTrackConfig);
-            string outPutPath = String.Empty;
-            if (configPath.StartsWith(TweenTimelineDefine.CustomConfigPath))
+            string filePath = string.Empty;
+            string customConfigPath = TweenTimelineDefine.CustomConfigPath;
+            bool isCustom = false;
+            if (configPath.StartsWith(customConfigPath))
             {
-                outPutPath = PathUtility.ConvertToAbsolutePath(TweenTimelineDefine.CustomConfigPath);
+                // Assets\Plugins\TweenTimeline\Sample\Editor\Configs\CustomAnimationContainerBuilder.cs
+                string outPutPath = PathUtility.ConvertToAbsolutePath(TweenTimelineDefine.SampleEditorPath);
+                filePath = Path.Combine(outPutPath, "CustomTweenActionContainerBuilder.cs");
+                isCustom = true;
             }
             else
             {
-                outPutPath = PathUtility.ConvertToAbsolutePath(TweenTimelineDefine.BuiltInConfigPath);
+                filePath = "Assets/Plugins/TweenTimeline/Editor/TweenActions/TweeenActionCollections/BuiltIn";
+                filePath = FolderLocationChecker.GetFolderPath(filePath);
+                filePath = Path.Combine(filePath, "BuiltInAnimationCollections.Base.cs");
             }
-            // @"C:\Users\liux4\Documents\UnityProjects\MyMiniGame\Assets\Plugins\TweenTimeline\Sample\Editor\Configs";
-            string filePath = Path.Combine(outPutPath, "CustomAnimationContainerBuilder.cs");
 
             if (!File.Exists(filePath))
             {
@@ -72,17 +77,30 @@ namespace Cr7Sund.TweenTimeLine
             GetGenConfigs(tweenGenTrackConfig, out var lines, out var namespaces);
 
             var finalContent = new StringBuilder();
-            finalContent.Append(StartGen(namespaces));
+            if (isCustom)
+            {
+                finalContent.Append(StartCustomGen(namespaces));
+            }
+            else
+            {
+                finalContent.Append(StartBaseGen(namespaces));
+            }
             foreach (var generatedLine in lines)
             {
                 finalContent.Append(generatedLine);
             }
-            finalContent.AppendLine(EndGen());
-
+            if (isCustom)
+            {
+                finalContent.AppendLine(EndCustomGen());
+            }
+            else
+            {
+                finalContent.AppendLine(EndBaseGen());
+            }
             await File.WriteAllTextAsync(filePath, finalContent.ToString(), Encoding.UTF8);
         }
 
-        public string StartGen(List<string> namespaces)
+        public string StartCustomGen(List<string> namespaces)
         {
             var namespaceSB = new StringBuilder();
             foreach (var item in namespaces)
@@ -96,17 +114,51 @@ using UnityEngine;
 
 namespace Cr7Sund.TweenTimeLine
 {{
-    public class CustomAnimationContainerBuilder
+    public class CustomTweenActionContainerBuilder
     {{
-        public static void CreateCustomAnimationCollection(List<AnimationEffect> animEffect)
+        public static List<{nameof(TweenActionEffect)}> CreateCustomAnimationCollection()
         {{
-           
+           var animEffect =  new List<{nameof(TweenActionEffect)}> ();
 ";
         }
 
-        public string EndGen()
+        public string StartBaseGen(List<string> namespaces)
         {
-            return @"        }
+            var namespaceSB = new StringBuilder();
+            foreach (var item in namespaces)
+            {
+                namespaceSB.AppendLine(item);
+            }
+
+            return $@"using System.Collections.Generic;
+using UnityEngine;
+{namespaceSB}
+
+namespace Cr7Sund.TweenTimeLine
+{{
+    public partial class TweenActionContainerBuilder
+    {{
+        public static {nameof(TweenCollection)} CreateBaseAnimationCollection()
+        {{
+            var customAnimationCollection = new TweenCollection(""Custom"");
+            var animEffect = customAnimationCollection.animationCollections;
+            ";
+        }
+
+        public string EndBaseGen()
+        {
+            return @" 
+             return customAnimationCollection;
+            }
+    }
+}";
+        }
+
+        public string EndCustomGen()
+        {
+            return @" 
+             return animEffect;
+            }
     }
 }";
         }
@@ -115,20 +167,19 @@ namespace Cr7Sund.TweenTimeLine
         {
             string typeName = TweenCustomTrackCodeGenerator.GetTypeName(method.ComponentType);
             namespaceName = $"using Cr7Sund.{typeName}Tween;";
-            string processedPropertyMethod = TweenCustomTrackCodeGenerator.ProcessPropertyMethod(method.GetPropertyMethod);
-            string identifier = $"{typeName}_{processedPropertyMethod}";
+            string identifier = TweenCustomTrackCodeGenerator.GetTweenBehaviourIdentifier(method);
             return $@"
-            animEffect.Add(new AnimationEffect( ""{method.GetPropertyMethod}"",""{typeName}"")
+            animEffect.Add(new {nameof(TweenActionEffect)}( ""{method.GetPropertyMethod}"",""{typeName}"")
             {{
                 image = ""custom_{typeName}_example.png"",
                 collectionCategory = ""Custom"",
-                animationSteps = new List<AnimationStep>
+                animationSteps = new List<{nameof(TweenActionStep)}>
                 {{
-                    new AnimationStep
+                    new {nameof(TweenActionStep)}
                     {{
                         EndPos = ""{GetDefaultValue(method.ValueType)}"", 
                         isRelative = true,
-                        tweenMethod = AnimationContainerBuilder.GetTweenMethodName<{identifier}ControlBehaviour>(),
+                        tweenMethod = {nameof(TweenActionContainerBuilder)}.GetTweenMethodName<{identifier}ControlBehaviour>(),
                         label = ""{method.GetPropertyMethod}"",
                     }}
                 }}

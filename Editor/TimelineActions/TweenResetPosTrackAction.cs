@@ -9,7 +9,6 @@ namespace Cr7Sund.TweenTimeLine
     [MenuEntry("Custom Actions/TweenResetPosTrackAction")]
     public class TweenResetPosTrackAction : TrackAction
     {
-        private EasingTokenPresetLibrary _easingTokenPresetLibrary;
 
         public override ActionValidity Validate(IEnumerable<TrackAsset> tracks)
         {
@@ -56,7 +55,7 @@ namespace Cr7Sund.TweenTimeLine
         }
 
 
-        [TimelineShortcut("TweenResetPosTrackAction", KeyCode.R)]
+        [TimelineShortcut("TweenResetPosTrackAction", KeyCode.R, ShortcutModifiers.Shift)]
         public static void HandleShortCut(ShortcutArguments args)
         {
             Invoker.InvokeWithSelectedTracks<TweenResetPosTrackAction>();

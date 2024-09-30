@@ -39,7 +39,7 @@ namespace Cr7Sund.TweenTimeLine
         {
             new TweenActionStep
             {
-                EndPos = new Vector3(-250, 0, 0).ToString(),
+                EndPos = new Vector3(250, 0, 0).ToString(),
                 StartPos = string.Empty,
                 isRelative = true,
                 tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionControlBehaviour>(), // 更新控制行为
@@ -116,10 +116,10 @@ namespace Cr7Sund.TweenTimeLine
             },
             new TweenActionStep
             {
-                EndPos = Quaternion.Euler(0, 0, 360).eulerAngles.ToString(),
+                EndPos = new Vector3(0, 0, 360).ToString(),
                 StartPos = Vector3.zero.ToString(),
                 label = "Rotate",
-                tweenMethod = GetTweenMethodName<Transform_RotationControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<Transform_LocalEulerAnglesControlBehaviour>(),
             },
             new TweenActionStep
             {
@@ -146,10 +146,10 @@ namespace Cr7Sund.TweenTimeLine
             },
             new TweenActionStep
             {
-                EndPos = Quaternion.Euler(0, 0, 720).eulerAngles.ToString(),
+                EndPos = new Vector3(0, 0, 720).ToString(),
                 StartPos = Vector3.zero.ToString(),
                 label = "Rotate",
-                tweenMethod = GetTweenMethodName<Transform_RotationControlBehaviour>(),
+                tweenMethod = GetTweenMethodName<Transform_LocalEulerAnglesControlBehaviour>(),
             },
             new TweenActionStep
             {

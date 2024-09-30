@@ -5,12 +5,14 @@ using System.Reflection;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions;
+using UnityEngine.Timeline;
 
 namespace Cr7Sund.TweenTimeLine
 {
     public static class AnimationClipConverter
     {
-        public static Dictionary<Type, Dictionary<string, string>> ReplaceProperty = new Dictionary<Type, Dictionary<string, string>>()
+        private static Dictionary<Type, Dictionary<string, string>> ReplaceProperty = new Dictionary<Type, Dictionary<string, string>>()
         {
             {
                 typeof(TextMeshProUGUI), new Dictionary<string, string>
@@ -25,93 +27,15 @@ namespace Cr7Sund.TweenTimeLine
             // { typeof(SkeletonGraphic), new Dictionary<string, string> { { "m_Color", "color" } } },
             // { typeof(UIParticle), new Dictionary<string, string> { { "m_Scale3D", "scale3D" } } },
         };
-        public static readonly HashSet<string> _ignoreName = new HashSet<string>()
+
+        private static readonly HashSet<string> _ignoreName = new HashSet<string>()
         {
             "enabled",
-            "_endPos"
+            "isActive",
+            "sprite"
         };
 
 
-        public static GenClipInfo GenClipInfo(string targetObject, string propertyName, AnimationClip clip, KeyframeDataWrapper keyWrapper)
-        {
-            GenClipInfo resultClipInfo = null;
-            string clipName = clip.name;
-
-            foreach (ObjectKeyframes animTargetInfo in keyWrapper.Objects)
-            {
-                if (!string.IsNullOrEmpty(animTargetInfo.ObjectKey) &&
-                    animTargetInfo.ObjectKey != targetObject)
-                {
-                    continue;
-                }
-                foreach (TypeKeyframes typeKeyFrames in animTargetInfo.Types)
-                {
-                    foreach (PropertyKeyframes frameProperty in typeKeyFrames.Properties)
-                    {
-                        if (frameProperty.PropertyName != propertyName)
-                        {
-                            continue;
-                        }
-
-                        string targetTypeName, tweenMethod, curveName;
-                        GetClipInfoName(clipName, typeKeyFrames.Type, frameProperty.PropertyName,
-                            out targetTypeName, out tweenMethod, out curveName);
-                        if (string.IsNullOrEmpty(curveName))
-                        {
-                            continue;
-                        }
-                        // if (!curveLibrary.TryGetCurve(curveName, out var existingCurve))
-                        // {
-                        //     Debug.LogError($"Curve not found for: {curveName}");
-                        //     continue; // Skip to the next iteration
-                        // }
-
-                        // RectTransformSizeDeltaControlTrack
-                        resultClipInfo = new GenClipInfo()
-                        {
-                            Duration =
-                                clip.length,
-                            EaseName =
-                                curveName,
-                            TweenMethod =
-                                tweenMethod,
-                            EndValue =
-                                frameProperty.Keyframes[0].Value, // the curve is inverse
-                            BindType = targetTypeName,
-                            StartValue =
-                                frameProperty.Keyframes[frameProperty.Keyframes.Count - 1].Value
-                        };
-
-                    }
-                }
-            }
-
-            return resultClipInfo;
-        }
-
-        public static List<string> GenTrackInfos(string targetObject, KeyframeDataWrapper keyWrapper)
-        {
-            var properties = new HashSet<string>();
-
-            foreach (ObjectKeyframes animTargetInfo in keyWrapper.Objects)
-            {
-                if (!string.IsNullOrEmpty(animTargetInfo.ObjectKey) &&
-                    animTargetInfo.ObjectKey != targetObject)
-                {
-                    continue;
-                }
-                foreach (TypeKeyframes typeKeyFrames in animTargetInfo.Types)
-                {
-                    foreach (PropertyKeyframes frameProperty in typeKeyFrames.Properties)
-                    {
-                        if (!properties.Contains(frameProperty.PropertyName))
-                            properties.Add(frameProperty.PropertyName);
-                    }
-                }
-            }
-
-            return properties.ToList();
-        }
 
         public static KeyframeDataWrapper GenerateKeyFrameDatas(AnimationClip clip)
         {
@@ -121,11 +45,12 @@ namespace Cr7Sund.TweenTimeLine
             foreach (EditorCurveBinding binding in curveBindings)
             {
                 AnimationCurve editorCurve = AnimationUtility.GetEditorCurve(clip, binding);
-                Array.Sort(editorCurve.keys, (t1, t2) => t1.time.CompareTo(t2.time));
+                Keyframe[] keys = editorCurve.keys;
+                Array.Sort(keys, (t1, t2) => t1.time.CompareTo(t2.time));
                 // TODO remove duplicate curves
-                for (int i = 0; i < editorCurve.keys.Length; i++)
+                for (int i = 0; i < keys.Length; i++)
                 {
-                    Keyframe keyframe = editorCurve.keys[i];
+                    Keyframe keyframe = keys[i];
                     KeyframeData data = new KeyframeData
                     {
                         Time = keyframe.time,
@@ -140,7 +65,7 @@ namespace Cr7Sund.TweenTimeLine
                     };
                     MapProperty(binding.type, ref data.Property);
 
-                    var value = keyframeDataList.Find(t1 => t1.ObjectKey == binding.path);
+                    var value = keyframeDataList.Find(t1 => t1.ObjectPath == binding.path);
                     if (value == null)
                     {
                         keyframeDataList.Add(value = new ObjectKeyframes(binding.path, binding.type));
@@ -168,48 +93,59 @@ namespace Cr7Sund.TweenTimeLine
             return keyframeDataWrapper;
         }
 
-
-        public static void GetClipInfoName(string clipName, Type targetType, string propertyName, out string targetTypeName, out string tweenMethod, out string curveName)
+        public static KeyframeDataWrapper GenerateObjectKeyFrameDatas(AnimationClip clip)
         {
-            clipName = clipName.Replace(" ", "");
-            string simplifyTypeName = GetSimplifyTypeName(targetType.ToString());
-            targetTypeName = targetType.ToString();
-            tweenMethod = GetTweenMethod(propertyName, out var typeName);
-            if (!string.IsNullOrEmpty(typeName))
-            {
-                targetTypeName = typeName;
-            }
-            if (string.IsNullOrEmpty(tweenMethod))
-            {
-                curveName = string.Empty;
-            }
-            else
-            {
-                curveName = $"{clipName}{simplifyTypeName}{tweenMethod}";
-            }
-        }
+            EditorCurveBinding[] curveBindings = AnimationUtility.GetObjectReferenceCurveBindings(clip);
+            List<ObjectKeyframes> keyframeDataList = new List<ObjectKeyframes>();
 
-        private static string GetTweenMethod(string propertyName, out string targetType)
-        {
-            targetType = null;
-
-            string key = $"{propertyName.ToUpper()}";
-            if (TweenConfigCacher.tweenGenInfoCaches.ContainsKey(key))
+            foreach (EditorCurveBinding binding in curveBindings)
             {
-                targetType = TweenConfigCacher.tweenGenInfoCaches[key].ComponentType;
-                return TweenConfigCacher.tweenGenInfoCaches[key].GetTweenMethod();
-            }
-            else
-            {
-                if (!_ignoreName.Contains(propertyName))
-                    Debug.LogError($"Dont find  tween method : {propertyName}");
-                return string.Empty;
-            }
-        }
+                var keys = AnimationUtility.GetObjectReferenceCurve(clip, binding);
+                Array.Sort(keys, (t1, t2) => t1.time.CompareTo(t2.time));
+                // TODO remove duplicate curves
+                for (int i = 0; i < keys.Length; i++)
+                {
+                    var keyframe = keys[i];
+                    KeyframeData data = new KeyframeData
+                    {
+                        Time = keyframe.time,
+                        Value = keyframe.value,
+                        // InTangent = keyframe.inTangent,
+                        // OutTangent = keyframe.outTangent,
+                        Property = binding.propertyName,
+                        // InWeight = keyframe.inWeight,
+                        // OutWeight = keyframe.outWeight,
+                        Path = binding.path,
+                        Type = new SerializableType(binding.type),
+                    };
+                    MapProperty(binding.type, ref data.Property);
 
-        private static string GetSimplifyTypeName(string fullType)
-        {
-            return fullType.Substring(fullType.LastIndexOf('.') + 1);
+                    var value = keyframeDataList.Find(t1 => t1.ObjectPath == binding.path);
+                    if (value == null)
+                    {
+                        keyframeDataList.Add(value = new ObjectKeyframes(binding.path, binding.type));
+                    }
+
+                    TypeKeyframes typeKeyframes = value.Types.Find(t1 => t1.Type == binding.type);
+                    if (typeKeyframes == null)
+                    {
+                        value.Types.Add(typeKeyframes = new TypeKeyframes(binding.type));
+                    }
+
+                    PropertyKeyframes propertyKeyframes =
+                        typeKeyframes.Properties.Find(t1 => t1.PropertyName == data.Property);
+                    if (propertyKeyframes == null)
+                    {
+                        typeKeyframes.Properties.Add(propertyKeyframes = new PropertyKeyframes(data.Property));
+                    }
+
+                    propertyKeyframes.Keyframes.Add(data);
+                }
+            }
+            var keyframeDataWrapper = new KeyframeDataWrapper();
+            keyframeDataWrapper.AnimationName = clip.name;
+            keyframeDataWrapper.Objects = keyframeDataList;
+            return keyframeDataWrapper;
         }
 
         public static void MapProperty(Type type, ref string property)
@@ -246,6 +182,51 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
 
+        public static void GetClipInfoName(string clipName, Type targetType, string propertyName, string bindTarget,
+         out string targetTypeName, out string tweenIdentifier, out string curveName)
+        {
+            clipName = clipName.Replace(" ", "");
+            targetTypeName = targetType.ToString();
+            tweenIdentifier = GetTweenMethod(propertyName, out var typeName);
+
+            if (!string.IsNullOrEmpty(typeName))
+            {
+                targetTypeName = typeName;
+            }
+            if (string.IsNullOrEmpty(tweenIdentifier))
+            {
+                curveName = string.Empty;
+            }
+            else
+            {
+                curveName = $"{clipName}{bindTarget}{tweenIdentifier}";
+            }
+        }
+
+        private static string GetTweenMethod(string propertyName, out string targetType)
+        {
+            targetType = null;
+            var identifier = string.Empty;
+
+            string key = $"{propertyName.ToUpper()}";
+            if (TweenConfigCacher.tweenGenInfoCaches.ContainsKey(key))
+            {
+                targetType = TweenConfigCacher.tweenGenInfoCaches[key].ComponentType;
+                // string tweenMethod = TweenConfigCacher.tweenGenInfoCaches[key].GetTweenMethod();
+                identifier = TweenCustomTrackCodeGenerator.GetTweenBehaviourIdentifier(TweenConfigCacher.tweenGenInfoCaches[key]);
+                return identifier;
+            }
+            else
+            {
+                if (!_ignoreName.Contains(propertyName))
+                {
+                    Debug.LogError($"Dont find  tween method : {propertyName} \n Please check in TweenGenTrackConfig Settings");
+                }
+                return string.Empty;
+            }
+        }
+
+
         private static string GetVariableName(string input)
         {
             string[] parts = input.Split('.');
@@ -281,5 +262,393 @@ namespace Cr7Sund.TweenTimeLine
             return result;
         }
 
+        #region  TrackContext
+
+        public static List<GenTrackInfo> ConstructGenTracks(AnimationClip clip,
+                EasingTokenPresetLibrary _easingTokenPresetLibrary,
+                   KeyframeDataWrapper keyWrapper, double startTime, int instanceID,
+                   in Dictionary<string, Tuple<string, string>> contentDict
+                   )
+        {
+            var trackInfos = CreateTrackContexts(null, clip
+                             , _easingTokenPresetLibrary, keyWrapper, startTime);
+
+            var genTrackInfos = new List<GenTrackInfo>(trackInfos.Count);
+            foreach (var trackInfoContext in trackInfos)
+            {
+                string instanceId = instanceID.ToString() + trackInfoContext.BindTargetName + trackInfoContext.tweenIdentifier;
+
+                var genTrackInfo = new GenTrackInfo(instanceId);
+                foreach (var clipInfoContext in trackInfoContext.clipInfos)
+                {
+                    BaseEasingTokenPreset easePreset = clipInfoContext.easePreset;
+                    string easeName = easePreset?.Name ?? string.Empty;
+                    string bindTypeName = trackInfoContext.BindType?.FullName ?? string.Empty;
+                    var behaviourTypeName = $"{trackInfoContext.tweenIdentifier}ControlBehaviour";
+                    string tweenMethod = string.Empty;
+                    string customTweenMethod = string.Empty;
+                    if (contentDict.ContainsKey(behaviourTypeName))
+                    {
+                        var methodContent = contentDict[behaviourTypeName];
+                        tweenMethod = methodContent.Item1;
+                        customTweenMethod = methodContent.Item2;
+                    }
+                    var genClipInfo = new GenClipInfo()
+                    {
+                        DelayTime = (float)clipInfoContext.start,
+                        Duration =
+                                  (float)clipInfoContext.duration,
+                        EaseName =
+                                  easeName,
+                        TweenMethod =
+                                  tweenMethod,
+                        CustomTweenMethod =
+                         customTweenMethod,
+                        EndValue =
+                                  clipInfoContext.endPos, // the curve is inverse
+                        BindType = bindTypeName,
+                        BindName = trackInfoContext.BindTargetName,
+                        StartValue = clipInfoContext.startPos
+                    };
+                    for (int j = 0; j < clipInfoContext.markInfos.Count; j++)
+                    {
+                        var genMarkInfo = new GenMarkInfo();
+                        genMarkInfo.filedName = clipInfoContext.markInfos[j].FieldName;
+                        genMarkInfo.Time = (float)clipInfoContext.markInfos[j].Time;
+                        genMarkInfo.value = GenMarkInfo.ConvertValue
+                            (clipInfoContext.markInfos[j].UpdateValue);
+
+                        genClipInfo.genMarkInfos.Add(genMarkInfo);
+                    }
+
+                    genTrackInfo.clipInfos.Add(genClipInfo);
+                }
+                genTrackInfos.Add(genTrackInfo);
+            }
+            return genTrackInfos;
+        }
+
+
+        public static List<TrackInfoContext> CreateTrackContexts(UnityEngine.GameObject target, AnimationClip clip,
+          EasingTokenPresetLibrary _easingTokenPresetLibrary,
+             KeyframeDataWrapper keyWrapper, double startTime)
+        {
+            var trackInfos = new List<TrackInfoContext>();
+
+            foreach (ObjectKeyframes animTargetInfo in keyWrapper.Objects)
+            {
+                if (string.IsNullOrEmpty(animTargetInfo.ObjectPath))
+                {
+                    continue;
+                }
+
+                ProcessAnimationTarget(target, animTargetInfo, clip, _easingTokenPresetLibrary,
+                 startTime, trackInfos);
+            }
+
+            return trackInfos;
+        }
+
+        private static void ProcessAnimationTarget(UnityEngine.GameObject target,
+        ObjectKeyframes animTargetInfo, AnimationClip clip, EasingTokenPresetLibrary _easingTokenPresetLibrary,
+             double startTime, in List<TrackInfoContext> trackInfoContexts)
+        {
+            foreach (TypeKeyframes typeKeyFrames in animTargetInfo.Types)
+            {
+                foreach (PropertyKeyframes frameProperty in typeKeyFrames.Properties)
+                {
+                    Transform targetTrans = null;
+                    Transform trackRoot = null;
+                    if (target != null)
+                    {
+                        targetTrans = target.transform.Find(animTargetInfo.ObjectPath);
+                        Assert.IsNotNull(targetTrans, $"Please check the animation bind path {animTargetInfo.ObjectPath} don't exist in {target.transform}");
+                        trackRoot = BindUtility.GetAttachRoot(targetTrans.transform);
+                        if (trackRoot == null) continue;
+                    }
+
+                    string targetTypeName, curveName;
+                    string bindTarget = animTargetInfo.GetObjectName();
+                    AnimationClipConverter.GetClipInfoName(clip.name, typeKeyFrames.Type,
+                    frameProperty.PropertyName, bindTarget,
+                        out targetTypeName, out string tweenIdentifier, out curveName);
+
+                    TrackInfoContext trackInfo = null;
+                    int findIndex = _easingTokenPresetLibrary.FindEasePreset(curveName);
+                    if (findIndex >= 0)
+                    {
+                        trackInfo = AddValueTrack(animTargetInfo, clip, startTime, _easingTokenPresetLibrary, frameProperty,
+                         targetTrans, targetTypeName, tweenIdentifier, curveName);
+                    }
+                    else
+                    {
+                        trackInfo = AddObjectTrack(animTargetInfo, clip, startTime, frameProperty, targetTrans);
+                    }
+
+                    if (trackInfo != null)
+                    {
+                        trackInfo.parent = trackRoot;
+                        trackInfoContexts.Add(trackInfo);
+                    }
+                }
+            }
+        }
+
+        private static TrackInfoContext AddValueTrack(ObjectKeyframes animTargetInfo, AnimationClip clip
+         , double startTime, EasingTokenPresetLibrary _easingTokenPresetLibrary,
+         PropertyKeyframes frameProperty, Transform transform,
+         string targetTypeName, string tweenIdentifier, string curveName)
+        {
+            var simplifyTypeName = TypeConverter.GetSimplifyTypeName(targetTypeName);
+            var trackName = $"Cr7Sund.{simplifyTypeName}Tween.{tweenIdentifier}ControlTrack";
+            Assembly assembly = TweenActionStep.GetTweenTrackAssembly(trackName);
+            Type trackType = assembly.GetType(trackName);
+            var assetName = $"Cr7Sund.{simplifyTypeName}Tween.{tweenIdentifier}ControlAsset";
+            var trackAssetType = assembly.GetType(assetName);
+
+            var trackInfo = new TrackInfoContext();
+            Component component = null;
+            if (transform != null)
+                component = transform.GetComponent(animTargetInfo.ObjectType);
+            trackInfo.component = component;
+            trackInfo.BindType = animTargetInfo.ObjectType;
+            trackInfo.BindTargetName = animTargetInfo.GetObjectName();
+            trackInfo.tweenIdentifier = tweenIdentifier;
+            trackInfo.trackType = trackType;
+            trackInfo.trackAssetType = trackAssetType;
+
+            ClipInfoContext clipInfoContext = new ClipInfoContext
+            {
+                start = startTime,
+                duration = clip.length,
+                easePreset = _easingTokenPresetLibrary.GetEasePreset(curveName),
+                startPos = frameProperty.Keyframes[0].Value,
+                endPos = frameProperty.Keyframes[^1].Value
+            };
+
+            trackInfo.clipInfos.Add(clipInfoContext);
+            return trackInfo;
+        }
+
+        private static TrackInfoContext AddObjectTrack(ObjectKeyframes animTargetInfo,
+                  AnimationClip clip, double startTime,
+                PropertyKeyframes frameProperty, Transform transform)
+        {
+            KeyframeData startKeyframeData = frameProperty.Keyframes[0];
+            bool isActiveProp = startKeyframeData.Property == TweenTimelineDefine.IsActiveFieleName;
+            if (!isActiveProp &&
+             startKeyframeData.Value.GetType() == typeof(float))
+            {
+                return null;
+            }
+            var trackInfo = new TrackInfoContext();
+            if (isActiveProp)
+            {
+                trackInfo.component = transform;
+            }
+            else
+            {
+                if (transform != null)
+                {
+                    trackInfo.component = transform.GetComponent(animTargetInfo.ObjectType);
+                }
+            }
+
+            trackInfo.trackType = typeof(EmptyTrack);
+            trackInfo.trackAssetType = typeof(EmptyControlAsset);
+            trackInfo.BindType = animTargetInfo.ObjectType;
+            trackInfo.BindTargetName = animTargetInfo.GetObjectName();
+
+            ClipInfoContext clipInfoContext = new ClipInfoContext
+            {
+                start = startTime,
+                duration = clip.length,
+                easePreset = null,
+                startPos = null,
+                endPos = null,
+            };
+            trackInfo.clipInfos.Add(clipInfoContext);
+
+            bool constant = true;
+            MarkInfoContext frameValue = null;
+            for (int i = 0; i < frameProperty.Keyframes.Count; i++)
+            {
+                object value = frameProperty.Keyframes[i].Value;
+                if (value is float floatValue)
+                {
+                    value = floatValue != 0;
+                }
+                var markInfo = new MarkInfoContext();
+                markInfo.FieldName = frameProperty.PropertyName;
+                markInfo.UpdateValue = value;
+                markInfo.Time = frameProperty.Keyframes[i].Time + startTime;
+
+                if (frameValue != null
+                    && frameValue.UpdateValue != markInfo.UpdateValue)
+                {
+                    constant = false;
+                }
+                frameValue = markInfo;
+
+                clipInfoContext.markInfos.Add(markInfo);
+            }
+            if (!constant)
+            {
+                return trackInfo;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region  Curve 
+
+        public static void CreateCurves(IEnumerable<TrackAsset> tracks, EasingTokenPresetLibrary _easingTokenPresetLibrary)
+        {
+            foreach (TrackAsset track in tracks)
+            {
+                if (track is AnimationTrack animationTrack)
+                {
+                    IEnumerable<TimelineClip> clips = animationTrack.GetClips();
+                    foreach (var timelineClip in clips)
+                    {
+                        var clip = timelineClip.animationClip;
+                        _easingTokenPresetLibrary.AddPresets(AnimationClipConverter.CreateCurvePresets(clip));
+                    }
+                }
+            }
+
+            AssetDatabase.SaveAssetIfDirty(_easingTokenPresetLibrary);
+            AssetDatabase.Refresh();
+        }
+
+        public static void CreateCurve(AnimationClip clip, EasingTokenPresetLibrary _easingTokenPresetLibrary)
+        {
+            List<CustomCurveEasingTokenPreset> easingTokenPresetsToAdd = AnimationClipConverter.CreateCurvePresets(clip);
+            _easingTokenPresetLibrary.AddPresets(easingTokenPresetsToAdd);
+            AssetDatabase.SaveAssetIfDirty(_easingTokenPresetLibrary);
+            AssetDatabase.Refresh();
+        }
+
+        private static List<CustomCurveEasingTokenPreset> CreateCurvePresets(AnimationClip clip)
+        {
+            List<CustomCurveEasingTokenPreset> curves = new();
+
+            EditorCurveBinding[] curveBindings = AnimationUtility.GetCurveBindings(clip);
+            foreach (EditorCurveBinding binding in curveBindings)
+            {
+                AnimationCurve editorCurve = AnimationUtility.GetEditorCurve(clip, binding);
+                editorCurve = NormalizeCurve(editorCurve, binding.propertyName);
+                Keyframe[] keys = editorCurve.keys;
+                Array.Sort(keys, (t1, t2) => t1.time.CompareTo(t2.time));
+                bool constant = true;
+                float curKeyFrameData = float.MaxValue; // for the sake of god, you should never assign the max value
+                for (int i = 0; i < keys.Length; i++)
+                {
+                    if (curKeyFrameData != float.MaxValue &&
+                        keys[i].value != curKeyFrameData)
+                    {
+                        constant = false;
+                        break;
+                    }
+                    curKeyFrameData = keys[i].value;
+                }
+
+                if (constant)
+                {
+                    continue;
+                }
+
+                string clipName = clip.name;
+                string propertyName = binding.propertyName;
+                AnimationClipConverter.MapProperty(binding.type, ref propertyName);
+                string targetTypeName, curveName;
+                var target = binding.path.Split('/').Last();
+
+                AnimationClipConverter.GetClipInfoName(clipName, binding.type, propertyName, target,
+                 out targetTypeName, out var tweenIdentifier, out curveName);
+                if (string.IsNullOrEmpty(curveName))
+                {
+                    continue;
+                }
+                var curve = new CustomCurveEasingTokenPreset()
+                {
+                    animationCurve = editorCurve,
+                    tokenKey = curveName
+                };
+
+                curves.Add(curve);
+            }
+
+            return curves;
+        }
+
+        private static AnimationCurve NormalizeCurve(AnimationCurve curve, string propertyName)
+        {
+            if (curve.length == 0)
+                return curve;
+
+            float minTime = float.MaxValue, maxTime = float.MinValue;
+            float minValue = float.MaxValue, maxValue = float.MinValue;
+
+            // Find the range of time and value
+            foreach (var key in curve.keys)
+            {
+                minTime = Mathf.Min(minTime, key.time);
+                maxTime = Mathf.Max(maxTime, key.time);
+                minValue = Mathf.Min(minValue, key.value);
+                maxValue = Mathf.Max(maxValue, key.value);
+            }
+
+            float timeRange = maxTime - minTime;
+            float valueRange = maxValue - minValue;
+
+            // Prevent division by zero
+            if (Mathf.Approximately(timeRange, 0f) || Mathf.Approximately(valueRange, 0f))
+            {
+                Debug.LogWarning($"The time range or value range of the curve is zero, cannot be fully normalized. {propertyName}");
+                return curve;
+            }
+
+            AnimationCurve normalizedCurve = new AnimationCurve();
+
+            foreach (var key in curve.keys)
+            {
+                float normalizedTime = (key.time - minTime) / timeRange;
+                float normalizedValue = (key.value - minValue) / valueRange;
+
+                // Adjust the tangent
+                float normalizedInTangent = key.inTangent * (timeRange / valueRange);
+                float normalizedOutTangent = key.outTangent * (timeRange / valueRange);
+
+                Keyframe normalizedKey = new Keyframe(
+                    normalizedTime,
+                    normalizedValue,
+                    normalizedInTangent,
+                    normalizedOutTangent
+                )
+                {
+                    weightedMode = key.weightedMode,
+                    inWeight = key.inWeight,
+                    outWeight = key.outWeight
+                };
+
+                normalizedCurve.AddKey(normalizedKey);
+            }
+
+            // Keep the tangent mode consistent
+            for (int i = 0; i < curve.length; i++)
+            {
+                AnimationUtility.SetKeyLeftTangentMode(normalizedCurve, i, AnimationUtility.GetKeyLeftTangentMode(curve, i));
+                AnimationUtility.SetKeyRightTangentMode(normalizedCurve, i, AnimationUtility.GetKeyRightTangentMode(curve, i));
+            }
+
+            return normalizedCurve;
+        }
+
+        #endregion
     }
 }

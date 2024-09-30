@@ -9,6 +9,7 @@ using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.Timeline;
 using System.Linq;
+using Assert = UnityEngine.Assertions.Assert;
 
 namespace Cr7Sund.TweenTimeLine
 {
@@ -21,6 +22,7 @@ namespace Cr7Sund.TweenTimeLine
 
         public static bool InitTimeline()
         {
+
             InitPreTween();
 
             if (!isInit && TimelineWindowExposer.IsValidTimelineWindow())
@@ -30,12 +32,18 @@ namespace Cr7Sund.TweenTimeLine
                 if (hasTimelineWindow)
                 {
                     Refresh();
+
                     isInit = true;
                     return true;
                 }
             }
 
             return false;
+        }
+
+        public static void LogProfile(string message)
+        {
+            Debug.Log("<color=green>" + message + "</color>");
         }
 
         [InitializeOnLoadMethod]
@@ -124,15 +132,17 @@ namespace Cr7Sund.TweenTimeLine
         #endregion
 
         #region BindDatas
-        public static void InitPlayableBindings()
+        public static bool InitPlayableBindings()
         {
             TweenTimeLineDataModel.TrackObjectDict.Clear();
 
-            var playableDirector = GameObject.FindFirstObjectByType<PlayableDirector>();
+            var playableDirector = TimelineWindowExposer.GetCurDirector();
             if (playableDirector != null && playableDirector.playableAsset != null)
             {
                 InitDirector(playableDirector);
+                return true;
             }
+            return false;
 
             void InitDirector(PlayableDirector playableDirector)
             {
@@ -145,8 +155,8 @@ namespace Cr7Sund.TweenTimeLine
                     var binding = playableDirector.GetGenericBinding(trackAsset);
                     if (binding == null)
                     {
-                        if (trackAsset is IBaseTrack)
-                            Debug.LogWarning($"{trackAsset} don't bind target");
+                        // if (trackAsset is IBaseTrack)
+                        Debug.LogWarning($"{trackAsset} don't bind target");
                         continue;
                     }
 
@@ -194,15 +204,14 @@ namespace Cr7Sund.TweenTimeLine
                         return;
                     }
                     var binComponent = TweenTimeLineDataModel.TrackObjectDict[trackAsset] as Component;
-                    if (trackAsset is CustomAnimationTrack animationTrack)
-                    {
-                        var animationPlayableAsset = clip.asset as CustomAnimationPlayableAsset;
-                        animationPlayableAsset.bindTarget = binComponent.transform.name;
-                    }
-                    else if (trackAsset is CustomAudioTrack customAudioTrack)
+                    var bindTrans = binComponent.transform;
+
+                    Assert.IsNotNull(bindTrans);
+
+                    if (trackAsset is AudioTrack customAudioTrack)
                     {
                         var animationPlayableAsset = clip.asset as CustomAudioPlayableAsset;
-                        animationPlayableAsset.bindTarget = binComponent.transform.name;
+                        animationPlayableAsset.bindTarget = bindTrans.name;
                     }
                 }
             });
@@ -407,7 +416,7 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
 
-        private static void InitPreTween()
+        public static void InitPreTween()
         {
             TryGetTweenManager(out var manager);
             Assert.IsNotNull(manager);
@@ -475,9 +484,11 @@ namespace Cr7Sund.TweenTimeLine
 
         private static void Refresh()
         {
-            InitPlayableBindings();
-            RefreshTimeline();
-            UpdateTimeCache();
+            if (InitPlayableBindings())
+            {
+                RefreshTimeline();
+                UpdateTimeCache();
+            }
         }
         #endregion
 
@@ -636,7 +647,7 @@ namespace Cr7Sund.TweenTimeLine
             TimelineWindowExposer.PlayEditTimeline();
         }
 
-        public static void AddTrack(Component component, string trackRootName, Type trackAssetType, Type assetType,
+        public static void AddTrack(Transform groupTrack,
             TrackInfoContext trackInfo, bool isIn, bool createNewTrack)
         {
             PlayableDirector playableDirector = GameObject.FindFirstObjectByType<PlayableDirector>();
@@ -644,37 +655,63 @@ namespace Cr7Sund.TweenTimeLine
 
             Undo.RecordObject(playableDirector.playableAsset, "Add Track");
 
-            GroupTrack parentTrack = GetParentGroup(trackRootName, timelineAsset, isIn);
+            GroupTrack parentTrack = GetParentGroup(groupTrack, timelineAsset, isIn);
 
-            AdjustStartTime(component, trackAssetType, ref trackInfo);
-            AddTrackWithParents(component, trackAssetType, assetType, trackInfo, createNewTrack, parentTrack);
+            AdjustStartTime(ref trackInfo);
+            AddTrackWithParents(trackInfo, createNewTrack, parentTrack);
         }
 
-        public static TrackAsset AddTrackWithParents(Component component, Type trackAssetType, Type clipAssetType, TrackInfoContext trackInfo, bool createNewTrack, TrackAsset parentTrack)
+        public static TrackAsset AddTrackWithParents(TrackInfoContext trackInfo,
+        bool createNewTrack, TrackAsset parentTrack)
         {
             PlayableDirector playableDirector = GameObject.FindFirstObjectByType<PlayableDirector>();
             TimelineAsset timelineAsset = playableDirector.playableAsset as TimelineAsset;
-            TrackAsset trackAsset = AddTrackToTimeline(component, trackAssetType, timelineAsset, parentTrack, createNewTrack);
+            TrackAsset trackAsset = AddTrackToTimeline(trackInfo, timelineAsset, parentTrack, createNewTrack);
             var clipMethod = typeof(TrackAsset).GetMethod("CreateClip", BindingFlags.Instance | BindingFlags.NonPublic);
-
+            var markMethod = typeof(TrackAsset).GetMethod("AddMarker", BindingFlags.Instance | BindingFlags.NonPublic);
             foreach (var clipInfo in trackInfo.clipInfos)
             {
                 TimelineClip clip = clipMethod.Invoke(trackAsset, new object[]
                 {
-                    clipAssetType
+                    trackInfo.trackAssetType
                 }) as TimelineClip;
                 AddClip(clipInfo, clip);
+
+                AddMarkers(trackAsset, markMethod, clipInfo);
             }
 
-            TimelineWindowExposer.Bind(playableDirector, trackAsset, component);
+            TimelineWindowExposer.Bind(playableDirector, trackAsset, trackInfo.component);
 
             return trackAsset;
+        }
+
+        private static void AddMarkers(TrackAsset trackAsset, MethodInfo makrMethod, ClipInfoContext clipInfo)
+        {
+            foreach (var markInfo in clipInfo.markInfos)
+            {
+                ValueMaker so = null;
+
+                if (markInfo.UpdateValue.GetType() == typeof(bool))
+                    so = ScriptableObject.CreateInstance<BoolNotesMarker>();
+                else if (markInfo.UpdateValue.GetType() == typeof(Sprite))
+                    so = ScriptableObject.CreateInstance<SpriteNotesMarker>();
+                else
+                    so = ScriptableObject.CreateInstance<StringNotesMarker>();
+
+                so.Value = markInfo.UpdateValue;
+                so.FieldName = markInfo.FieldName;
+                makrMethod.Invoke(trackAsset, new[]{so
+                    });
+                so.time = markInfo.Time;
+                ((IMarker)so).Initialize(trackAsset);
+            }
         }
 
         private static void AddClip(ClipInfoContext clipContextInfo, TimelineClip clip)
         {
             clip.start = clipContextInfo.start;
             clip.duration = clipContextInfo.duration;
+            clip.displayName = clipContextInfo.GetDisplayName(clip.asset.GetType());
 
             if (!TimelineWindowExposer.GetBehaviourValue(clip.asset, out var value))
             {
@@ -687,13 +724,13 @@ namespace Cr7Sund.TweenTimeLine
             behaviour.EasePreset = clipContextInfo.easePreset;
         }
 
-        private static void AdjustStartTime(Component component, Type trackAssetType, ref TrackInfoContext trackInfo)
+        private static void AdjustStartTime(ref TrackInfoContext trackInfo)
         {
             foreach (var item in TweenTimeLineDataModel.TrackObjectDict)
             {
                 TrackAsset trackAsset = item.Key;
-                if (item.Value.Equals(component)
-                    && trackAssetType == trackAsset.GetType())
+                if (item.Value.Equals(trackInfo.component)
+                    && trackInfo.trackType == trackAsset.GetType())
                 {
                     if (TweenTimeLineDataModel.TrackBehaviourDict.TryGetValue(trackAsset, out var behaviourList))
                     {
@@ -714,22 +751,48 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
 
-        public static GroupTrack GetParentGroup(string grouTrackName, TimelineAsset timelineAsset, bool isIn)
+        public static GroupTrack GetParentGroup(Transform groupTrack, TimelineAsset timelineAsset, bool isIn)
         {
-            string rootTrackName = isIn ? TweenTimelineDefine.InDefine : TweenTimelineDefine.OutDefine;
+            string grouTrackName = groupTrack.name;
+            if (groupTrack.tag == TweenTimelineDefine.PanelTag
+            && !groupTrack.name.EndsWith(TweenTimelineDefine.PanelTag))
+            {
+                grouTrackName = $"{grouTrackName}{TweenTimelineDefine.PanelTag}";
+            }
+            if (groupTrack.tag == TweenTimelineDefine.CompositeTag)
+            {
+                bool contains = false;
+                foreach (var item in TweenTimelineDefine.UIComponentTypeMatch)
+                {
+                    if (groupTrack.name.EndsWith(item.Key))
+                    {
+                        contains = true;
+                        break;
+                    }
+                }
 
-            GroupTrack rootParentTrack = null;
-            var grandParentTrackIndex = TweenTimeLineDataModel.groupTracks.FindIndex(track => track.name == rootTrackName);
-            if (grandParentTrackIndex < 0)
-            {
-                rootParentTrack = timelineAsset.CreateTrack<GroupTrack>(rootTrackName);
+                if (!contains &&
+                    !groupTrack.name.EndsWith(TweenTimelineDefine.CompositeTag))
+                {
+                    grouTrackName = $"{grouTrackName}{TweenTimelineDefine.CompositeTag}";
+                }
             }
-            else
-            {
-                rootParentTrack = TweenTimeLineDataModel.groupTracks[grandParentTrackIndex];
-            }
+
+            string rootTrackName = isIn ?
+                  TweenTimelineDefine.InDefine :
+                  TweenTimelineDefine.OutDefine;
+            GroupTrack rootParentTrack = CreateRootTrack(timelineAsset, rootTrackName);
 
             return CreatGroupAsset(grouTrackName, timelineAsset, rootParentTrack);
+        }
+
+        private static GroupTrack CreateRootTrack(TimelineAsset timelineAsset, string rootTrackName)
+        {
+            GroupTrack rootParentTrack = null;
+            var grandParentTrackIndex = TweenTimeLineDataModel.groupTracks.FindIndex(track => track.name == rootTrackName);
+            rootParentTrack = AddGroup(rootTrackName, timelineAsset, null, grandParentTrackIndex);
+
+            return rootParentTrack;
         }
 
         public static GroupTrack CreatGroupAsset(string grouTrackName, TimelineAsset timelineAsset, TrackAsset parentTrack)
@@ -753,9 +816,19 @@ namespace Cr7Sund.TweenTimeLine
             }
 
             var groupTrackIndex = TweenTimeLineDataModel.groupTracks.FindIndex(MatchGroup);
+            groupTrack = AddGroup(grouTrackName, timelineAsset, parentTrack, groupTrackIndex);
+
+            return groupTrack;
+        }
+
+        private static GroupTrack AddGroup(string grouTrackName, TimelineAsset timelineAsset,
+        TrackAsset parentTrack, int groupTrackIndex)
+        {
+            GroupTrack groupTrack;
             if (groupTrackIndex < 0)
             {
                 groupTrack = timelineAsset.CreateTrack<GroupTrack>(parentTrack, grouTrackName);
+                TweenTimeLineDataModel.groupTracks.Add(groupTrack); // since we don't trigger timeline change immediately
             }
             else
             {
@@ -774,20 +847,36 @@ namespace Cr7Sund.TweenTimeLine
         /// <param name="groupTrack"></param>
         /// <param name="createNewTrack">For example, if in different direction, it should be false</param>
         /// <returns></returns>
-        public static TrackAsset AddTrackToTimeline(
-            Component component, Type trackAssetType,
+        private static TrackAsset AddTrackToTimeline(TrackInfoContext trackInfoContext,
             TimelineAsset timelineAsset, TrackAsset groupTrack, bool createNewTrack)
         {
-            Assert.IsNotNull(trackAssetType, nameof(trackAssetType) + " != null");
+            Component component = trackInfoContext.component;
+            Type trackType = trackInfoContext.trackType;
 
-            TrackAsset track = FindExistTrackAsset(component, trackAssetType);
+            Assert.IsNotNull(trackType, nameof(trackType) + " != null");
+            Assert.IsNotNull(component, nameof(component) + " != null");
+
+            TrackAsset track = FindExistTrackAsset(component, trackType);
             if (track == null || createNewTrack)
             {
-                track = timelineAsset.CreateTrack(trackAssetType, groupTrack, $"{component.gameObject.name}Track");
+                var trackRoot = BindUtility.GetAttachRoot(component.transform);
+                string trackName = GetTrackName(component.transform, trackRoot,
+                 trackInfoContext.component.GetType(), trackType);
+                track = timelineAsset.CreateTrack(trackType, groupTrack, trackName);
                 Debug.Log("Track added: " + track.name);
             }
 
             return track;
+        }
+
+        private static string GetTrackName(Transform child, Transform root,
+        Type componentType, Type trackType)
+        {
+            string trackName = TweenTimelinePreferencesProvider.GetBool(TweenGenSettings.UseFullPathName)
+            ? child.GetFullPathTrans(root)
+            : child.gameObject.name;
+
+            return $"{trackName}_{componentType.FullName}_{trackType.Name}";
         }
 
         public static TrackAsset FindExistTrackAsset(Component component, Type trackAssetType)
@@ -812,6 +901,10 @@ namespace Cr7Sund.TweenTimeLine
             if (!InitTimeline())
             {
                 // Debug.Log("Please open the timeLine window first");
+                if (!isInit)
+                {
+                    Debug.LogError("Fail to Init Timeline");
+                }
                 return false;
             }
             return true;
@@ -841,25 +934,6 @@ namespace Cr7Sund.TweenTimeLine
             return null;
         }
 
-        public static Transform GetAttachRoot(Transform bindObj)
-        {
-            GameObject[] panels = GameObject.FindGameObjectsWithTag("Panel");
-            if (panels.Length < 0)
-            {
-                throw new Exception("Please assign the panel tag with Panel");
-            }
-
-            foreach (var panel in panels)
-            {
-                if (bindObj.IsChildOf(panel.transform))
-                {
-                    return panel.transform;
-                }
-            }
-
-            throw new IndexOutOfRangeException();
-        }
-
         public static TrackAsset GetTrackRoot(TrackAsset trackAsset)
         {
             if (trackAsset == null)
@@ -874,6 +948,27 @@ namespace Cr7Sund.TweenTimeLine
             }
 
             return GetTrackRoot(trackAssetParent);
+        }
+
+        public static TrackAsset GetTrackSecondRoot(TrackAsset trackAsset)
+        {
+            if (trackAsset == null)
+            {
+                return null;
+            }
+            var trackAssetParent = trackAsset.parent as TrackAsset;
+            if (trackAssetParent == null)
+            {
+                return trackAsset;
+            }
+
+            var grandTrackAssetParent = trackAssetParent.parent as TrackAsset;
+            if (grandTrackAssetParent == null)
+            {
+                return trackAsset;
+            }
+
+            return GetTrackSecondRoot(trackAssetParent);
         }
 
         public static int GetPanelTracks(IEnumerable<TrackAsset> tracks, out List<TrackAsset> trackHierarchy, out TrackAsset rootTrack)
@@ -932,6 +1027,7 @@ namespace Cr7Sund.TweenTimeLine
             }
             TimelineWindowExposer.SkipToTimelinePos(clipInfo.start);
         }
+
         #endregion
     }
 

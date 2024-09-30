@@ -17,9 +17,9 @@ namespace Cr7Sund.TweenTimeLine
     public class TweenCodeGenerator
     {
         private Dictionary<string, Tuple<string, string>> _contentDict = new();
-        private CurveLibraryCenter curveLibrary;
         private Regex _tweenPatternRegex = new Regex(@"PrimeTween\.Tween\.(\w+)");
         private static readonly Regex _onValueChangeRegex = new Regex(@"onValueChange:\s*\(\s*[^)]*\s*\)\s*=>\s*(.*)", RegexOptions.Singleline);
+        private static EasingTokenPresetLibrary _easingTokenPresetLibrary;
 
         [MenuItem("Tools/GenerateRunTimeCode")]
         public static void GenerateRunTimeCode()
@@ -30,9 +30,6 @@ namespace Cr7Sund.TweenTimeLine
 
         public async void Generate()
         {
-            EditorUtility.DisplayProgressBar("Generating Code", "Convert Animation Clip Curves", 0f);
-            ConstructAnimationClipCurves();
-            EditorUtility.ClearProgressBar();
 
             EditorUtility.DisplayProgressBar("Generating Code", "Constructing Method Content Dictionary", 0f);
             await ConstructMethodContentDict();
@@ -45,6 +42,10 @@ namespace Cr7Sund.TweenTimeLine
             EditorUtility.DisplayProgressBar("Generating Code", "Creating Tween Code File", 1f);
             await CreateTweenGenFile(sequences);
             EditorUtility.ClearProgressBar();
+
+            EditorUtility.DisplayProgressBar("Generating Code", "Creating Tween Extension File", 1f);
+            await CreateTweenExtensionFile(sequences);
+            EditorUtility.ClearProgressBar();
         }
 
         public async Task CreateTweenGenFile(Dictionary<string, GenTweenSequence> sequences)
@@ -53,6 +54,14 @@ namespace Cr7Sund.TweenTimeLine
 
             await using var writeStream = new StreamWriter(file);
             await GenerateTweenCodeAsync(sequences.Values.ToList(), writeStream);
+        }
+
+        public async Task CreateTweenExtensionFile(Dictionary<string, GenTweenSequence> sequences)
+        {
+            string file = Path.Combine(TweenTimelineDefine.GenRuntimePath, "ITweenBindingExtenstion.cs");
+
+            await using var writeStream = new StreamWriter(file);
+            await GenerateTweenExtensionCodeAsync(sequences.Values.ToList(), writeStream);
         }
 
         public async Task GenerateTweenCodeAsync(List<GenTweenSequence> sequences, StreamWriter writer)
@@ -69,9 +78,10 @@ namespace Cr7Sund.TweenTimeLine
                 var sequence = sequences[i];
                 float progress = (i + 1) / (float)sequences.Count * 0.5f + 0.5f; // Progress from 0.5 to 1.0
 
-                EditorUtility.DisplayProgressBar("Generating Code", $"Generating {sequence.parentTrackName}Tween", progress);
+                string parentTrackName = sequence.parentTrackName;
+                EditorUtility.DisplayProgressBar("Generating Code", $"Generating {parentTrackName}Tween", progress);
 
-                await writer.WriteLineAsync($"    public static Sequence {sequence.parentTrackName}Tween(ITweenBinding binding)");
+                await writer.WriteLineAsync($"    public static Sequence {parentTrackName}Tween(ITweenBinding binding)");
                 await writer.WriteLineAsync("    {");
 
                 // Multiple trackInfos, use Sequence.Create()
@@ -102,7 +112,7 @@ namespace Cr7Sund.TweenTimeLine
                             else
                             {
                                 await writer.WriteLineAsync($"           .Group(Tween.{clip.TweenMethod}(binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), " +
-                                                            $"startValue: {UnityValueFormatter.FormatValue(clip.StartValue)}, endValue: {UnityValueFormatter.FormatValue(clip.EndValue)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\"), onValueChange: (t, updateValue) => {clip.CustomTweenMethod}))");
+                                                            $"startValue: {UnityValueFormatter.FormatValue(clip.StartValue)}, endValue: {UnityValueFormatter.FormatValue(clip.EndValue)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\"), onValueChange: (target, updateValue) => {clip.CustomTweenMethod}))");
                             }
                         }
 
@@ -116,6 +126,14 @@ namespace Cr7Sund.TweenTimeLine
                             else if (mark.filedName == "StopAudioClip")
                             {
                                 await writer.WriteLineAsync($"                .InsertCallback({mark.Time}f, binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), (target) => target.Stop())");
+                            }
+                            else if (mark.filedName == TweenTimelineDefine.IsActiveFieleName)
+                            {
+                                await writer.WriteLineAsync($"                .InsertCallback({mark.Time}f, binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), (target) => {{ target.gameObject.SetActive({mark.value});}})");
+                            }
+                            else if (mark.filedName == "sprite")
+                            {
+                                await writer.WriteLineAsync($"                .InsertCallback({mark.Time}f, binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), (target) => {{ binding.SetSprite(target, {mark.value});}})");
                             }
                             else
                             {
@@ -142,7 +160,7 @@ namespace Cr7Sund.TweenTimeLine
                             else
                             {
                                 await writer.WriteLineAsync($"                .Chain(Tween.{clip.TweenMethod}(binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), " +
-                                                            $"startValue: {UnityValueFormatter.FormatValue(clip.StartValue)}, endValue: {UnityValueFormatter.FormatValue(clip.EndValue)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\"), onValueChange: (t, updateValue) => {clip.CustomTweenMethod}))");
+                                                            $"startValue: {UnityValueFormatter.FormatValue(clip.StartValue)}, endValue: {UnityValueFormatter.FormatValue(clip.EndValue)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\"), onValueChange: (target, updateValue) => {clip.CustomTweenMethod}))");
                             }
 
                             // Generate code for genMarkInfos
@@ -165,35 +183,84 @@ namespace Cr7Sund.TweenTimeLine
             EditorUtility.ClearProgressBar();
         }
 
-        private static string GetGenSequenceName(TrackAsset trackAsset)
+        public async Task GenerateTweenExtensionCodeAsync(List<GenTweenSequence> sequences, StreamWriter writer)
         {
-            string parentTrackName = string.Empty;
-            var parent = trackAsset.parent as GroupTrack;
-            string panelPostFix = TweenTimelinePreferencesProvider.GetString(TweenElemenSettings.PanelPostFix);
+            await writer.WriteLineAsync("using Cr7Sund.TweenTimeLine;");
+            await writer.WriteLineAsync("using PrimeTween;");
+            await writer.WriteLineAsync("using UnityEngine;");
+            await writer.WriteLineAsync();
+            await writer.WriteLineAsync("public static class ITweenBindingExtenstion");
+            await writer.WriteLineAsync("{");
+
+            await writer.WriteLineAsync("        public static Sequence Play(this ITweenBinding tweenBinding, string tweenBehaviour)");
+            await writer.WriteLineAsync("{");
+
+            for (int i = 0; i < sequences.Count; i++)
+            {
+                var sequence = sequences[i];
+                float progress = (i + 1) / (float)sequences.Count * 0.5f + 0.5f; // Progress from 0.5 to 1.0
+
+                string parentTrackName = sequence.parentTrackName;
+                EditorUtility.DisplayProgressBar("Generating Code", $"Generating {parentTrackName}Tween Extension", progress);
+                await writer.WriteLineAsync($"    if (tweenBehaviour == nameof(GenerateTween. {parentTrackName}Tween))");
+                await writer.WriteLineAsync("    {");
+                await writer.WriteLineAsync($"       return GenerateTween.{parentTrackName}Tween(tweenBinding);");
+                await writer.WriteLineAsync("    }");
+            }
+            await writer.WriteLineAsync("            return Sequence.Create();");
+
+            await writer.WriteLineAsync("}");
+            await writer.WriteLineAsync("}");
+            EditorUtility.ClearProgressBar();
+        }
+
+        public static string GetGenSequenceName(TrackAsset trackAsset)
+        {
+            string sequenceName = null;
+            TrackAsset parent = trackAsset;
+
             while (parent != null)
             {
-                if (parent.name.EndsWith(panelPostFix))
+                if (parent.name.EndsWith(TweenTimelineDefine.PanelTag)
+                    || parent.name.EndsWith(TweenTimelineDefine.CompositeTag))
                 {
-                    parentTrackName = parent.name;
+                    sequenceName = parent.name;
+                    break;
+                }
+
+                bool contains = false;
+                foreach (var item in TweenTimelineDefine.UIComponentTypeMatch)
+                {
+                    if (parent.name.EndsWith(item.Key))
+                    {
+                        sequenceName = parent.name;
+                        contains = true;
+                        break;
+                    }
+                }
+                if (contains)
+                {
                     break;
                 }
                 parent = parent.parent as GroupTrack;
             }
 
-            Assert.IsNotNull(parentTrackName, $"{trackAsset.name} should be endWith {panelPostFix}");
+            Assert.IsNotNull(sequenceName, $"{trackAsset.name} should be endWith suitable postFix");
 
             if (parent != null)
             {
                 var root = parent.parent as GroupTrack;
                 if (root != null)
                 {
-                    Assert.IsTrue(root.name == TweenTimelineDefine.InDefine || root.name == TweenTimelineDefine.OutDefine, $"the {parent.name} 's parent track shouble be in or out");
+                    Assert.IsTrue(root.name == TweenTimelineDefine.InDefine
+                     || root.name == TweenTimelineDefine.OutDefine, $"the {parent.name} 's parent track shouble be in or out");
 
-                    parentTrackName = $"{parentTrackName}_{root.name}";
+                    sequenceName = $"{sequenceName}_{root.name}";
                 }
             }
 
-            return parentTrackName;
+            Assert.IsNotNull(sequenceName, $"{trackAsset.name} dont have parentTrack");
+            return sequenceName;
         }
 
         private async Task ConstructMethodContentDict()
@@ -269,6 +336,9 @@ namespace Cr7Sund.TweenTimeLine
 
         public Dictionary<string, GenTweenSequence> ConstructAllTweenSequence()
         {
+            _easingTokenPresetLibrary = AssetDatabase.LoadAssetAtPath<EasingTokenPresetLibrary>(TweenTimelineDefine.easingTokenPresetsPath);
+            TweenConfigCacher.CacheTweenConfigs();
+
             string inputFilePath = TweenTimelineDefine.EditorDataSourcePath;
             var assetGUIDs = AssetDatabase.FindAssets("t:TimelineAsset", new[]
             {
@@ -294,7 +364,7 @@ namespace Cr7Sund.TweenTimeLine
 
             TimelineWindowExposer.IterateClips((clipAsset, trackAsset) =>
                 {
-                    string tweenGenName = GetGenSequenceName(trackAsset);
+                    string tweenGenName = GetGenSequenceName(trackAsset.parent as GroupTrack);
                     if (!resultSequences.TryGetValue(tweenGenName, out var sequence))
                     {
                         sequence = new GenTweenSequence();
@@ -306,17 +376,10 @@ namespace Cr7Sund.TweenTimeLine
                     GenTrackInfo trackInfo = null;
                     int instanceID = trackAsset.GetInstanceID();
 
-                    if (trackAsset is CustomAnimationTrack customAnimationTrack)
+                    if (trackAsset is AnimationTrack customAnimationTrack)
                     {
-                        var customClipAsset = clipAsset.asset as CustomAnimationPlayableAsset;
-                        var keyframeDatas = AnimationClipConverter.GenerateKeyFrameDatas(customClipAsset.clip);
-                        var properties = AnimationClipConverter.GenTrackInfos(customClipAsset.bindTarget, keyframeDatas);
-                        foreach (var propertyName in properties)
-                        {
-                            trackInfo = new GenTrackInfo(instanceID.ToString() + propertyName);
-                            GenAnimationSequence(trackInfo, propertyName, clipAsset, trackAsset, keyframeDatas);
-                            sequence.trackInfos.Add(trackInfo);
-                        }
+                        GenAnimTrackInfo(clipAsset, sequence,
+                         instanceID, _contentDict);
                     }
                     else
                     {
@@ -332,10 +395,10 @@ namespace Cr7Sund.TweenTimeLine
                         }
                     }
 
-                    if (trackAsset is CustomAnimationTrack)
+                    if (trackAsset is AnimationTrack)
                     {
                     }
-                    else if (trackAsset is CustomAudioTrack)
+                    else if (trackAsset is AudioTrack)
                     {
                         GenAudioSequence(trackInfo, clipAsset, trackAsset);
                     }
@@ -345,19 +408,25 @@ namespace Cr7Sund.TweenTimeLine
                     }
                 },
                 tracks);
-
         }
 
-        private void GenAnimationSequence(GenTrackInfo trackInfo, string propertyName, TimelineClip clipAsset, TrackAsset trackAsset, KeyframeDataWrapper keyWrapper)
+        private void GenAnimTrackInfo(TimelineClip timelineClip, GenTweenSequence sequence,
+         int instanceID, Dictionary<string, Tuple<string, string>> contentDict)
         {
-            if (clipAsset.asset is CustomAnimationPlayableAsset animationPlayableAsset)
-            {
-                var customClipAsset = clipAsset.asset as CustomAnimationPlayableAsset;
-                var clipInfo = AnimationClipConverter.GenClipInfo(animationPlayableAsset.bindTarget, propertyName, customClipAsset.clip, keyWrapper);
-                clipInfo.BindName = animationPlayableAsset.bindTarget;
-                clipInfo.DelayTime = (float)clipAsset.start;
-                trackInfo.clipInfos.Add(clipInfo);
-            }
+            // trackInfo = new GenTrackInfo(instanceID.ToString() + propertyName);
+            var clip = timelineClip.animationClip;
+
+            AnimationClipConverter.CreateCurve(clip, _easingTokenPresetLibrary);
+
+            var keyframeDatas = AnimationClipConverter.GenerateKeyFrameDatas(clip);
+            sequence.trackInfos.AddRange(
+               AnimationClipConverter.ConstructGenTracks(clip
+                 , _easingTokenPresetLibrary, keyframeDatas, timelineClip.start, instanceID, contentDict));
+
+            keyframeDatas = AnimationClipConverter.GenerateObjectKeyFrameDatas(clip);
+            sequence.trackInfos.AddRange(
+                  AnimationClipConverter.ConstructGenTracks(clip, _easingTokenPresetLibrary,
+                  keyframeDatas, timelineClip.start, instanceID, contentDict));
         }
 
         private void GenAudioSequence(GenTrackInfo trackInfo, TimelineClip clipAsset, TrackAsset trackAsset)
@@ -397,65 +466,86 @@ namespace Cr7Sund.TweenTimeLine
             {
                 var behaviour = value as IUniqueBehaviour;
                 // var componentType = AniActionEditToolHelper.GetFirstGenericType(behaviour.GetType()).ToString();
-                var methodContent = _contentDict[behaviour.GetType().Name];
-                BaseEasingTokenPreset easePreset = behaviour.EasePreset;
-
-                if (easePreset == null)
+                string behaviourTypeName = behaviour.GetType().Name;
+                if (_contentDict.ContainsKey(behaviourTypeName))
                 {
-                    throw new Exception($"clipAsset has null easePreset,  {behaviour.BindTarget} {clipAsset.displayName}, {trackAsset.timelineAsset.name}");
+                    GenCustomSteps(trackInfo, clipAsset, trackAsset, behaviour);
                 }
-
-                // we need to remove the delay time of TimeLineManager
-                // since we the ui sequene should be async
-                // float start = (float)(clipAsset.start - trackAsset.start);
-                float start = (float)clipAsset.start;
-                var genClipInfo = new GenClipInfo
+                else
                 {
-                    DelayTime = start,
-                    Duration = (float)clipAsset.duration,
-                    EndValue = behaviour.EndPos,
-                    StartValue = behaviour.StartPos,
-                    BindType = behaviour.BindType,
-                    BindName = behaviour.BindTarget,
-                    TweenMethod = methodContent.Item1,
-                    CustomTweenMethod = methodContent.Item2,
-                    EaseName = easePreset.Name,
-                };
-
-                foreach (IMarker marker in trackAsset.GetMarkers())
-                {
-                    if (marker is IValueMaker valueMaker
-                        && marker.time >= clipAsset.start && marker.time <= clipAsset.end)
-                    {
-                        genClipInfo.genMarkInfos.Add(new GenMarkInfo(valueMaker));
-                    }
+                    GenMakerSteps(trackInfo, clipAsset, trackAsset, behaviour);
                 }
-                trackInfo.clipInfos.Add(genClipInfo);
             }
         }
 
-        private void ConstructAnimationClipCurves()
+        private void GenCustomSteps(GenTrackInfo trackInfo, TimelineClip clipAsset, TrackAsset trackAsset,
+         IUniqueBehaviour behaviour)
         {
-            string inputFilePath = TweenTimelineDefine.EditorDataSourcePath;
-            var guids = AssetDatabase.FindAssets("t:AnimationClip", new string[]
-            {
-                inputFilePath
-            });
-            curveLibrary = new CurveLibraryCenter();
-            curveLibrary.CreateCurveWrapperLibrary(TweenTimelineDefine.CurveWrapLibraryPath);
-            TweenConfigCacher.CacheTweenConfigs();
+            string behaviourTypeName = behaviour.GetType().Name;
 
-            for (int i = 0; i < guids.Length; i++)
-            {
-                string filePath = AssetDatabase.GUIDToAssetPath(guids[i]);
-                var fileName = Path.GetFileNameWithoutExtension(filePath);
+            BaseEasingTokenPreset easePreset = behaviour.EasePreset;
 
-                EditorUtility.DisplayProgressBar("Generate ClipCurve", $"Processing file {fileName}", (i + 1) / (float)guids.Length);
-                var clip = AssetDatabase.LoadAssetAtPath<AnimationClip>(filePath);
-                curveLibrary.ConvertClip(clip);
+            if (easePreset == null)
+            {
+                throw new Exception($"clipAsset has null easePreset,  {behaviour.BindTarget} {clipAsset.displayName}, {trackAsset.timelineAsset.name}");
             }
-            curveLibrary.GenCurveInfoDict();
-            EditorUtility.ClearProgressBar();
+
+            // we need to remove the delay time of TimeLineManager
+            // since we the ui sequene should be async
+            // float start = (float)(clipAsset.start - trackAsset.start);
+            float start = (float)clipAsset.start;
+            var methodContent = _contentDict[behaviourTypeName];
+            string tweenMethod = methodContent.Item1;
+            string customTweenMethod = methodContent.Item2;
+
+            var genClipInfo = new GenClipInfo
+            {
+                DelayTime = start,
+                Duration = (float)clipAsset.duration,
+                EndValue = behaviour.EndPos,
+                StartValue = behaviour.StartPos,
+                BindType = behaviour.BindType,
+                BindName = behaviour.BindTarget,
+                TweenMethod = tweenMethod,
+                CustomTweenMethod = customTweenMethod,
+                EaseName = easePreset.Name,
+            };
+
+            foreach (IMarker marker in trackAsset.GetMarkers())
+            {
+                if (marker is IValueMaker valueMaker
+                    && marker.time >= clipAsset.start && marker.time <= clipAsset.end)
+                {
+                    genClipInfo.genMarkInfos.Add(new GenMarkInfo(valueMaker));
+                }
+            }
+            trackInfo.clipInfos.Add(genClipInfo);
         }
+
+
+        private void GenMakerSteps(GenTrackInfo trackInfo, TimelineClip clipAsset, TrackAsset trackAsset
+          , IUniqueBehaviour behaviour)
+        {
+            float start = (float)clipAsset.start;
+
+            var genClipInfo = new GenClipInfo
+            {
+                DelayTime = start,
+                BindType = behaviour.BindType,
+                BindName = behaviour.BindTarget,
+            };
+
+            foreach (IMarker marker in trackAsset.GetMarkers())
+            {
+                if (marker is IValueMaker valueMaker
+                    && marker.time >= clipAsset.start && marker.time <= clipAsset.end)
+                {
+                    genClipInfo.genMarkInfos.Add(new GenMarkInfo(valueMaker));
+                }
+            }
+            trackInfo.clipInfos.Add(genClipInfo);
+        }
+
+
     }
 }

@@ -28,1242 +28,1422 @@ namespace Cr7Sund.TweenTimeLine
 {
     public partial class TweenActionContainerBuilder
     {
-        private TweenCollection CreateBaseAnimationCollection()
+        public static TweenCollection CreateBaseAnimationCollection()
         {
             var customAnimationCollection = new TweenCollection("Custom");
-
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "range","Light")
+            var animEffect = customAnimationCollection.animationCollections;
+            
+            animEffect.Add(new TweenActionEffect( "range","Light")
             {
-                image = "custom_Light_Range_example.png",
+                image = "custom_Light_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Light_RangeControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Light_RangeControlBehaviour>(),
                         label = "range",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "shadowStrength","Light")
+            animEffect.Add(new TweenActionEffect( "shadowStrength","Light")
             {
-                image = "custom_Light_ShadowStrength_example.png",
+                image = "custom_Light_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Light_ShadowStrengthControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Light_ShadowStrengthControlBehaviour>(),
                         label = "shadowStrength",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "intensity","Light")
+            animEffect.Add(new TweenActionEffect( "intensity","Light")
             {
-                image = "custom_Light_Intensity_example.png",
+                image = "custom_Light_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Light_IntensityControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Light_IntensityControlBehaviour>(),
                         label = "intensity",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "orthographicSize","Camera")
+            animEffect.Add(new TweenActionEffect( "orthographicSize","Camera")
             {
-                image = "custom_Camera_OrthographicSize_example.png",
+                image = "custom_Camera_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Camera_OrthographicSizeControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Camera_OrthographicSizeControlBehaviour>(),
                         label = "orthographicSize",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "backgroundColor","Camera")
+            animEffect.Add(new TweenActionEffect( "backgroundColor","Camera")
             {
-                image = "custom_Camera_BackgroundColor_example.png",
+                image = "custom_Camera_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "RGBA(1.000, 1.000, 1.000, 1.000)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Camera_BackgroundColorControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Camera_BackgroundColorControlBehaviour>(),
                         label = "backgroundColor",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "aspect","Camera")
+            animEffect.Add(new TweenActionEffect( "aspect","Camera")
             {
-                image = "custom_Camera_Aspect_example.png",
+                image = "custom_Camera_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Camera_AspectControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Camera_AspectControlBehaviour>(),
                         label = "aspect",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "farClipPlane","Camera")
+            animEffect.Add(new TweenActionEffect( "farClipPlane","Camera")
             {
-                image = "custom_Camera_FarClipPlane_example.png",
+                image = "custom_Camera_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Camera_FarClipPlaneControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Camera_FarClipPlaneControlBehaviour>(),
                         label = "farClipPlane",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "fieldOfView","Camera")
+            animEffect.Add(new TweenActionEffect( "fieldOfView","Camera")
             {
-                image = "custom_Camera_FieldOfView_example.png",
+                image = "custom_Camera_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Camera_FieldOfViewControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Camera_FieldOfViewControlBehaviour>(),
                         label = "fieldOfView",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "nearClipPlane","Camera")
+            animEffect.Add(new TweenActionEffect( "nearClipPlane","Camera")
             {
-                image = "custom_Camera_NearClipPlane_example.png",
+                image = "custom_Camera_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Camera_NearClipPlaneControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Camera_NearClipPlaneControlBehaviour>(),
                         label = "nearClipPlane",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "pixelRect","Camera")
+            animEffect.Add(new TweenActionEffect( "pixelRect","Camera")
             {
-                image = "custom_Camera_PixelRect_example.png",
+                image = "custom_Camera_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(x:0.00, y:0.00, width:0.00, height:0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Camera_PixelRectControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Camera_PixelRectControlBehaviour>(),
                         label = "pixelRect",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "rect","Camera")
+            animEffect.Add(new TweenActionEffect( "rect","Camera")
             {
-                image = "custom_Camera_Rect_example.png",
+                image = "custom_Camera_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(x:0.00, y:0.00, width:0.00, height:0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Camera_RectControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Camera_RectControlBehaviour>(),
                         label = "rect",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "localRotation","Transformation ")
+            animEffect.Add(new TweenActionEffect( "localRotation.eulerAngles","Transform")
             {
-                image = "custom_Transform_LocalRotation_example.png",
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Transform_LocalRotationControlBehaviour>(),
-                        label = "localRotation",
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_LocalRotationEulerAnglesControlBehaviour>(),
+                        label = "localRotation.eulerAngles",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "localScale","Transformation ")
+            animEffect.Add(new TweenActionEffect( "localScale","Transform")
             {
-                image = "custom_Transform_LocalScale_example.png",
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
-                        EndPos = Vector3.zero.ToString(), 
+                        EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
                         label = "localScale",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "rotation","Transformation ")
+            animEffect.Add(new TweenActionEffect( "eulerAngles","Transform")
             {
-                image = "custom_Transform_Rotation_example.png",
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Transform_RotationControlBehaviour>(),
-                        label = "rotation",
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_EulerAnglesControlBehaviour>(),
+                        label = "eulerAngles",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "value","Slider")
+            animEffect.Add(new TweenActionEffect( "value","Slider")
             {
-                image = "custom_Slider_Value_example.png",
+                image = "custom_Slider_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Slider_ValueControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Slider_ValueControlBehaviour>(),
                         label = "value",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "GetNormalizedPosition()","ScrollRect")
+            animEffect.Add(new TweenActionEffect( "GetNormalizedPosition()","ScrollRect")
             {
-                image = "custom_ScrollRect_GetNormalizedPosition_example.png",
+                image = "custom_ScrollRect_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<ScrollRect_GetNormalizedPositionControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<ScrollRect_GetNormalizedPositionControlBehaviour>(),
                         label = "GetNormalizedPosition()",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "horizontalNormalizedPosition","ScrollRect")
+            animEffect.Add(new TweenActionEffect( "horizontalNormalizedPosition","ScrollRect")
             {
-                image = "custom_ScrollRect_HorizontalNormalizedPosition_example.png",
+                image = "custom_ScrollRect_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<ScrollRect_HorizontalNormalizedPositionControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<ScrollRect_HorizontalNormalizedPositionControlBehaviour>(),
                         label = "horizontalNormalizedPosition",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "verticalNormalizedPosition","ScrollRect")
+            animEffect.Add(new TweenActionEffect( "verticalNormalizedPosition","ScrollRect")
             {
-                image = "custom_ScrollRect_VerticalNormalizedPosition_example.png",
+                image = "custom_ScrollRect_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<ScrollRect_VerticalNormalizedPositionControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<ScrollRect_VerticalNormalizedPositionControlBehaviour>(),
                         label = "verticalNormalizedPosition",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "pivot.x","Basic Layout")
+            animEffect.Add(new TweenActionEffect( "pivot.x","RectTransform")
             {
-                image = "custom_RectTransform_PivotX_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_PivotXControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_PivotXControlBehaviour>(),
                         label = "pivot.x",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "pivot.y","Basic Layout")
+            animEffect.Add(new TweenActionEffect( "pivot.y","RectTransform")
             {
-                image = "custom_RectTransform_PivotY_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_PivotYControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_PivotYControlBehaviour>(),
                         label = "pivot.y",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "pivot","Basic Layout")
+            animEffect.Add(new TweenActionEffect( "pivot","RectTransform")
             {
-                image = "custom_RectTransform_Pivot_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_PivotControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_PivotControlBehaviour>(),
                         label = "pivot",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "anchorMax","Basic Layout")
+            animEffect.Add(new TweenActionEffect( "anchorMax","RectTransform")
             {
-                image = "custom_RectTransform_AnchorMax_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_AnchorMaxControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_AnchorMaxControlBehaviour>(),
                         label = "anchorMax",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "anchorMin","Basic Layout")
+            animEffect.Add(new TweenActionEffect( "anchorMin","RectTransform")
             {
-                image = "custom_RectTransform_AnchorMin_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_AnchorMinControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_AnchorMinControlBehaviour>(),
                         label = "anchorMin",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "anchoredPosition3D","Transformation (UI)")
+            animEffect.Add(new TweenActionEffect( "anchoredPosition3D","RectTransform")
             {
-                image = "custom_RectTransform_AnchoredPosition3D_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_AnchoredPosition3DControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_AnchoredPosition3DControlBehaviour>(),
                         label = "anchoredPosition3D",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "anchoredPosition3D.x","Transformation (UI)")
+            animEffect.Add(new TweenActionEffect( "anchoredPosition3D.x","RectTransform")
             {
-                image = "custom_RectTransform_AnchoredPosition3DX_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_AnchoredPosition3DXControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_AnchoredPosition3DXControlBehaviour>(),
                         label = "anchoredPosition3D.x",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "anchoredPosition3D.y","Transformation (UI)")
+            animEffect.Add(new TweenActionEffect( "anchoredPosition3D.y","RectTransform")
             {
-                image = "custom_RectTransform_AnchoredPosition3DY_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_AnchoredPosition3DYControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_AnchoredPosition3DYControlBehaviour>(),
                         label = "anchoredPosition3D.y",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "anchoredPosition3D.z","Transformation (UI)")
+            animEffect.Add(new TweenActionEffect( "anchoredPosition3D.z","RectTransform")
             {
-                image = "custom_RectTransform_AnchoredPosition3DZ_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_AnchoredPosition3DZControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_AnchoredPosition3DZControlBehaviour>(),
                         label = "anchoredPosition3D.z",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "effectDistance","Shadow")
+            animEffect.Add(new TweenActionEffect( "effectDistance","Shadow")
             {
-                image = "custom_Shadow_EffectDistance_example.png",
+                image = "custom_Shadow_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Shadow_EffectDistanceControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Shadow_EffectDistanceControlBehaviour>(),
                         label = "effectDistance",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "effectColor.a","Shadow")
+            animEffect.Add(new TweenActionEffect( "effectColor.a","Shadow")
             {
-                image = "custom_Shadow_EffectColorA_example.png",
+                image = "custom_Shadow_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Shadow_EffectColorAControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Shadow_EffectColorAControlBehaviour>(),
                         label = "effectColor.a",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "effectColor","Shadow")
+            animEffect.Add(new TweenActionEffect( "effectColor","Shadow")
             {
-                image = "custom_Shadow_EffectColor_example.png",
+                image = "custom_Shadow_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "RGBA(1.000, 1.000, 1.000, 1.000)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Shadow_EffectColorControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Shadow_EffectColorControlBehaviour>(),
                         label = "effectColor",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "GetPreferredSize()","LayoutElement")
+            animEffect.Add(new TweenActionEffect( "GetPreferredSize()","LayoutElement")
             {
-                image = "custom_LayoutElement_GetPreferredSize_example.png",
+                image = "custom_LayoutElement_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<LayoutElement_GetPreferredSizeControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<LayoutElement_GetPreferredSizeControlBehaviour>(),
                         label = "GetPreferredSize()",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "preferredWidth","LayoutElement")
+            animEffect.Add(new TweenActionEffect( "preferredWidth","LayoutElement")
             {
-                image = "custom_LayoutElement_PreferredWidth_example.png",
+                image = "custom_LayoutElement_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<LayoutElement_PreferredWidthControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<LayoutElement_PreferredWidthControlBehaviour>(),
                         label = "preferredWidth",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "preferredHeight","LayoutElement")
+            animEffect.Add(new TweenActionEffect( "preferredHeight","LayoutElement")
             {
-                image = "custom_LayoutElement_PreferredHeight_example.png",
+                image = "custom_LayoutElement_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<LayoutElement_PreferredHeightControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<LayoutElement_PreferredHeightControlBehaviour>(),
                         label = "preferredHeight",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "position","Rigidbody")
+            animEffect.Add(new TweenActionEffect( "position","Rigidbody")
             {
-                image = "custom_Rigidbody_Position_example.png",
+                image = "custom_Rigidbody_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Rigidbody_PositionControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Rigidbody_PositionControlBehaviour>(),
                         label = "position",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "rotation","Rigidbody")
+            animEffect.Add(new TweenActionEffect( "rotation","Rigidbody")
             {
-                image = "custom_Rigidbody_Rotation_example.png",
+                image = "custom_Rigidbody_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00000, 0.00000, 0.00000, 1.00000)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Rigidbody_RotationControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Rigidbody_RotationControlBehaviour>(),
                         label = "rotation",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "position","Rigidbody2D")
+            animEffect.Add(new TweenActionEffect( "position","Rigidbody2D")
             {
-                image = "custom_Rigidbody2D_Position_example.png",
+                image = "custom_Rigidbody2D_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Rigidbody2D_PositionControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Rigidbody2D_PositionControlBehaviour>(),
                         label = "position",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "rotation","Rigidbody2D")
+            animEffect.Add(new TweenActionEffect( "rotation","Rigidbody2D")
             {
-                image = "custom_Rigidbody2D_Rotation_example.png",
+                image = "custom_Rigidbody2D_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Rigidbody2D_RotationControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Rigidbody2D_RotationControlBehaviour>(),
                         label = "rotation",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "GetFlexibleSize()","LayoutElement")
+            animEffect.Add(new TweenActionEffect( "GetFlexibleSize()","LayoutElement")
             {
-                image = "custom_LayoutElement_GetFlexibleSize_example.png",
+                image = "custom_LayoutElement_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<LayoutElement_GetFlexibleSizeControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<LayoutElement_GetFlexibleSizeControlBehaviour>(),
                         label = "GetFlexibleSize()",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "flexibleWidth","LayoutElement")
+            animEffect.Add(new TweenActionEffect( "flexibleWidth","LayoutElement")
             {
-                image = "custom_LayoutElement_FlexibleWidth_example.png",
+                image = "custom_LayoutElement_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<LayoutElement_FlexibleWidthControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<LayoutElement_FlexibleWidthControlBehaviour>(),
                         label = "flexibleWidth",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "flexibleHeight","LayoutElement")
+            animEffect.Add(new TweenActionEffect( "flexibleHeight","LayoutElement")
             {
-                image = "custom_LayoutElement_FlexibleHeight_example.png",
+                image = "custom_LayoutElement_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<LayoutElement_FlexibleHeightControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<LayoutElement_FlexibleHeightControlBehaviour>(),
                         label = "flexibleHeight",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "GetMinSize()","LayoutElement")
+            animEffect.Add(new TweenActionEffect( "GetMinSize()","LayoutElement")
             {
-                image = "custom_LayoutElement_GetMinSize_example.png",
+                image = "custom_LayoutElement_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<LayoutElement_GetMinSizeControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<LayoutElement_GetMinSizeControlBehaviour>(),
                         label = "GetMinSize()",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "minWidth","LayoutElement")
+            animEffect.Add(new TweenActionEffect( "minWidth","LayoutElement")
             {
-                image = "custom_LayoutElement_MinWidth_example.png",
+                image = "custom_LayoutElement_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<LayoutElement_MinWidthControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<LayoutElement_MinWidthControlBehaviour>(),
                         label = "minWidth",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "minHeight","LayoutElement")
+            animEffect.Add(new TweenActionEffect( "minHeight","LayoutElement")
             {
-                image = "custom_LayoutElement_MinHeight_example.png",
+                image = "custom_LayoutElement_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<LayoutElement_MinHeightControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<LayoutElement_MinHeightControlBehaviour>(),
                         label = "minHeight",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "position","Transformation ")
+            animEffect.Add(new TweenActionEffect( "position","Transform")
             {
-                image = "custom_Transform_Position_example.png",
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Transform_PositionControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_PositionControlBehaviour>(),
                         label = "position",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "position.x","Transformation ")
+            animEffect.Add(new TweenActionEffect( "position.x","Transform")
             {
-                image = "custom_Transform_PositionX_example.png",
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Transform_PositionXControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_PositionXControlBehaviour>(),
                         label = "position.x",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "position.y","Transformation ")
+            animEffect.Add(new TweenActionEffect( "position.y","Transform")
             {
-                image = "custom_Transform_PositionY_example.png",
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Transform_PositionYControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_PositionYControlBehaviour>(),
                         label = "position.y",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "position.z","Transformation ")
+            animEffect.Add(new TweenActionEffect( "position.z","Transform")
             {
-                image = "custom_Transform_PositionZ_example.png",
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Transform_PositionZControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_PositionZControlBehaviour>(),
                         label = "position.z",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "localPosition","Transformation ")
+            animEffect.Add(new TweenActionEffect( "localPosition","Transform")
             {
-                image = "custom_Transform_LocalPosition_example.png",
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Transform_LocalPositionControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_LocalPositionControlBehaviour>(),
                         label = "localPosition",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "localPosition.x","Transformation ")
+            animEffect.Add(new TweenActionEffect( "localPosition.x","Transform")
             {
-                image = "custom_Transform_LocalPositionX_example.png",
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Transform_LocalPositionXControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_LocalPositionXControlBehaviour>(),
                         label = "localPosition.x",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "localPosition.y","Transformation ")
+            animEffect.Add(new TweenActionEffect( "localPosition.y","Transform")
             {
-                image = "custom_Transform_LocalPositionY_example.png",
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Transform_LocalPositionYControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_LocalPositionYControlBehaviour>(),
                         label = "localPosition.y",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "localPosition.z","Transformation ")
+            animEffect.Add(new TweenActionEffect( "localPosition.z","Transform")
             {
-                image = "custom_Transform_LocalPositionZ_example.png",
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Transform_LocalPositionZControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_LocalPositionZControlBehaviour>(),
                         label = "localPosition.z",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "color","Graphic")
+            animEffect.Add(new TweenActionEffect( "rotation.eulerAngles","Transform")
             {
-                image = "custom_Graphic_Color_example.png",
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
+                animationSteps = new List<TweenActionStep>
+                {
+                    new TweenActionStep
+                    {
+                        EndPos = "(0.00, 0.00, 0.00)", 
+                        isRelative = true,
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_RotationEulerAnglesControlBehaviour>(),
+                        label = "rotation.eulerAngles",
+                    }
+                }
+            });
+            animEffect.Add(new TweenActionEffect( "localEulerAngles","Transform")
+            {
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
+                animationSteps = new List<TweenActionStep>
+                {
+                    new TweenActionStep
+                    {
+                        EndPos = "(0.00, 0.00, 0.00)", 
+                        isRelative = true,
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_LocalEulerAnglesControlBehaviour>(),
+                        label = "localEulerAngles",
+                    }
+                }
+            });
+            animEffect.Add(new TweenActionEffect( "localScale","Transform")
+            {
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
+                animationSteps = new List<TweenActionStep>
+                {
+                    new TweenActionStep
+                    {
+                        EndPos = "(0.00, 0.00, 0.00)", 
+                        isRelative = true,
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
+                        label = "localScale",
+                    }
+                }
+            });
+            animEffect.Add(new TweenActionEffect( "localScale.x","Transform")
+            {
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
+                animationSteps = new List<TweenActionStep>
+                {
+                    new TweenActionStep
+                    {
+                        EndPos = "0", 
+                        isRelative = true,
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_LocalScaleXControlBehaviour>(),
+                        label = "localScale.x",
+                    }
+                }
+            });
+            animEffect.Add(new TweenActionEffect( "localScale.y","Transform")
+            {
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
+                animationSteps = new List<TweenActionStep>
+                {
+                    new TweenActionStep
+                    {
+                        EndPos = "0", 
+                        isRelative = true,
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_LocalScaleYControlBehaviour>(),
+                        label = "localScale.y",
+                    }
+                }
+            });
+            animEffect.Add(new TweenActionEffect( "localScale.z","Transform")
+            {
+                image = "custom_Transform_example.png",
+                collectionCategory = "Custom",
+                animationSteps = new List<TweenActionStep>
+                {
+                    new TweenActionStep
+                    {
+                        EndPos = "0", 
+                        isRelative = true,
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Transform_LocalScaleZControlBehaviour>(),
+                        label = "localScale.z",
+                    }
+                }
+            });
+            animEffect.Add(new TweenActionEffect( "color","Graphic")
+            {
+                image = "custom_Graphic_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "RGBA(1.000, 1.000, 1.000, 1.000)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Graphic_ColorControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Graphic_ColorControlBehaviour>(),
                         label = "color",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "color","SpriteRenderer")
+            animEffect.Add(new TweenActionEffect( "color","SpriteRenderer")
             {
-                image = "custom_SpriteRenderer_Color_example.png",
+                image = "custom_SpriteRenderer_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "RGBA(1.000, 1.000, 1.000, 1.000)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<SpriteRenderer_ColorControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<SpriteRenderer_ColorControlBehaviour>(),
                         label = "color",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "color","Material")
+            animEffect.Add(new TweenActionEffect( "color","Material")
             {
-                image = "custom_Material_Color_example.png",
+                image = "custom_Material_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "RGBA(1.000, 1.000, 1.000, 1.000)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Material_ColorControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Material_ColorControlBehaviour>(),
                         label = "color",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "color","Light")
+            animEffect.Add(new TweenActionEffect( "color","Light")
             {
-                image = "custom_Light_Color_example.png",
+                image = "custom_Light_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "RGBA(1.000, 1.000, 1.000, 1.000)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Light_ColorControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Light_ColorControlBehaviour>(),
                         label = "color",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "anchoredPosition","Transformation (UI)")
+            animEffect.Add(new TweenActionEffect( "anchoredPosition","RectTransform")
             {
-                image = "custom_RectTransform_AnchoredPosition_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_AnchoredPositionControlBehaviour>(),
                         label = "anchoredPosition",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "anchoredPosition.x","Transformation (UI)")
+            animEffect.Add(new TweenActionEffect( "anchoredPosition.x","RectTransform")
             {
-                image = "custom_RectTransform_AnchoredPositionX_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionXControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_AnchoredPositionXControlBehaviour>(),
                         label = "anchoredPosition.x",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "anchoredPosition.y","Transformation (UI)")
+            animEffect.Add(new TweenActionEffect( "anchoredPosition.y","RectTransform")
             {
-                image = "custom_RectTransform_AnchoredPositionY_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionYControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_AnchoredPositionYControlBehaviour>(),
                         label = "anchoredPosition.y",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "sizeDelta","Transformation (UI)")
+            animEffect.Add(new TweenActionEffect( "sizeDelta","RectTransform")
             {
-                image = "custom_RectTransform_SizeDelta_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_SizeDeltaControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_SizeDeltaControlBehaviour>(),
                         label = "sizeDelta",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "alpha","CanvasGroup")
+            animEffect.Add(new TweenActionEffect( "alpha","CanvasGroup")
             {
-                image = "custom_CanvasGroup_Alpha_example.png",
+                image = "custom_CanvasGroup_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<CanvasGroup_AlphaControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<CanvasGroup_AlphaControlBehaviour>(),
                         label = "alpha",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "color.a","Graphic")
+            animEffect.Add(new TweenActionEffect( "color.a","Graphic")
             {
-                image = "custom_Graphic_ColorA_example.png",
+                image = "custom_Graphic_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
                         label = "color.a",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "color.a","SpriteRenderer")
+            animEffect.Add(new TweenActionEffect( "color.a","SpriteRenderer")
             {
-                image = "custom_SpriteRenderer_ColorA_example.png",
+                image = "custom_SpriteRenderer_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<SpriteRenderer_ColorAControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<SpriteRenderer_ColorAControlBehaviour>(),
                         label = "color.a",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "color.a","Material")
+            animEffect.Add(new TweenActionEffect( "color.a","Material")
             {
-                image = "custom_Material_ColorA_example.png",
+                image = "custom_Material_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Material_ColorAControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Material_ColorAControlBehaviour>(),
                         label = "color.a",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "mainTextureOffset","Material")
+            animEffect.Add(new TweenActionEffect( "mainTextureOffset","Material")
             {
-                image = "custom_Material_MainTextureOffset_example.png",
+                image = "custom_Material_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Material_MainTextureOffsetControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Material_MainTextureOffsetControlBehaviour>(),
                         label = "mainTextureOffset",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "mainTextureScale","Material")
+            animEffect.Add(new TweenActionEffect( "mainTextureScale","Material")
             {
-                image = "custom_Material_MainTextureScale_example.png",
+                image = "custom_Material_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Material_MainTextureScaleControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Material_MainTextureScaleControlBehaviour>(),
                         label = "mainTextureScale",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "fillAmount","Image")
+            animEffect.Add(new TweenActionEffect( "fillAmount","Image")
             {
-                image = "custom_Image_FillAmount_example.png",
+                image = "custom_Image_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Image_FillAmountControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Image_FillAmountControlBehaviour>(),
                         label = "fillAmount",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "volume","AudioSource")
+            animEffect.Add(new TweenActionEffect( "volume","AudioSource")
             {
-                image = "custom_AudioSource_Volume_example.png",
+                image = "custom_AudioSource_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<AudioSource_VolumeControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<AudioSource_VolumeControlBehaviour>(),
                         label = "volume",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "pitch","AudioSource")
+            animEffect.Add(new TweenActionEffect( "pitch","AudioSource")
             {
-                image = "custom_AudioSource_Pitch_example.png",
+                image = "custom_AudioSource_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<AudioSource_PitchControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<AudioSource_PitchControlBehaviour>(),
                         label = "pitch",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "panStereo","AudioSource")
+            animEffect.Add(new TweenActionEffect( "panStereo","AudioSource")
             {
-                image = "custom_AudioSource_PanStereo_example.png",
+                image = "custom_AudioSource_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<AudioSource_PanStereoControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<AudioSource_PanStereoControlBehaviour>(),
                         label = "panStereo",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "timeScale","Tween")
+            animEffect.Add(new TweenActionEffect( "timeScale","Tween")
             {
-                image = "custom_Tween_TimeScale_example.png",
+                image = "custom_Tween_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Tween_TimeScaleControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Tween_TimeScaleControlBehaviour>(),
                         label = "timeScale",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "timeScale","Sequence")
+            animEffect.Add(new TweenActionEffect( "timeScale","Sequence")
             {
-                image = "custom_Sequence_TimeScale_example.png",
+                image = "custom_Sequence_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<Sequence_TimeScaleControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Sequence_TimeScaleControlBehaviour>(),
                         label = "timeScale",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "GetResolvedStyleRect()","VisualElement")
+            animEffect.Add(new TweenActionEffect( "GetResolvedStyleRect()","VisualElement")
             {
-                image = "custom_VisualElement_GetResolvedStyleRect_example.png",
+                image = "custom_VisualElement_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(x:0.00, y:0.00, width:0.00, height:0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<VisualElement_GetResolvedStyleRectControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<VisualElement_GetResolvedStyleRectControlBehaviour>(),
                         label = "GetResolvedStyleRect()",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "position","ITransform")
+            animEffect.Add(new TweenActionEffect( "position","ITransform")
             {
-                image = "custom_ITransform_Position_example.png",
+                image = "custom_ITransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<ITransform_PositionControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<ITransform_PositionControlBehaviour>(),
                         label = "position",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "rotation","ITransform")
+            animEffect.Add(new TweenActionEffect( "rotation","ITransform")
             {
-                image = "custom_ITransform_Rotation_example.png",
+                image = "custom_ITransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00000, 0.00000, 0.00000, 1.00000)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<ITransform_RotationControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<ITransform_RotationControlBehaviour>(),
                         label = "rotation",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "scale","ITransform")
+            animEffect.Add(new TweenActionEffect( "scale","ITransform")
             {
-                image = "custom_ITransform_Scale_example.png",
+                image = "custom_ITransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<ITransform_ScaleControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<ITransform_ScaleControlBehaviour>(),
                         label = "scale",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "layout.size","VisualElement")
+            animEffect.Add(new TweenActionEffect( "layout.size","VisualElement")
             {
-                image = "custom_VisualElement_LayoutSize_example.png",
+                image = "custom_VisualElement_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<VisualElement_LayoutSizeControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<VisualElement_LayoutSizeControlBehaviour>(),
                         label = "layout.size",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "GetTopLeft()","VisualElement")
+            animEffect.Add(new TweenActionEffect( "GetTopLeft()","VisualElement")
             {
-                image = "custom_VisualElement_GetTopLeft_example.png",
+                image = "custom_VisualElement_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<VisualElement_GetTopLeftControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<VisualElement_GetTopLeftControlBehaviour>(),
                         label = "GetTopLeft()",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "style.color.value","VisualElement")
+            animEffect.Add(new TweenActionEffect( "style.color.value","VisualElement")
             {
-                image = "custom_VisualElement_StyleColorValue_example.png",
+                image = "custom_VisualElement_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "RGBA(1.000, 1.000, 1.000, 1.000)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<VisualElement_StyleColorValueControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<VisualElement_StyleColorValueControlBehaviour>(),
                         label = "style.color.value",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "style.backgroundColor.value","VisualElement")
+            animEffect.Add(new TweenActionEffect( "style.backgroundColor.value","VisualElement")
             {
-                image = "custom_VisualElement_StyleBackgroundColorValue_example.png",
+                image = "custom_VisualElement_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "RGBA(1.000, 1.000, 1.000, 1.000)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<VisualElement_StyleBackgroundColorValueControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<VisualElement_StyleBackgroundColorValueControlBehaviour>(),
                         label = "style.backgroundColor.value",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "offsetMin","Basic Layout")
+            animEffect.Add(new TweenActionEffect( "offsetMin","RectTransform")
             {
-                image = "custom_RectTransform_OffsetMin_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_OffsetMinControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_OffsetMinControlBehaviour>(),
                         label = "offsetMin",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "offsetMin.x","Basic Layout")
+            animEffect.Add(new TweenActionEffect( "offsetMin.x","RectTransform")
             {
-                image = "custom_RectTransform_OffsetMinX_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_OffsetMinXControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_OffsetMinXControlBehaviour>(),
                         label = "offsetMin.x",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "offsetMin.y","Basic Layout")
+            animEffect.Add(new TweenActionEffect( "offsetMin.y","RectTransform")
             {
-                image = "custom_RectTransform_OffsetMinY_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_OffsetMinYControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_OffsetMinYControlBehaviour>(),
                         label = "offsetMin.y",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "offsetMax","Basic Layout")
+            animEffect.Add(new TweenActionEffect( "offsetMax","RectTransform")
             {
-                image = "custom_RectTransform_OffsetMax_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_OffsetMaxControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_OffsetMaxControlBehaviour>(),
                         label = "offsetMax",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "offsetMax.x","Basic Layout")
+            animEffect.Add(new TweenActionEffect( "offsetMax.x","RectTransform")
             {
-                image = "custom_RectTransform_OffsetMaxX_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_OffsetMaxXControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_OffsetMaxXControlBehaviour>(),
                         label = "offsetMax.x",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "offsetMax.y","Basic Layout")
+            animEffect.Add(new TweenActionEffect( "offsetMax.y","RectTransform")
             {
-                image = "custom_RectTransform_OffsetMaxY_example.png",
+                image = "custom_RectTransform_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectTransform_OffsetMaxYControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_OffsetMaxYControlBehaviour>(),
                         label = "offsetMax.y",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "maxVisibleCharacters","TMP_Text")
+            animEffect.Add(new TweenActionEffect( "maxVisibleCharacters","TMP_Text")
             {
-                image = "custom_TMP_Text_MaxVisibleCharacters_example.png",
+                image = "custom_TMP_Text_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "0", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<TMP_Text_MaxVisibleCharactersControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<TMP_Text_MaxVisibleCharactersControlBehaviour>(),
                         label = "maxVisibleCharacters",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "padding","RectMask2D")
+            animEffect.Add(new TweenActionEffect( "padding","RectMask2D")
             {
-                image = "custom_RectMask2D_Padding_example.png",
+                image = "custom_RectMask2D_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0.00, 0.00, 0.00, 0.00)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectMask2D_PaddingControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectMask2D_PaddingControlBehaviour>(),
                         label = "padding",
                     }
                 }
             });
-            customAnimationCollection.animationCollections.Add(new TweenActionEffect( "softness","RectMask2D")
+            animEffect.Add(new TweenActionEffect( "softness","RectMask2D")
             {
-                image = "custom_RectMask2D_Softness_example.png",
+                image = "custom_RectMask2D_example.png",
+                collectionCategory = "Custom",
                 animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
                         EndPos = "(0, 0)", 
                         isRelative = true,
-                        tweenMethod = GetTweenMethodName<RectMask2D_SoftnessControlBehaviour>(),
+                        tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectMask2D_SoftnessControlBehaviour>(),
                         label = "softness",
                     }
                 }
-            });            return customAnimationCollection;
-        }
+            }); 
+             return customAnimationCollection;
+            }
     }
 }

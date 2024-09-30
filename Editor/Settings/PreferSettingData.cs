@@ -8,5 +8,6 @@ namespace Cr7Sund.TweenTimeLine
         public string label;
         public string key;
         public string settingType;
+        public string toolTips;
     }
 }

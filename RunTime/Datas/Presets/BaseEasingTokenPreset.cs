@@ -18,14 +18,14 @@ namespace Cr7Sund.TweenTimeLine
     public abstract class BaseEasingTokenPreset
     {
         public abstract string Name { get; }
-        public abstract Enum TokenType { get; }
+        // public abstract Enum TokenType { get; }
         /// <summary>
         /// (Ease easeType \ AnimationCurve animCurve \ EaseFunction customEase)
         /// </summary>
         public abstract PrimeTween.Easing Easing { get; }
         public abstract AnimationCurve Curve { get; }
 
-        public abstract void Init(Enum enumType, EasingWrapper easing);
+        public abstract void Init(string enumType, EasingWrapper easing);
 
         public virtual BaseEasingTokenPreset GetReverseEasing(EasingTokenPresetLibrary easingTokenPresetLibrary)
         {

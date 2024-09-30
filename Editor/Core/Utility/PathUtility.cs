@@ -24,8 +24,8 @@ namespace Cr7Sund
             if (relativePath.StartsWith("Assets"))
             {
                 // 移除 "Assets" 并与项目路径组合
-                string pathWithoutAssets = relativePath.Substring("Assets".Length).TrimStart('/');
-                return Path.Combine(projectPath, pathWithoutAssets);
+                // string pathWithoutAssets = relativePath.Substring("Assets".Length).TrimStart('/');
+                return Path.Combine(projectPath, relativePath);
             }
 
             // 如果不以 "Assets" 开头，假设它是相对于项目根目录的路径

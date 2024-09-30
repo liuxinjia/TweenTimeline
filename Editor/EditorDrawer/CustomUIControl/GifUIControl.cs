@@ -32,24 +32,57 @@ namespace Cr7Sund
 
         private void Play()
         {
-            string fileName = Path.GetFileNameWithoutExtension(filePath);
+            System.Diagnostics.Stopwatch _profilerWatch = new();
+
+            _profilerWatch.Restart();
+            InitializeCache();
+            TweenTimelineManager.LogProfile($"Play time: {_profilerWatch.ElapsedMilliseconds} ms"); // Log elapsed time
+
+            _profilerWatch.Restart();
+            LoadGifData();
+            TweenTimelineManager.LogProfile($"LoadGifData time: {_profilerWatch.ElapsedMilliseconds} ms"); // Log elapsed time
+
+            _profilerWatch.Restart();
+            RegisterUpdateCallback();
+            TweenTimelineManager.LogProfile($"RegisterUpdateCallback time: {_profilerWatch.ElapsedMilliseconds} ms"); // Log elapsed time
+        }
+
+        private void InitializeCache()
+        {
             if (_cache == null)
             {
-                var guids = AssetDatabase.FindAssets("t:GifCache",
-                new string[] {
-                    TweenTimelineDefine.BuiltInConfigPath,
-                    TweenTimelineDefine.CustomConfigPath });
-                foreach (var guid in guids)
-                {
-                    _cache = AssetDatabase.LoadAssetAtPath<GifCache>(AssetDatabase.GUIDToAssetPath(guid));
-                    break;
-                }
-                if (guids.Length == 0)
+                _cache = LoadGifCacheFromAssets();
+                if (_cache == null)
                 {
                     _cache = ScriptableObject.CreateInstance<GifCache>();
                 }
             }
+        }
 
+        private GifCache LoadGifCacheFromAssets()
+        {
+            System.Diagnostics.Stopwatch profilerWatch = new();
+            profilerWatch.Restart();
+
+            var guids = AssetDatabase.FindAssets("t:GifCache",
+            new string[] {
+                TweenTimelineDefine.BuiltInGIFPresetFolder,
+                TweenTimelineDefine.CustomGIFPresetFolder });
+            TweenTimelineManager.LogProfile($"Find Assetse: {profilerWatch.ElapsedMilliseconds} ms"); // Log elapsed time
+
+            profilerWatch.Restart();
+            foreach (var guid in guids)
+            {
+                return AssetDatabase.LoadAssetAtPath<GifCache>(AssetDatabase.GUIDToAssetPath(guid));
+            }
+            TweenTimelineManager.LogProfile($"LoadAssetAtPath: {profilerWatch.ElapsedMilliseconds} ms"); // Log elapsed time
+
+            return null;
+        }
+
+        private void LoadGifData()
+        {
+            string fileName = Path.GetFileNameWithoutExtension(filePath);
             int cacheIndex = _cache.gifDataLists.FindIndex(x => Path.GetFileNameWithoutExtension(x.FilePath) == fileName);
             if (cacheIndex >= 0)
             {
@@ -62,23 +95,39 @@ namespace Cr7Sund
                 _cache.gifDataLists.Add(_gifData);
                 _gifData.CreateGIFWithouCache();
             }
+        }
 
+        private void RegisterUpdateCallback()
+        {
             sequenceID = EditorTweenCenter.RegisterUpdateCallback(this, -1, (element, elapsedTime) =>
             {
-                var mTime = elapsedTime - curTotalTime;
-                if (mTime >= _gifData.Frames[_gifData.Frames.Count - 1].Delay)
-                {
-                    mTime = 0;
-                    curTotalTime = elapsedTime;
-                    mCurFrame = 0;
-                }
-                if (mTime >= _gifData.Frames[mCurFrame].Delay)
-                {
-                    mCurFrame = (mCurFrame + 1) % _gifData.Frames.Count;
-                    var gifField = element as GifUIControl;
-                    gifField.image = _gifData.Frames[mCurFrame].Frame;
-                }
+                UpdateGifFrame(elapsedTime);
             });
+        }
+
+        private void UpdateGifFrame(float elapsedTime)
+        {
+            var mTime = elapsedTime - curTotalTime;
+            if (mTime >= _gifData.Frames[_gifData.Frames.Count - 1].Delay)
+            {
+                ResetGifState(elapsedTime);
+            }
+            if (mTime >= _gifData.Frames[mCurFrame].Delay)
+            {
+                AdvanceGifFrame();
+            }
+        }
+
+        private void ResetGifState(float elapsedTime)
+        {
+            curTotalTime = elapsedTime;
+            mCurFrame = 0;
+        }
+
+        private void AdvanceGifFrame()
+        {
+            mCurFrame = (mCurFrame + 1) % _gifData.Frames.Count;
+            image = _gifData.Frames[mCurFrame].Texture;
         }
 
     }

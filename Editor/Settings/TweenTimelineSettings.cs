@@ -15,10 +15,11 @@ namespace Cr7Sund.TweenTimeLine
     }
     public enum TweenElemenSettings
     {
-        [Description("Panel")]
-        PanelPostFix,
-        [Description("Composite")]
-        CompositePostFix,
+    }
+
+    public enum TweenGenSettings
+    {
+        UseFullPathName,
     }
 
     public enum TweenPreferenceDefine
@@ -57,13 +58,12 @@ namespace Cr7Sund.TweenTimeLine
 
         public List<PreferSettingData> settings = new List<PreferSettingData>();
 
-        public static Dictionary<Enum, object> _customPairs = new Dictionary<Enum, object>()
+        public static Dictionary<Enum, Tuple<object, string>> _customPairs = new Dictionary<Enum, Tuple<object, string>>()
         {
-            {TweenElemenSettings.CompositePostFix, "Composite"},
-            {TweenElemenSettings.PanelPostFix, "Panel"},
-            {ActionEditorSettings.EnableGifPreview, true},
-            {ActionEditorSettings.AlwaysCreateTrack, false},
-            {ActionEditorSettings.DealyResetTime, 1.0f},
+            {ActionEditorSettings.EnableGifPreview, new Tuple<object, string>(true, string.Empty)},
+            {ActionEditorSettings.AlwaysCreateTrack, new Tuple<object, string>(false, string.Empty)},
+            {TweenGenSettings.UseFullPathName, new Tuple<object, string>(false, string.Empty)},
+            {ActionEditorSettings.DealyResetTime, new Tuple<object, string>(1.0f, string.Empty)},
         };
 
         public void Reset()
@@ -85,11 +85,11 @@ namespace Cr7Sund.TweenTimeLine
 
             foreach (var item in _customPairs)
             {
-                UpdateValue(item.Key.ToString(), item.Value);
+                UpdateValue(item.Key.ToString(), item.Value, string.Empty);
             }
         }
 
-        public void UpdateValue<T>(string key, T defaultValue)
+        public void UpdateValue<T>(string key, T defaultValue, string toolTips)
         {
             if (defaultValue == null)
             {
@@ -99,6 +99,7 @@ namespace Cr7Sund.TweenTimeLine
             var settingType = defaultValue.GetType().FullName;
             var existingSetting = this.settings.FirstOrDefault(s => s.key == key);
             existingSetting.settingType = settingType;
+            existingSetting.toolTips = toolTips;
 
             if (defaultValue == null)
             {
@@ -148,7 +149,7 @@ namespace Cr7Sund.TweenTimeLine
                 });
             }
 
-            UpdateValue<T>(key, defaultValue);
+            UpdateValue<T>(key, defaultValue, string.Empty);
         }
     }
 }

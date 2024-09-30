@@ -26,19 +26,19 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
         public override AnimationCurve Curve => animationCurve;
-        public override Enum TokenType
-        {
-            get=>tokenKey;
-        }
+        // public override Enum TokenType
+        // {
+        //     get=>tokenKey;
+        // }
 
         public JitterEasingTokenPreset()
         {
             animationCurve = AnimationCurve.Constant(0, 1, 0);
         }
 
-        public override void Init(Enum enumType, EasingWrapper easing)
+        public override void Init(string enumType, EasingWrapper easing)
         {
-            tokenKey = (JitterEasingToken)enumType;
+            tokenKey = Enum.Parse<JitterEasingToken>(enumType);
             animationCurve = easing.Curve;
         }
     }

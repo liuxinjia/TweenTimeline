@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Cr7Sund.TweenTimeLine
@@ -7,21 +9,19 @@ namespace Cr7Sund.TweenTimeLine
     {
         public static Transform GetAttachRoot(Transform bindObj)
         {
-            GameObject[] panels = GameObject.FindGameObjectsWithTag("Panel");
-            if (panels.Length < 0)
-            {
-                throw new Exception("Please assign the panel tag with Panel");
-            }
+            HashSet<string> validTags = new HashSet<string> { TweenTimelineDefine.PanelTag, TweenTimelineDefine.CompositeTag };
 
-            foreach (var panel in panels)
+            Transform current = bindObj;
+            while (current != null)
             {
-                if (bindObj.IsChildOf(panel.transform))
+                if (validTags.Contains(current.tag))
                 {
-                    return panel.transform;
+                    return current;
                 }
+                current = current.parent;
             }
 
-            throw new Exception($"Please attach the transfrom {bindObj} with Panel");
+            return null;
         }
     }
 }

@@ -56,7 +56,7 @@ namespace Cr7Sund
 
         public static string RegisterSequence(Sequence sequence, UnityEngine.Object target, float duration)
         {
-            UnityEngine.Assertions.Assert.IsTrue(duration > 0);
+            UnityEngine.Assertions.Assert.IsTrue(duration > 0, "sequence duration is less than zero");
             // preview action will update and create newOne
             // CreateTween(behaviour); 
             Action<float> timeAction = (elapsedTime) =>
@@ -156,7 +156,6 @@ namespace Cr7Sund
                 _editorUpdateActionList[i].action?.Invoke(elapsedTime);
                 // Force visual refresh of UI objects
                 // (a simple SceneView.RepaintAll won't work with UI elements)
-
 
                 if (target is UnityEngine.Object engineObj)
                 {

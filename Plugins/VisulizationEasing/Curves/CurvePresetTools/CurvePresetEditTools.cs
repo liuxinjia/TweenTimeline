@@ -67,6 +67,7 @@ namespace Cr7Sund.Editor.CurvePreset
 
             CreateAnimCurves();
 
+            showCurve(rootVisualElement);
             void IMGUICode()
             {
                 Rect R = GUILayoutUtility.GetRect(300, 300, 100, 100, GUILayout.Width(200));
@@ -275,6 +276,94 @@ namespace Cr7Sund.Editor.CurvePreset
             var enumerable = input as IEnumerable;
 
             return enumerable;
+        }
+
+
+        private void showCurve(VisualElement container)
+        {
+            var clip = Selection.activeObject as AnimationClip;
+            if (clip == null) return;
+
+            EditorCurveBinding[] curveBindings = AnimationUtility.GetCurveBindings(clip);
+            AnimationCurve other = AnimationCurve.Constant(0, 1, 0);
+
+            foreach (EditorCurveBinding binding in curveBindings)
+            {
+                AnimationCurve editorCurve = AnimationUtility.GetEditorCurve(clip, binding);
+
+                if (IsCurveExcluded(editorCurve))
+                {
+                    continue;
+                }
+                var curveField = new CurveField(binding.propertyName);
+                curveField.value = editorCurve;
+                curveField.style.height = 200;
+
+                container.Add(curveField);
+            }
+        }
+
+        private static readonly List<AnimationCurve> fixedCurves = new List<AnimationCurve>
+        {
+            AnimationCurve.Constant(0, 1, 0), // 例如，常量曲线
+            // AnimationCurve.Constant(0, 1, 1), // 例如，常量曲线
+            // AnimationCurve.Linear(0, 0, 1, 1) // 线性曲线
+            // 添加更多需要排除的曲线
+        };
+
+        public bool IsCurveExcluded(AnimationCurve curve)
+        {
+            foreach (var fixedCurve in fixedCurves)
+            {
+                if (AreCurvesEqual(curve, fixedCurve))
+                {
+                    return true; // 找到匹配的固定曲线
+                }
+            }
+            return false; // 没有匹配的固定曲线
+        }
+        public bool AreCurvesEqual(AnimationCurve curve1, AnimationCurve curve2, float tolerance = 0.0001f)
+        {
+            // 确保两个曲线的关键帧数量相同
+
+            if (curve1.length != curve2.length)
+            {
+                return false;
+            }
+
+            // 确保起始时间和结束时间一致
+            float startTime1 = curve1[0].time;
+            float endTime1 = curve1[curve1.length - 1].time;
+            float startTime2 = curve2[0].time;
+            float endTime2 = curve2[curve2.length - 1].time;
+
+            if (startTime1 != startTime2 || endTime1 != endTime2)
+            {
+                return false;
+            }
+
+            // 计算帧数
+            int frameCount = 60; // 可以根据需要调整这个值
+            float timeStep = (endTime1 - startTime1) / frameCount;
+
+            // 遍历每一帧，比较两个曲线在每个时间点的值
+            for (int i = 0; i <= frameCount; i++)
+            {
+                float time = startTime1 + i * timeStep;
+
+                float value1 = curve1.Evaluate(time);
+                float value2 = curve2.Evaluate(time);
+
+                Debug.Log($"{value1} {value2} {time}");
+                // 如果两个曲线的值在某一帧相差超过 tolerance，就认为它们不相等
+                if (Mathf.Abs(value1 - value2) > tolerance)
+                {
+                    return false;
+                }
+            }
+
+            // 如果所有帧的值都相等，返回 true
+            return true;
         }
 
 

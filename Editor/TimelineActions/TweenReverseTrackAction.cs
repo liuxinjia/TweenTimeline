@@ -58,24 +58,24 @@ namespace Cr7Sund.TweenTimeLine
                 else
                 {
                     Component component = TweenTimeLineDataModel.TrackObjectDict[childSourceTrack] as Component;
-                    var trackAssetType = childSourceTrack.GetType();
+                    var trackType = childSourceTrack.GetType();
                     // LayoutElement_FlexibleHeightControlTrack
-                    string trackName = trackAssetType.Name.ToString();
+                    string trackName = trackType.Name.ToString();
                     string animUnitTweenMethod = trackName.Replace("ControlTrack", "");
-                    string componentType = trackAssetType.FullName.Split('.')[1];
+                    string componentType = trackType.FullName.Split('.')[1];
                     var assetName = $"Cr7Sund.{componentType}.{animUnitTweenMethod}ControlAsset";
+                    var trackAssetType = trackType.Assembly.GetType(assetName);
 
                     var trackInfo = GetReverseClipInfo(childSourceTrack, isIn);
-                    var clipAssetType = trackAssetType.Assembly.GetType(assetName);
-                    Assert.IsNotNull(clipAssetType);
+                    trackInfo.trackAssetType = trackAssetType;
+                    trackInfo.trackType = trackType;
+                    trackInfo.component = component;
 
-                    newTrack = TweenTimelineManager.AddTrackWithParents(component,
-                        trackAssetType,
-                        clipAssetType,
-                        trackInfo,
-                        createNewTrack: true, // different direction
-                        parentTrack: parentTrack
-                    );
+                    newTrack = TweenTimelineManager.AddTrackWithParents(
+                    trackInfo,
+                    createNewTrack: true, // different direction
+                    parentTrack: parentTrack
+                );
                 }
 
                 newTrackDict.Add(childSourceTrack, newTrack);
@@ -101,6 +101,8 @@ namespace Cr7Sund.TweenTimeLine
         public TrackInfoContext GetReverseClipInfo(TrackAsset trackAsset, int isIn)
         {
             var resultTrackInfo = new TrackInfoContext();
+
+
             var childBehaviours = TweenTimeLineDataModel.TrackBehaviourDict[trackAsset];
             foreach (var clipBeahviour in childBehaviours)
             {
@@ -125,7 +127,7 @@ namespace Cr7Sund.TweenTimeLine
             throw new NotImplementedException();
         }
 
-        [TimelineShortcut("TweenReverseTrackAction", KeyCode.H)]
+        [TimelineShortcut("TweenReverseTrackAction", KeyCode.H, ShortcutModifiers.Shift)]
         public static void HandleShortCut(ShortcutArguments args)
         {
             Invoker.InvokeWithSelectedTracks<TweenReverseTrackAction>();

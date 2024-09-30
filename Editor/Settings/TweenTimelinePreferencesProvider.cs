@@ -47,20 +47,20 @@ namespace Cr7Sund.TweenTimeLine
 
                 if (setting.settingType == typeof(bool).FullName)
                 {
-                    AddBoolPref(root, setting.label, setting.key);
+                    AddBoolPref(root, setting.label, setting.key, setting.toolTips);
                 }
                 else if (setting.settingType == typeof(float).FullName)
                 {
-                    AddFloatPref(root, setting.label, setting.key);
+                    AddFloatPref(root, setting.label, setting.key, setting.toolTips);
                 }
                 else if (setting.settingType == typeof(string).FullName)
                 {
-                    AddStringPref(root, setting.label, setting.key);
+                    AddStringPref(root, setting.label, setting.key, setting.toolTips);
                 }
             }
         }
 
-        private void AddBoolPref(VisualElement root, string label, string key)
+        private void AddBoolPref(VisualElement root, string label, string key, string toolTips)
         {
             var toggle = new Toggle(label)
             {
@@ -70,6 +70,8 @@ namespace Cr7Sund.TweenTimeLine
                     marginBottom = 10
                 }
             };
+            toggle.tooltip = toolTips;
+
             toggle.RegisterValueChangedCallback(evt =>
             {
                 EditorPrefs.SetBool(key, evt.newValue);
@@ -79,7 +81,7 @@ namespace Cr7Sund.TweenTimeLine
             root.Add(toggle);
         }
 
-        private void AddFloatPref(VisualElement root, string label, string key)
+        private void AddFloatPref(VisualElement root, string label, string key, string toolTips)
         {
             var floatField = new FloatField(label)
             {
@@ -89,6 +91,7 @@ namespace Cr7Sund.TweenTimeLine
                     marginBottom = 10
                 }
             };
+            floatField.tooltip = toolTips;
             floatField.RegisterValueChangedCallback(evt =>
             {
                 EditorPrefs.SetFloat(key, evt.newValue);
@@ -97,7 +100,7 @@ namespace Cr7Sund.TweenTimeLine
             root.Add(floatField);
         }
 
-        private void AddStringPref(VisualElement root, string label, string key)
+        private void AddStringPref(VisualElement root, string label, string key, string toolTips)
         {
             var textField = new TextField(label)
             {
@@ -107,6 +110,8 @@ namespace Cr7Sund.TweenTimeLine
                     marginBottom = 10
                 }
             };
+            textField.tooltip = toolTips;
+
             textField.RegisterValueChangedCallback(evt =>
             {
                 EditorPrefs.SetString(key, evt.newValue);

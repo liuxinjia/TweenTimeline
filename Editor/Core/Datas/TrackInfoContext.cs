@@ -1,24 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Cr7Sund.TweenTimeLine
 {
     public class TrackInfoContext
     {
-       public List<ClipInfoContext> clipInfos;
+        public Component component;
+        public Type trackType;
+        public Type trackAssetType;
+
+        public Type BindType;
+        public string BindTargetName;
+        public List<ClipInfoContext> clipInfos;
+        internal Transform parent;
+        internal string tweenIdentifier;
 
         public TrackInfoContext()
         {
             clipInfos = new List<ClipInfoContext>();
         }
-    }
 
-    public class ClipInfoContext
-    {
-        public double start;
-        public double duration;
-
-        public BaseEasingTokenPreset easePreset;
-        public object startPos;
-        public object endPos;
     }
 }

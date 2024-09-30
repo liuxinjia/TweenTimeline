@@ -40,6 +40,37 @@ namespace Cr7Sund.TweenTimeLine
         }
 
 
+        public void AddPresets(IEnumerable<BaseEasingTokenPreset> easingTokenPresetsToAdd)
+        {
+            foreach (var preset in easingTokenPresetsToAdd)
+            {
+                AddPreset(preset); // Reuse AddPreset to handle duplicates
+            }
+        }
+
+        public void AddPreset(BaseEasingTokenPreset easingTokenPreset)
+        {
+            var findIndex = easingTokenPresets
+               .FindIndex(token =>
+                token.Name == easingTokenPreset.Name
+                );
+
+            bool isLinear = easingTokenPreset.Name == "Linear";
+
+            if (findIndex >= 0
+               && !isLinear)
+            {
+                // Debug.LogWarning($"A ease preset with the name '{easingTokenPreset.Name}' already exists.");
+                easingTokenPresets[findIndex] = easingTokenPreset;
+            }
+            else
+            {
+                easingTokenPresets.Add(easingTokenPreset);
+            }
+        }
+
+
+
 #if UNITY_EDITOR
 
         public JitterEasingTokenPreset GetEasePreset(JitterEasingToken easeToken)
@@ -72,6 +103,26 @@ namespace Cr7Sund.TweenTimeLine
             EaseTokenPreset easeTokenPreset = Activator.CreateInstance<EaseTokenPreset>();
             easeTokenPreset.tokenKey = ease;
             return easeTokenPreset;
+        }
+
+        public CustomCurveEasingTokenPreset GetEasePreset(string curveName)
+        {
+            var targetEase = easingTokenPresets
+                .OfType<CustomCurveEasingTokenPreset>()
+                .First(token => token.Name == curveName);
+
+            var easeTokenPreset = Activator.CreateInstance<CustomCurveEasingTokenPreset>();
+            easeTokenPreset.animationCurve = targetEase.animationCurve;
+            easeTokenPreset.tokenKey = curveName;
+            return easeTokenPreset;
+        }
+
+        public int FindEasePreset(string curveName)
+        {
+            return easingTokenPresets
+                .OfType<CustomCurveEasingTokenPreset>()
+                .ToList()
+                .FindIndex(token => token.Name == curveName);
         }
 #endif
 

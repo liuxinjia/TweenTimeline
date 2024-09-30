@@ -37,8 +37,8 @@ namespace Cr7Sund.TweenTimeLine
 
         public string GetCustomTweenMethod()
         {
-            var result = SetPropertyMethod.Replace("target.", "");
-            result = result.TrimEnd(';');
+            // var result = SetPropertyMethod.Replace("target.", "");
+            var result = SetPropertyMethod.TrimEnd(';');
             return result;
         }
     }

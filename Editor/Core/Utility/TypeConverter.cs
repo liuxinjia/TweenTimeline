@@ -118,7 +118,7 @@ public static class TypeConverter
                 if (float.TryParse(components[0], out float dx) &&
                     float.TryParse(components[1], out float dy) &&
                     float.TryParse(components[2], out float dz))
-                    return Quaternion.Euler(new Vector3(dx, dy, dz));
+                    return new Vector3(dx, dy, dz);
             }
             if (components.Length == 4)
                 if (float.TryParse(components[0], out float dx) &&
@@ -344,5 +344,11 @@ public static class TypeConverter
         }
 
         throw new InvalidOperationException($"Cannot add delta to type '{targetType.Name}'.");
+    }
+
+
+    public static string GetSimplifyTypeName(string fullType)
+    {
+        return fullType.Substring(fullType.LastIndexOf('.') + 1);
     }
 }

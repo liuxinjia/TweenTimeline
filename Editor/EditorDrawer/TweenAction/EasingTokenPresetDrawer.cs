@@ -65,6 +65,8 @@ namespace Cr7Sund.TweenTimeLine
 
         private VisualElement CreateEasePresetField(SerializedProperty _easePresetProp, Type presetType)
         {
+            var container = new VisualElement();
+
             var cureProperty = _easePresetProp.FindPropertyRelative(curvePropertyPath);
             var tokenProperty = _easePresetProp.FindPropertyRelative(tokenKeyPropertyPath);
             if (tokenProperty == null)
@@ -81,27 +83,37 @@ namespace Cr7Sund.TweenTimeLine
             }
             else
             {
-                string presetName = tokenProperty.enumNames[tokenProperty.enumValueIndex];
+                string presetName = string.Empty;
+                if (tokenProperty.propertyType == SerializedPropertyType.Enum)
+                {
+                    presetName = tokenProperty.enumNames[tokenProperty.enumValueIndex];
+                }
+                else
+                {
+                    presetName = tokenProperty.stringValue;
+                }
                 presetName = GetCurveName(presetName);
 
                 curveField.value = GetEaseAnimationCurve(presetName);
             }
-            curveField.SetEnabled(false);
+            // curveField.SetEnabled(false);
 
-            var enumValues = tokenProperty.enumDisplayNames.ToList<string>();
-            int currentIndex = tokenProperty.enumValueIndex;
-            PopupField<string> popField = new PopupField<string>("EaseToken", enumValues, currentIndex);
-            popField.RegisterValueChangedCallback(evt =>
+            if (tokenProperty.propertyType == SerializedPropertyType.Enum)
             {
-                string curveName = GetCurveName(evt.newValue);
-                curveField.value = GetEaseAnimationCurve(curveName);
-                tokenProperty.enumValueIndex = enumValues.IndexOf(evt.newValue);
-                _easePresetProp.serializedObject.ApplyModifiedProperties();
-                _easePresetProp.serializedObject.Update();
-            });
+                var enumValues = tokenProperty.enumDisplayNames.ToList<string>();
+                int currentIndex = tokenProperty.enumValueIndex;
+                PopupField<string> popField = new PopupField<string>("EaseToken", enumValues, currentIndex);
+                popField.RegisterValueChangedCallback(evt =>
+                {
+                    string curveName = GetCurveName(evt.newValue);
+                    curveField.value = GetEaseAnimationCurve(curveName);
+                    tokenProperty.enumValueIndex = enumValues.IndexOf(evt.newValue);
+                    _easePresetProp.serializedObject.ApplyModifiedProperties();
+                    _easePresetProp.serializedObject.Update();
+                });
 
-            var container = new VisualElement();
-            container.Add(popField);
+                container.Add(popField);
+            }
             container.Add(curveField);
             return container;
         }

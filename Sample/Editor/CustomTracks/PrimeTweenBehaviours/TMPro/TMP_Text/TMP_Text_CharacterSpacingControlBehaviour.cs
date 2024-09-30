@@ -13,7 +13,7 @@ namespace Cr7Sund.TMP_TextTween
         {
             return PrimeTween.Tween.Custom(target, startValue: startValue,
                   ease: PrimEase, endValue: _endPos, duration: (float)duration, 
-                  onValueChange: (t, updateValue) => t. characterSpacing = updateValue);
+                  onValueChange: (target, updateValue) => target.characterSpacing = updateValue);
         }
 
         protected override object OnGet(TMPro.TMP_Text target)
@@ -23,7 +23,7 @@ namespace Cr7Sund.TMP_TextTween
 
         protected override void OnSet(TMPro.TMP_Text target, float updateValue)
         {
-            target.characterSpacing = updateValue;
+           target.characterSpacing = updateValue;
         }
     }
 }

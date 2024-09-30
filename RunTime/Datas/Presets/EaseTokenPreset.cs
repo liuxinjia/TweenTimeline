@@ -19,16 +19,16 @@ namespace Cr7Sund.TweenTimeLine
                 return tokenKey.ToString();
             }
         }
-        public override Enum TokenType
-        {
-            get => tokenKey;
-        }
+        // public override Enum TokenType
+        // {
+        //     get => tokenKey;
+        // }
         public override Easing Easing => tokenKey;
         public override AnimationCurve Curve => null;
 
-        public override void Init(Enum enumType, EasingWrapper easing)
+        public override void Init(string enumType, EasingWrapper easing)
         {
-            tokenKey = (Ease)enumType;
+            tokenKey = Enum.Parse<Ease>(enumType);
         }
 
 #if UNITY_EDITOR

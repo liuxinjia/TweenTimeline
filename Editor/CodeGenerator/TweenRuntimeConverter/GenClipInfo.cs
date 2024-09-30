@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using PrimeTween;
 namespace Cr7Sund.TweenTimeLine
 {
     public class GenClipInfo
@@ -11,8 +12,17 @@ namespace Cr7Sund.TweenTimeLine
         public string CustomTweenMethod;
         public string EaseName;
         public string BindType;
-        public string BindName;
+        private string bindName;
         public List<GenMarkInfo> genMarkInfos = new();
 
+        public string BindName
+        {
+            get
+            {
+                Assert.IsNotNull(BindType);
+                return $"{bindName}_{TypeConverter.GetSimplifyTypeName(BindType)}";
+            }
+            set => bindName = value;
+        }
     }
 }

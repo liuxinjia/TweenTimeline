@@ -6,7 +6,7 @@ using UnityEngine;
 public class KeyframeData
 {
     public float Time;
-    public float Value;
+    public object Value;
     public float InTangent;
     public float OutTangent;
     public string Property;
@@ -27,14 +27,22 @@ public class KeyframeData
 
     public static implicit operator Keyframe(KeyframeData keyframeData)
     {
-        var keyframe = new Keyframe(
-            keyframeData.Time,
-            keyframeData.Value,
-            keyframeData.InTangent,
-            keyframeData.OutTangent,
-            keyframeData.InWeight,
-            keyframeData.OutWeight
-        );
-        return keyframe;
+        if (keyframeData.Value is float floatValue)
+        {
+            var keyframe = new Keyframe(
+                    keyframeData.Time,
+                    floatValue,
+                    keyframeData.InTangent,
+                    keyframeData.OutTangent,
+                    keyframeData.InWeight,
+                    keyframeData.OutWeight
+                );
+            return keyframe;
+        }
+        else
+        {
+            Debug.LogError("try to conert objectKeyFrame to keyFrame");
+            return new Keyframe();
+        }
     }
 }

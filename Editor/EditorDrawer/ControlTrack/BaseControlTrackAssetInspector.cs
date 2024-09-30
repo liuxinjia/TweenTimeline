@@ -111,39 +111,6 @@ namespace Cr7Sund.TweenTimeLine
             container.Add(startPosProp);
         }
 
-        private VisualElement DrawEasePresetField()
-        {
-            var derivedEaseTokenTypes = TweenTimelineDefine.DerivedEaseTokenTypes;
-            Type currentType = _easePresetProp.managedReferenceValue?.GetType();
-
-            string[] typeNames = derivedEaseTokenTypes.Select(t => t.Name).ToArray();
-            int currentIndex = Array.FindIndex(derivedEaseTokenTypes, type => type == currentType);
-            var popupField = new PopupField<string>("Ease Preset Type", typeNames.ToList(), currentIndex);
-
-            popupField.RegisterValueChangedCallback(evt =>
-            {
-                int selectedIndex = typeNames.ToList().IndexOf(evt.newValue);
-                Type selectedType = derivedEaseTokenTypes[selectedIndex];
-
-                if (selectedType != currentType)
-                {
-                    _easePresetProp.managedReferenceValue = Activator.CreateInstance(selectedType);
-                    serializedObject.ApplyModifiedProperties();
-                    serializedObject.Update();
-                }
-            });
-
-            var container = new VisualElement();
-            container.Add(popupField);
-
-            if (_easePresetProp.managedReferenceValue != null)
-            {
-                PropertyField easePresetField = new PropertyField(_easePresetProp, "Ease Preset");
-                container.Add(easePresetField);
-            }
-
-            return container;
-        }
 
         #region Buttons
         private void DrawBtns()
@@ -250,6 +217,4 @@ namespace Cr7Sund.TweenTimeLine
         #endregion
 
     }
-
-
 }

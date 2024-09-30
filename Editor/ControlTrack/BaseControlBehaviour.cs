@@ -33,7 +33,10 @@ namespace Cr7Sund.TweenTimeLine
         public object EndPos
         {
             get => _endPos;
-            set => _endPos = (TValue)value;
+            set
+            {
+                _endPos = (TValue)value;
+            }
         }
         public Easing PrimEase
         {
@@ -68,6 +71,7 @@ namespace Cr7Sund.TweenTimeLine
             set => _bindType = value; // {{ edit_1 }}
         }
 
+
         public override void OnBehaviourPlay(Playable playable, FrameData info)
         {
             // when drag don't publish event
@@ -99,9 +103,9 @@ namespace Cr7Sund.TweenTimeLine
             return OnGet((TTarget)target);
         }
 
-        public void Set(System.Object target, Object intValue)
+        public void Set(System.Object target, Object value)
         {
-            OnSet((TTarget)target, (TValue)intValue);
+            OnSet((TTarget)target, (TValue)value);
         }
 
         public PrimeTween.Tween CreateTween(object target, double duration, object startValue)

@@ -16,8 +16,12 @@ namespace Cr7Sund.TweenTimeLine
     {
         [SerializeField] private string _fieldName;
 
-        public abstract object Value { get; }
-        public string FieldName => _fieldName;
+        public abstract object Value { get; set; }
+        public string FieldName
+        {
+            get => _fieldName;
+            set => _fieldName = value;
+        }
 
         public int instanceID => GetInstanceID();
 
@@ -61,7 +65,11 @@ namespace Cr7Sund.TweenTimeLine
 
         public NotificationFlags flags => NotificationFlags.TriggerInEditMode;
 
-        public override object Value => _value;
+        public override object Value
+        {
+            get => _value;
+            set => _value = (TValue)value;
+        }
 
     }
 }

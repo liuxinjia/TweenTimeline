@@ -41,6 +41,7 @@ namespace Cr7Sund.TweenTimeLine
         private void CreateAnimEffects()
         {
             var setting = AssetDatabase.LoadAssetAtPath<TweenActionLibrary>(TweenTimelineDefine.tweenLibraryPath);
+
             foreach (var item in componentDatas)
             {
                 setting.AddEffect(CreateAnimationEffect(item));
@@ -53,7 +54,7 @@ namespace Cr7Sund.TweenTimeLine
         public static TweenActionEffect CreateAnimationEffect(TweenComponentData method)
         {
             string typeName = TweenCustomTrackCodeGenerator.GetTypeName(method.ComponentType);
-
+            string identifier = TweenCustomTrackCodeGenerator.GetTweenBehaviourIdentifier(method);
             return new TweenActionEffect(method.GetPropertyMethod, typeName)
             {
                 image = $"{typeName}.png",
@@ -64,7 +65,7 @@ namespace Cr7Sund.TweenTimeLine
                     {
                         EndPos = AnimationCollectionGenerator.GetDefaultValue(method.ValueType),
                         isRelative = true,
-                        tweenMethod = typeName,
+                        tweenMethod =$"{identifier}ControlBehaviour",
                         label = method.GetPropertyMethod,
                     }
                 }

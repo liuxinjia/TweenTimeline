@@ -22,11 +22,14 @@ namespace Cr7Sund.TweenTimeLine
             SerializedProperty fieldValueProp = serializedObject.FindProperty("_value");
             valuePropField.BindProperty(fieldValueProp);
 
-            var choices = GetFieldWithType();
+            var choices = GetFieldWithType(fieldValueProp.propertyType == SerializedPropertyType.Boolean);
             if (choices.Count > 0)
             {
-                serializedObject.FindProperty("_fieldName").stringValue = choices[0];
-                serializedObject.ApplyModifiedProperties();
+                if (string.IsNullOrEmpty(serializedObject.FindProperty("_fieldName").stringValue))
+                {
+                    serializedObject.FindProperty("_fieldName").stringValue = choices[0];
+                    serializedObject.ApplyModifiedProperties();
+                }
             }
             var index = choices.IndexOf(serializedObject.FindProperty("_fieldName").stringValue);
             index = Math.Max(0, index);
@@ -43,13 +46,11 @@ namespace Cr7Sund.TweenTimeLine
             return container;
         }
 
-        private List<string> GetFieldWithType()
+        private List<string> GetFieldWithType(bool isBoolType)
         {
-            var image = new Image();
             SerializedProperty valueProp = serializedObject.FindProperty("_value");
 
-            SerializedPropertyType propertyType1 = valueProp.propertyType;
-            var propertyType = SerializedPropertyValueExtension.GetRealType(propertyType1);
+            var propertyType = SerializedPropertyValueExtension.GetRealType(valueProp.propertyType);
             var marker = target as Marker;
             // parent can be not assigned
             if (!TweenTimeLineDataModel.TrackObjectDict.ContainsKey(marker.parent))
@@ -67,11 +68,16 @@ namespace Cr7Sund.TweenTimeLine
             var props = targetComponent.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
             var setProps = props
                 .Where(prop => prop.SetMethod != null && prop.SetMethod.IsPublic
-                && prop.PropertyType == propertyType)
+                 && propertyType.IsAssignableFrom(prop.PropertyType))
                 .Select(prop => prop.Name)
                 .ToList();
 
             filterNames.AddRange(setProps);
+
+            if (isBoolType)
+            {
+                filterNames.Add(TweenTimelineDefine.IsActiveFieleName);
+            }
             return filterNames;
         }
 

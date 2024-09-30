@@ -19,7 +19,7 @@ namespace Cr7Sund.TweenTimeLine
         [ContextMenu(nameof(AddCustomTracks))]
         public void AddCustomTracks()
         {
-            var newAnimations = CustomAnimationContainerBuilder.CreateCustomAnimationCollection();
+            var newAnimations = CustomTweenActionContainerBuilder.CreateCustomAnimationCollection();
             newAnimations.ForEach(AddEffect);
         }
 
@@ -55,7 +55,6 @@ namespace Cr7Sund.TweenTimeLine
             AssetDatabase.SaveAssetIfDirty(this);
             AssetDatabase.Refresh();
         }
-
 
 
         [ContextMenu(nameof(ApplyToSettings))]
