@@ -20,10 +20,10 @@ namespace Cr7Sund.TweenTimeLine
         public void AddCustomTracks()
         {
             var newAnimations = CustomTweenActionContainerBuilder.CreateCustomAnimationCollection();
-            newAnimations.ForEach(AddEffect);
+            newAnimations.ForEach((effect)=>AddEffect(effect));
         }
 
-        public void AddEffect(TweenActionEffect effect)
+        public void AddEffect(TweenActionEffect effect, string category = "Custom")
         {
             var existingEffectIndex = animationCollections.FindIndex(e => e.label == effect.label);
             if (existingEffectIndex >= 0)
@@ -70,11 +70,13 @@ namespace Cr7Sund.TweenTimeLine
         [MenuItem("Tools/AssemblyName")]
         public static void ShowFileID()
         {
-            string fullName = typeof(CustomTweenActionLibrary).Assembly.FullName;
+            string fullName =
+            AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(Selection.activeObject));
+            //  typeof(CustomTweenActionLibrary).Assembly.FullName;
             EditorGUIUtility.systemCopyBuffer = fullName;
+
             Debug.Log(fullName);
         }
-
 
     }
 

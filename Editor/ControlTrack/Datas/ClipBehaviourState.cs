@@ -7,6 +7,7 @@ namespace Cr7Sund.TweenTimeLine
         public ClipBehaviourStateEnum BehaviourState { get; private set; }
         public bool IsSelect;
         public object initPos;
+        public bool IsRecordStart;
         public Dictionary<int, object> markerInitPosDict;
 
         public ActionTrackHistory actionTrackHistory = new();

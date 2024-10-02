@@ -9,7 +9,7 @@ namespace Cr7Sund.VisualElementTween
     [TrackClipType(typeof(VisualElement_GetTopLeftControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.UIElements.VisualElement))]
-    [TrackColor(0.657f, 0.762f, 0.543f)]
+    [TrackColor(0.037f, 0.245f, 0.653f)]
     public class VisualElement_GetTopLeftControlTrack : TrackAsset,IBaseTrack
     {
 

@@ -64,7 +64,7 @@ namespace Cr7Sund.TweenTimeLine
                     new TweenActionStep
                     {
                         EndPos = AnimationCollectionGenerator.GetDefaultValue(method.ValueType),
-                        isRelative = true,
+                       tweenOperationType= TweenActionStep.TweenOperationType.Additive,
                         tweenMethod =$"{identifier}ControlBehaviour",
                         label = method.GetPropertyMethod,
                     }

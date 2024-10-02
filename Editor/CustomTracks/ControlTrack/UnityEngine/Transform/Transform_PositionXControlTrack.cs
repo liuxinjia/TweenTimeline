@@ -9,7 +9,7 @@ namespace Cr7Sund.TransformTween
     [TrackClipType(typeof(Transform_PositionXControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.Transform))]
-    [TrackColor(0.234f, 0.849f, 0.154f)]
+    [TrackColor(0.096f, 0.212f, 0.48f)]
     public class Transform_PositionXControlTrack : TrackAsset,IBaseTrack
     {
 

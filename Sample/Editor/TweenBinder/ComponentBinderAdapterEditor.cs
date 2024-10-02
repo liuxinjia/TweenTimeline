@@ -58,14 +58,29 @@ namespace Cr7Sund.TweenTimeLine
             return root;
         }
 
-        protected virtual VisualElement CreateTopField(string category)
+        protected virtual List<string> _tweenFields { get; }
+
+        protected void OnRebind(ComponentBinderAdapter binderAdapter, string category)
         {
-            return null;
+            binderAdapter.cacheList.Clear();
+            foreach (var tweenField in _tweenFields)
+            {
+                var tweenTypeProperty = serializedObject.FindProperty(tweenField);
+                GetTweenNamMenus(binderAdapter, tweenTypeProperty, category,
+                 out var choices, out var initialIndex);
+                RebindComponent(category, tweenTypeProperty.stringValue);
+            }
         }
 
-        protected virtual void OnRebind(ComponentBinderAdapter binderAdapter, string category)
+        protected VisualElement CreateTopField(string category)
         {
-
+            var topField = new VisualElement();
+            topField.style.flexDirection = FlexDirection.Column;
+            foreach (var tweeName in _tweenFields)
+            {
+                topField.Add(AddTweenField(serializedObject.FindProperty(tweeName), category));
+            }
+            return topField;
         }
 
         protected VisualElement AddTweenField(SerializedProperty nameProp, string category)
@@ -111,11 +126,11 @@ namespace Cr7Sund.TweenTimeLine
             var resetActions = BindAdapterEditorHelper.GetResetActions(binder, componentBindTracks);
             _curSequence = ((ITweenBinding)binder).Play(nameProp.stringValue);
 
-            float dealyResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DealyResetTime);
+            float delayResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DelayResetTime);
             _updateSequenceID = EditorTweenCenter.RegisterSequence(_curSequence,
              binder.transform, _curSequence.duration);
             EditorTweenCenter.RegisterDelayCallback(target,
-              _curSequence.duration + dealyResetTime, (_, _) =>
+              _curSequence.duration + delayResetTime, (_, _) =>
               {
                   _updateSequenceID = string.Empty;
                   resetActions.ForEach(t => t?.Invoke());
@@ -132,7 +147,8 @@ namespace Cr7Sund.TweenTimeLine
             popup.RegisterValueChangedCallback(evt =>
             {
                 property.stringValue = BindAdapterEditorHelper.GetTweenName(evt.newValue);
-                property.serializedObject.ApplyModifiedProperties();
+                serializedObject.ApplyModifiedProperties();
+                OnRebind(binderAdapter, category);
             });
 
             return popup;

@@ -75,7 +75,6 @@ namespace Cr7Sund.TweenTimeLine
             toggle.RegisterValueChangedCallback(evt =>
             {
                 EditorPrefs.SetBool(key, evt.newValue);
-                
             });
 
             root.Add(toggle);

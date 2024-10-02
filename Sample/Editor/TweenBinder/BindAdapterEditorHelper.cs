@@ -88,7 +88,8 @@ namespace Cr7Sund.TweenTimeLine
             {
                 string trackTypeName = componentBindTracks.trackTypeNames[i];
                 var componentPairs = binder.cacheList.FirstOrDefault(
-                    x => BindAdapterEditorHelper.GetTweenTarget(componentBindTracks.bindTargets[i], componentBindTracks.bindTypes[i]) == x.key);
+                    x => BindAdapterEditorHelper.GetTweenTarget(
+                        componentBindTracks.bindTargets[i], componentBindTracks.bindTypes[i]) == x.key);
                 var component = componentPairs.component;
 
                 GetBehaviourInfo(trackTypeName,

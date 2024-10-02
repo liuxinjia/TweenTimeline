@@ -346,7 +346,6 @@ public static class TypeConverter
         throw new InvalidOperationException($"Cannot add delta to type '{targetType.Name}'.");
     }
 
-
     public static string GetSimplifyTypeName(string fullType)
     {
         return fullType.Substring(fullType.LastIndexOf('.') + 1);

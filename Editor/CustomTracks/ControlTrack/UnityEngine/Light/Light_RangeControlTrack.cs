@@ -9,7 +9,7 @@ namespace Cr7Sund.LightTween
     [TrackClipType(typeof(Light_RangeControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.Light))]
-    [TrackColor(0.261f, 0.177f, 0.919f)]
+    [TrackColor(0.339f, 0.35f, 0.972f)]
     public class Light_RangeControlTrack : TrackAsset,IBaseTrack
     {
 

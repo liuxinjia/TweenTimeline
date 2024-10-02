@@ -28,7 +28,10 @@ namespace Cr7Sund.TweenTimeLine
         {
             TweenTimelineManager.InitTimeline();
 
-            var window = GetWindow<TweenActionEditorWindow>();
+            var window = EditorWindow.GetWindow<TweenActionEditorWindow>(desiredDockNextTo: new[]
+            {
+            System.Type.GetType("UnityEditor.GameView,UnityEditor.dll")
+            });
             window.maxSize = TweenTimelineDefine.windowMaxSize;
             window.minSize = TweenTimelineDefine.windowMaxSize;
         }
@@ -142,7 +145,7 @@ namespace Cr7Sund.TweenTimeLine
             var trackRoot = BindUtility.GetAttachRoot(selectTweenAction.target.transform);
             foreach (var animUnit in selectTweenAction.animationSteps)
             {
-                animUnit.GetAnimUnitClipInfo(selectTweenAction, _easingTokenPresetLibrary, 
+                animUnit.GetAnimUnitClipInfo(selectTweenAction, _easingTokenPresetLibrary,
                 out var clipInfo, out var component);
                 Type componentType = animUnit.GetComponentType();
                 string animUnitTweenMethod = animUnit.tweenMethod.Replace("ControlBehaviour", "");
@@ -221,7 +224,7 @@ namespace Cr7Sund.TweenTimeLine
                         TweenTimelineManager.ToggleAllPLayClips();
                     }
 
-                    float dealyResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DealyResetTime);
+                    float dealyResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DelayResetTime);
                     TweenTimelineManager.ToggleAllPLayClips();
 
                     _curRestID = EditorTweenCenter.RegisterDelayCallback(this,
@@ -468,20 +471,22 @@ namespace Cr7Sund.TweenTimeLine
                 animActionUnit.StartPos = newValue;
             });
             startPosField.name = "StartPosField";
-            startPosField.style.display = (animActionUnit.isRelative) ? DisplayStyle.None : DisplayStyle.Flex;
+            startPosField.style.display = (animActionUnit.tweenOperationType != TweenActionStep.TweenOperationType.Default)
+            ? DisplayStyle.None : DisplayStyle.Flex;
             var paramsPart = animUnit.Q<VisualElement>("paramsPart");
 
             paramsPart.Add(endPosField);
             paramsPart.Add(startPosField);
 
             // Set the toggle
-            var toggle = animUnit.Q<Toggle>("relative");
-            toggle.value = animActionUnit.isRelative;
+            var toggle = animUnit.Q<EnumField>("relative");
+            toggle.Init(animActionUnit.tweenOperationType);
             // toggle.style.display = animActionUnit.isRelative ? DisplayStyle.Flex : DisplayStyle.None;
             toggle.RegisterValueChangedCallback(evt =>
             {
-                animActionUnit.isRelative = evt.newValue;
-                startPosField.style.display = (animActionUnit.isRelative) ? DisplayStyle.None : DisplayStyle.Flex;
+                animActionUnit.tweenOperationType = (TweenActionStep.TweenOperationType)evt.newValue;
+                startPosField.style.display = (animActionUnit.tweenOperationType != TweenActionStep.TweenOperationType.Default)
+                ? DisplayStyle.None : DisplayStyle.Flex;
             });
 
             // Add the animUnit to the container
@@ -685,7 +690,7 @@ namespace Cr7Sund.TweenTimeLine
                 onResetActions.Add(onResetAction);
             }
 
-            float dealyResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DealyResetTime);
+            float dealyResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DelayResetTime);
             _curSequence.ChainDelay(dealyResetTime).OnComplete(() =>
             {
                 foreach (var item in onResetActions)

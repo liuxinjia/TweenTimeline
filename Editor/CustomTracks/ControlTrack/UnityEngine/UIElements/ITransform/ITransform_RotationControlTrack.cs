@@ -9,7 +9,7 @@ namespace Cr7Sund.ITransformTween
     [TrackClipType(typeof(ITransform_RotationControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.UIElements.ITransform))]
-    [TrackColor(0.077f, 0.642f, 0.322f)]
+    [TrackColor(0.091f, 0.72f, 0.384f)]
     public class ITransform_RotationControlTrack : TrackAsset,IBaseTrack
     {
 

@@ -9,7 +9,7 @@ namespace Cr7Sund.TransformTween
     [TrackClipType(typeof(Transform_LocalScaleControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.Transform))]
-    [TrackColor(0.426f, 0.464f, 0.804f)]
+    [TrackColor(0.774f, 0.671f, 0.026f)]
     public class Transform_LocalScaleControlTrack : TrackAsset,IBaseTrack
     {
 

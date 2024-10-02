@@ -8,20 +8,37 @@ using UnityEngine.UIElements;
 
 namespace Cr7Sund.TweenTimeLine
 {
+    public class ControlTrackWindow : EditorWindow
+    {
+        private SerializedObject _serializedObject;
+        private IUniqueBehaviour _behaviour;
+
+        public static void Open(SerializedObject serializedObject, IUniqueBehaviour behaviour)
+        {
+            var window = EditorWindow.GetWindow<ControlTrackWindow>(desiredDockNextTo: new[]
+            {
+                System.Type.GetType("UnityEditor.GameView,UnityEditor.dll")
+            });
+            window._behaviour = behaviour;
+            window._serializedObject = serializedObject;
+            window.UpdateUI();
+        }
+
+        private void UpdateUI()
+        {
+            rootVisualElement.Clear();
+
+            var trackUIBuilder = new ControlTrackUIBuilder();
+            VisualElement container = trackUIBuilder.CreateContainer(_serializedObject, _behaviour);
+
+            rootVisualElement.Add(container);
+        }
+    }
+
     [CustomEditor(typeof(ControlAsset), true, isFallback = true)]
     [CanEditMultipleObjects]
     public class BaseControlTrackAssetInspector : UnityEditor.Editor
     {
-        private VisualElement container;
-        private IUniqueBehaviour _behaviour;
-        private string _curRestID;
-        private const string VisualTreeAssetGUID = "84a8ec30493bd7e4497a1eff081adb6f";
-        private const string styleGUID = "cfde41d1fc9c9cc40bf3a8ed4778c5fc";
-
-        private SerializedProperty _easePresetProp;
-        private SerializedProperty _endPosProp;
-        private SerializedProperty _startPosProp;
-
         public override VisualElement CreateInspectorGUI()
         {
             TweenTimelineManager.EnsureCanPreview();
@@ -29,14 +46,41 @@ namespace Cr7Sund.TweenTimeLine
             {
                 return base.CreateInspectorGUI();
             }
-            _behaviour = value as IUniqueBehaviour;
+            var _behaviour = value as IUniqueBehaviour;
             if (!TweenTimeLineDataModel.ClipStateDict.ContainsKey(_behaviour))
             {
                 return base.CreateInspectorGUI();
             }
 
             var root = new VisualElement();
-            container = new VisualElement();
+            var trackUIBuilder = new ControlTrackUIBuilder();
+            VisualElement container = trackUIBuilder.CreateContainer(serializedObject, _behaviour);
+
+            var windBtn = new Button(()=> ControlTrackWindow.Open(new SerializedObject(target), _behaviour));
+            windBtn.text = "open window";
+
+            root.Add(windBtn);
+            root.Add(container);
+            return root;
+        }
+    }
+
+    public class ControlTrackUIBuilder
+    {
+        private IUniqueBehaviour _behaviour;
+        private string _curRestID;
+        private const string VisualTreeAssetGUID = "84a8ec30493bd7e4497a1eff081adb6f";
+        private const string styleGUID = "cfde41d1fc9c9cc40bf3a8ed4778c5fc";
+
+        private string recordBtnStartDefine = nameof(recordBtnStartDefine);
+        private string recordBtnEndDefine = nameof(recordBtnEndDefine);
+
+
+        public VisualElement CreateContainer(SerializedObject serializedObject, IUniqueBehaviour behaviour)
+        {
+            _behaviour = behaviour;
+
+            var container = new VisualElement();
 
             var visualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(AssetDatabase.GUIDToAssetPath(VisualTreeAssetGUID));
             VisualElement labelFromUXML = visualTreeAsset.Instantiate();
@@ -44,23 +88,10 @@ namespace Cr7Sund.TweenTimeLine
             labelFromUXML.styleSheets.Add(styleAsset);
             container.Add(labelFromUXML);
 
-            var behaviour = value as IUniqueBehaviour;
-            var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[behaviour];
-            float duration = (float)clipInfo.duration;
-            float start = (float)clipInfo.start;
-            // if ((float)Math.Round(duration, 3) != duration
-            // || (float)Math.Round(start, 3) != start)
-            // {
-            //     HelpBox helpBox = new HelpBox($"Clip end is invalid seconds {duration} {start}.  Note: The time is rounded to 3 decimal places to avoid precision issues. \n If you change it , the warning remains. Try to switch inspector", HelpBoxMessageType.Warning);
-            //     root.Add(helpBox);
-            // }
-
             DrawRecordHistory(container.Query<VisualElement>("CommandContainers"));
-            DrawTrackProperties(container.Query<VisualElement>("SettingsContainers"));
-            DrawBtns();
-
-            root.Add(container);
-            return root;
+            DrawTrackProperties(container.Query<VisualElement>("SettingsContainers"), serializedObject);
+            DrawBtns(container);
+            return container;
         }
 
         private void DrawRecordHistory(VisualElement container)
@@ -94,99 +125,155 @@ namespace Cr7Sund.TweenTimeLine
             listView.selectionChanged += objects => Debug.Log(objects);
         }
 
-        protected virtual void DrawTrackProperties(VisualElement container)
+        private void DrawTrackProperties(VisualElement container, SerializedObject serializedObject)
         {
             var templateProp = serializedObject.FindProperty("template");
-            _easePresetProp = templateProp.FindPropertyRelative("_easePreset");
-            _endPosProp = templateProp.FindPropertyRelative("_endPos");
-            _startPosProp = templateProp.FindPropertyRelative("_startPos");
+            
+            var easePresetProp = templateProp.FindPropertyRelative("_easePreset");
+            var endPosProp = templateProp.FindPropertyRelative("_endPos");
+            var startPosProp = templateProp.FindPropertyRelative("_startPos");
 
             // var easeProp = DrawEasePresetField();
-            var easeProp = new PropertyField(_easePresetProp);
-            var endPosProp = new PropertyField(_endPosProp);
-            var startPosProp = new PropertyField(_startPosProp);
+            var easePropField = new PropertyField(easePresetProp);
+            var endPosPropField = CreatePosField(endPosProp, false);
+            var startPosPropField = CreatePosField(startPosProp, true);
 
-            container.Add(easeProp);
-            container.Add(endPosProp);
-            container.Add(startPosProp);
+            container.Add(easePropField);
+            container.Add(endPosPropField);
+            container.Add(startPosPropField);
+        }
+
+
+        private VisualElement CreatePosField(SerializedProperty prop, bool isStart)
+        {
+            var posContainer = new VisualElement();
+            posContainer.style.flexDirection = FlexDirection.Row;
+            var endPosProp = SerializedPropertyValueExtension.CreateField(prop);
+            Button resetBtn = new Button(() => ResetPos(isStart));
+            Button recordBtn = new Button(() => Record(isStart));
+            resetBtn.text = "Reset";
+            recordBtn.text = "Record";
+            recordBtn.name = isStart ? recordBtnStartDefine : recordBtnEndDefine;
+            endPosProp.style.flexGrow = 1;
+            posContainer.Add(endPosProp);
+            posContainer.Add(recordBtn);
+            posContainer.Add(resetBtn);
+            return posContainer;
+        }
+
+        private void ResetPos(bool isStart)
+        {
+            var resetPos = TweenTimelineManager.GetStartValue(_behaviour, isStart);
+
+            if (isStart)
+            {
+                _behaviour.StartPos = resetPos;
+            }
+            else
+            {
+                _behaviour.EndPos = resetPos;
+            }
         }
 
 
         #region Buttons
-        private void DrawBtns()
+        private void DrawBtns(VisualElement container)
         {
             var preViewBtn = container.Q<Button>("preViewBtn");
             var recordBtn = container.Q<Button>("recordBtn");
             Button playBtn = container.Q<Button>("playBtn");
-            if (!TimelineWindowExposer.GetBehaviourValue(target, out var value))
-            {
-                return;
-            }
-            var behaviour = value as IUniqueBehaviour;
+
 
             preViewBtn.SetEnabled(false);
-            var stateInfo = TweenTimeLineDataModel.ClipStateDict[behaviour];
-            stateInfo.ViewAction = RefreshBtns;
+            var stateInfo = TweenTimeLineDataModel.ClipStateDict[_behaviour];
+            stateInfo.ViewAction = () => RefreshBtns(container);
 
             playBtn.RegisterCallback<ClickEvent>(_ =>
             {
-                if (!string.IsNullOrEmpty(_curRestID))
-                {
-                    EditorTweenCenter.UnRegisterEditorTimer(_curRestID);
-                    TweenTimelineManager.TogglePlayClip(behaviour);
-                }
-
-                var stateInfo = TweenTimeLineDataModel.ClipStateDict[behaviour];
-                var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[behaviour];
-                TweenTimelineManager.TogglePlayClip(behaviour);
-
-                // Yeah! it cost more gc compare to create sequence
-                float dealyResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DealyResetTime);
-                _curRestID = EditorTweenCenter.RegisterDelayCallback(target,
-                 (float)clipInfo.duration + dealyResetTime,
-                  (t, elapsedTime) =>
-                  {
-                      TweenTimelineManager.TogglePlayClip(behaviour); _curRestID = string.Empty;
-                  });
+                Play();
             });
 
-            recordBtn.RegisterCallback<ClickEvent>(_ =>
-            {
-                var stateInfo = TweenTimeLineDataModel.ClipStateDict[behaviour];
-                var trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[behaviour];
-                var trackTarget = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
-                TweenTimelineManager.SelectBeforeToggle(behaviour);
-                TweenTimelineManager.ToggleRecordClip(behaviour);
-                if (stateInfo.BehaviourState == ClipBehaviourStateEnum.Recording)
-                {
-                    Selection.activeObject = trackTarget;
-                }
-            });
-            RefreshBtns();
+            recordBtn.style.display = DisplayStyle.None;
+            RefreshBtns(container);
         }
 
-        public void RefreshBtns()
+        private void Play()
+        {
+            if (!string.IsNullOrEmpty(_curRestID))
+            {
+                EditorTweenCenter.UnRegisterEditorTimer(_curRestID);
+                TweenTimelineManager.TogglePlayClip(_behaviour);
+            }
+
+            var stateInfo = TweenTimeLineDataModel.ClipStateDict[_behaviour];
+            var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[_behaviour];
+            TweenTimelineManager.TogglePlayClip(_behaviour);
+
+            // Yeah! it cost more gc compare to create sequence
+            float dealyResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DelayResetTime);
+            _curRestID = EditorTweenCenter.RegisterDelayCallback(_behaviour,
+            (float)clipInfo.duration + dealyResetTime,
+             (t, elapsedTime) =>
+             {
+                 TweenTimelineManager.TogglePlayClip(_behaviour);
+                 _curRestID = string.Empty;
+             });
+        }
+
+        private void Record(bool isStart)
+        {
+            var stateInfo = TweenTimeLineDataModel.ClipStateDict[_behaviour];
+            var trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[_behaviour];
+            var trackTarget = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
+            stateInfo.IsRecordStart = isStart;
+
+            TweenTimelineManager.SelectBeforeToggle(_behaviour);
+            TweenTimelineManager.ToggleRecordClip(_behaviour);
+            if (stateInfo.BehaviourState == ClipBehaviourStateEnum.Recording)
+            {
+                Selection.activeObject = trackTarget;
+            }
+        }
+
+        public void RefreshBtns(VisualElement container)
         {
             var preViewBtn = container.Q<Button>("preViewBtn");
-            var recordBtn = container.Q<Button>("recordBtn");
             Button playBtn = container.Q<Button>("playBtn");
+            var recordEndBtn = container.Q<Button>(recordBtnEndDefine);
+            var recordStartBtn = container.Q<Button>(recordBtnStartDefine);
 
-            if (!TimelineWindowExposer.GetBehaviourValue(target, out var value))
+            if (_behaviour == null)
             {
-                OnUpdateRunBtn(recordBtn, () => false);
-                OnUpdateRunBtn(preViewBtn, () => false);
-                OnUpdateRunBtn(playBtn, () => false);
+                OnUpdateRunBtn(container, recordEndBtn, () => false);
+                OnUpdateRunBtn(container, recordStartBtn, () => false);
+                OnUpdateRunBtn(container, preViewBtn, () => false);
+                OnUpdateRunBtn(container, playBtn, () => false);
                 return;
             }
 
-            var behaviour = value as IUniqueBehaviour;
-            var stateInfo = TweenTimeLineDataModel.ClipStateDict[behaviour];
-            OnUpdateRunBtn(recordBtn, () => stateInfo.IsRecording);
-            OnUpdateRunBtn(playBtn, () => stateInfo.IsPlaying);
-            OnUpdateRunBtn(preViewBtn, () => stateInfo.IsPreview);
+            var stateInfo = TweenTimeLineDataModel.ClipStateDict[_behaviour];
+            OnUpdateRunBtn(container, playBtn, () => stateInfo.IsPlaying);
+            OnUpdateRunBtn(container, preViewBtn, () => stateInfo.IsPreview);
+
+            if (stateInfo.IsRecording)
+            {
+                if (stateInfo.IsRecordStart)
+                {
+                    OnUpdateRunBtn(container, recordStartBtn, () => stateInfo.IsRecording);
+                }
+                else
+                {
+                    OnUpdateRunBtn(container, recordEndBtn, () => stateInfo.IsRecording);
+                }
+            }
+            else
+            {
+                OnUpdateRunBtn(container, recordStartBtn, () => false);
+                OnUpdateRunBtn(container, recordEndBtn, () => false);
+            }
         }
 
-        private void RefreshBtnImges()
+        private void RefreshBtnImges(VisualElement container)
         {
             Button playBtn = container.Q<Button>("playBtn");
             var recordBtn = container.Q<Button>("recordBtn");
@@ -195,7 +282,7 @@ namespace Cr7Sund.TweenTimeLine
             recordBtn.iconImage = TweenTimeLineDataModel.StateInfo.IsRecording ? TweenTimelineDefine.recordOnBackground : TweenTimelineDefine.recordOffBackground;
         }
 
-        private void OnUpdateRunBtn(Button recordBtn, Func<bool> func)
+        private void OnUpdateRunBtn(VisualElement container, Button recordBtn, Func<bool> func)
         {
             bool result = func.Invoke();
             if (result)
@@ -209,7 +296,7 @@ namespace Cr7Sund.TweenTimeLine
                 recordBtn.EnableInClassList("ActiveBtn", false);
             }
 
-            RefreshBtnImges();
+            RefreshBtnImges(container);
 
             var listView = container.Q<ListView>("historyList");
             listView.Rebuild();

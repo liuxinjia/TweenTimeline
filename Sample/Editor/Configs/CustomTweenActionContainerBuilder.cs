@@ -10,9 +10,9 @@ namespace Cr7Sund.TweenTimeLine
     {
         public static List<TweenActionEffect> CreateCustomAnimationCollection()
         {
-           var animEffect =  new List<TweenActionEffect> ();
+            var animEffect = new List<TweenActionEffect>();
 
-            animEffect.Add(new TweenActionEffect( "characterSpacing","TMP_Text")
+            animEffect.Add(new TweenActionEffect("characterSpacing", "TMP_Text")
             {
                 image = "custom_TMP_Text_example.png",
                 collectionCategory = "Custom",
@@ -20,14 +20,14 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     new TweenActionStep
                     {
-                        EndPos = "0", 
-                        isRelative = true,
+                        EndPos = "0",
+                        tweenOperationType =  TweenActionStep.TweenOperationType.Additive,
                         tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<TMP_Text_CharacterSpacingControlBehaviour>(),
                         label = "characterSpacing",
                     }
                 }
             });
-            animEffect.Add(new TweenActionEffect( "sizeDelta.x","RectTransform")
+            animEffect.Add(new TweenActionEffect("sizeDelta.x", "RectTransform")
             {
                 image = "custom_RectTransform_example.png",
                 collectionCategory = "Custom",
@@ -35,14 +35,14 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     new TweenActionStep
                     {
-                        EndPos = "0", 
-                        isRelative = true,
+                        EndPos = "0",
+                        tweenOperationType =  TweenActionStep.TweenOperationType.Additive,
                         tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_SizeDeltaXControlBehaviour>(),
                         label = "sizeDelta.x",
                     }
                 }
             });
-            animEffect.Add(new TweenActionEffect( "anchorMax.x","RectTransform")
+            animEffect.Add(new TweenActionEffect("anchorMax.x", "RectTransform")
             {
                 image = "custom_RectTransform_example.png",
                 collectionCategory = "Custom",
@@ -50,14 +50,14 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     new TweenActionStep
                     {
-                        EndPos = "0", 
-                        isRelative = true,
+                        EndPos = "0",
+                        tweenOperationType =  TweenActionStep.TweenOperationType.Additive,
                         tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectTransform_AnchorMaxXControlBehaviour>(),
                         label = "anchorMax.x",
                     }
                 }
-            }); 
-             return animEffect;
-            }
+            });
+            return animEffect;
+        }
     }
 }

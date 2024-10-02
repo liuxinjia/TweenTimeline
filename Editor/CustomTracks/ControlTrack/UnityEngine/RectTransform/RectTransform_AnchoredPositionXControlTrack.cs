@@ -9,7 +9,7 @@ namespace Cr7Sund.RectTransformTween
     [TrackClipType(typeof(RectTransform_AnchoredPositionXControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.RectTransform))]
-    [TrackColor(0.818f, 0.113f, 0.129f)]
+    [TrackColor(0.149f, 0.634f, 0.558f)]
     public class RectTransform_AnchoredPositionXControlTrack : TrackAsset,IBaseTrack
     {
 

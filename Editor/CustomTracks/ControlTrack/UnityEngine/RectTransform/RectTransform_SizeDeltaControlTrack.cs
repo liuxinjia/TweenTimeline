@@ -9,7 +9,7 @@ namespace Cr7Sund.RectTransformTween
     [TrackClipType(typeof(RectTransform_SizeDeltaControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.RectTransform))]
-    [TrackColor(0.362f, 0.716f, 0.93f)]
+    [TrackColor(0.141f, 0.069f, 0.573f)]
     public class RectTransform_SizeDeltaControlTrack : TrackAsset,IBaseTrack
     {
 

@@ -5,7 +5,6 @@ using UnityEditor.ShortcutManagement;
 using UnityEditor.Timeline;
 using UnityEditor.Timeline.Actions;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.Timeline;
 
 namespace Cr7Sund.TweenTimeLine
@@ -35,7 +34,7 @@ namespace Cr7Sund.TweenTimeLine
                 AddTrack(isIn, childTrack, rootTrack);
             }
 
-            void CreaetTrack(int isIn, TrackAsset childSourceTrack, TrackAsset parentSourceTrack)
+            void CreateTrack(int isIn, TrackAsset childSourceTrack, TrackAsset parentSourceTrack)
             {
                 TrackAsset newTrack = null;
                 TrackAsset parentTrack = null;
@@ -45,8 +44,8 @@ namespace Cr7Sund.TweenTimeLine
                 }
                 else
                 {
-                    var groupName = isIn < 0 ? TweenTimelineDefine.InDefine : TweenTimelineDefine.OutDefine;
-                    parentTrack = TweenTimelineManager.CreatGroupAsset(groupName, childSourceTrack.timelineAsset, null);
+                    var reverseGroupName = isIn < 0 ? TweenTimelineDefine.InDefine : TweenTimelineDefine.OutDefine;
+                    parentTrack = TweenTimelineManager.CreatGroupAsset(reverseGroupName, childSourceTrack.timelineAsset, null);
                     newTrackDict.Add(parentSourceTrack, newTrack);
                 }
 
@@ -83,7 +82,7 @@ namespace Cr7Sund.TweenTimeLine
 
             void AddTrack(int isIn, TrackAsset trackAsset, TrackAsset parentSourceTrack)
             {
-                CreaetTrack(isIn, trackAsset, parentSourceTrack);
+                CreateTrack(isIn, trackAsset, parentSourceTrack);
 
                 foreach (var childTrack in trackAsset.GetChildTracks())
                 {
@@ -95,37 +94,30 @@ namespace Cr7Sund.TweenTimeLine
             TimelineEditor.Refresh(RefreshReason.ContentsAddedOrRemoved);
             return true;
         }
-
-
-
         public TrackInfoContext GetReverseClipInfo(TrackAsset trackAsset, int isIn)
         {
             var resultTrackInfo = new TrackInfoContext();
 
 
-            var childBehaviours = TweenTimeLineDataModel.TrackBehaviourDict[trackAsset];
-            foreach (var clipBeahviour in childBehaviours)
+            var childBehaviors = TweenTimeLineDataModel.TrackBehaviourDict[trackAsset];
+            foreach (var clipBehaviour in childBehaviors)
             {
-                var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[clipBeahviour];
+                var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[clipBehaviour];
                 var clipInfoContext = new ClipInfoContext();
                 resultTrackInfo.clipInfos.Add(clipInfoContext);
 
                 clipInfoContext.start = clipInfo.start;
-                clipInfoContext.duration = clipBeahviour.EasePreset.GetReverseDuration(clipInfo.duration, isIn);
+                clipInfoContext.duration = clipBehaviour.EasePreset.GetReverseDuration(clipInfo.duration, isIn);
 
-                clipInfoContext.startPos = clipBeahviour.EndPos;
-                clipInfoContext.endPos = clipBeahviour.StartPos;
-                clipInfoContext.easePreset = clipBeahviour.EasePreset.GetReverseEasing(_easingTokenPresetLibrary);
+                clipInfoContext.startPos = clipBehaviour.EndPos;
+                clipInfoContext.endPos = clipBehaviour.StartPos;
+                clipInfoContext.easePreset = clipBehaviour.EasePreset.GetReverseEasing(_easingTokenPresetLibrary);
             }
 
             return resultTrackInfo;
         }
 
 
-        private void Reverse(TrackAsset sourceTrack, TrackAsset newTrack)
-        {
-            throw new NotImplementedException();
-        }
 
         [TimelineShortcut("TweenReverseTrackAction", KeyCode.H, ShortcutModifiers.Shift)]
         public static void HandleShortCut(ShortcutArguments args)

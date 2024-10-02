@@ -32,11 +32,18 @@ namespace Cr7Sund.TweenTimeLine
             return this;
         }
 
-        public virtual double GetReverseDuration(double duration, int isIn)
+        public double GetReverseDuration(double duration, int isIn)
         {
-            double delta = 0.1;
-            delta *= Mathf.Sign(isIn);
-            return duration + delta;
+            double delta = GetReverseDelta(duration, isIn);
+            delta *= Mathf.Sign(isIn) * -1;
+
+            double result = duration + delta;
+            return result > 0 ? result : duration;
+        }
+
+        protected virtual double GetReverseDelta(double duration, int isIn)
+        {
+            return 0.1f;
         }
     }
 }

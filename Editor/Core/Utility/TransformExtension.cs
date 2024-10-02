@@ -7,11 +7,6 @@ namespace Cr7Sund.TweenTimeLine
     {
         public static string GetFullPathTrans(this Transform child, Transform root)
         {
-            if (!TweenTimelinePreferencesProvider.GetBool(TweenGenSettings.UseFullPathName))
-            {
-                return child.gameObject.name;
-            }
-
             // 使用 StringBuilder 来高效构建路径字符串
             StringBuilder pathBuilder = new StringBuilder();
             List<string> pathParts = new List<string>();

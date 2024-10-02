@@ -22,7 +22,13 @@ namespace Cr7Sund.TweenTimeLine
             baseCollection.animationCollections.ForEach(animation => animation.collectionCategory = baseCollection.category);
             animationContainers.Add(baseCollection);
 
-            container.animationContainers.AddRange(animationContainers);
+            foreach (var tweenCollection in animationContainers)
+            {
+                foreach (var item in tweenCollection.animationCollections)
+                {
+                    container.AddEffect(item, tweenCollection.category);
+                }
+            }
         }
 
         public static string GetTweenMethodName<T>()

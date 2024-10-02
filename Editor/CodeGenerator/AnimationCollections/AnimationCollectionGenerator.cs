@@ -178,7 +178,7 @@ namespace Cr7Sund.TweenTimeLine
                     new {nameof(TweenActionStep)}
                     {{
                         EndPos = ""{GetDefaultValue(method.ValueType)}"", 
-                        isRelative = true,
+                        TweenActionStep.TweenOperationType.Additive
                         tweenMethod = {nameof(TweenActionContainerBuilder)}.GetTweenMethodName<{identifier}ControlBehaviour>(),
                         label = ""{method.GetPropertyMethod}"",
                     }}

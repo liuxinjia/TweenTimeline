@@ -33,7 +33,11 @@ namespace Cr7Sund.TweenTimeLine
                 var asset = AssetDatabase.LoadAssetAtPath<TimelineAsset>(AssetDatabase.GUIDToAssetPath(assetID));
                 if (asset is TimelineAsset timelineAsset)
                 {
-                    tweenActions.AddRange(GetTweenTypes(timelineAsset));
+                    List<ComponentTween> collection = GetTweenTypes(timelineAsset);
+                    if (collection != null)
+                    {
+                        tweenActions.AddRange(collection);
+                    }
                 }
             }
         }
@@ -99,7 +103,8 @@ namespace Cr7Sund.TweenTimeLine
                 findTween.trackTypeNames.Add(trackAsset.GetType().FullName);
             });
 
-            return resultTweens.Values.ToList();
+            List<ComponentTween> componentTweens = resultTweens.Values.ToList();
+            return componentTweens;
         }
 
         private static string GetTweenTypesCategory(string trackName)

@@ -11,11 +11,18 @@ namespace Cr7Sund.TweenTimeLine
     [System.Serializable]
     public class TweenActionStep
     {
+        public enum TweenOperationType
+        {
+            Default,
+            Relative,
+            Additive
+        }
+
         public string label;
         public string tweenMethod;
         public string EndPos;
         public string StartPos;
-        public bool isRelative;
+        public TweenOperationType tweenOperationType;
         public float startTimeOffset; // 动画结束时间点（正数为时间点，0为整个duration, 负数表示提前开始）
         public HashSet<string> NotAdditiveSet = new()
         {
@@ -98,23 +105,23 @@ namespace Cr7Sund.TweenTimeLine
             {
                 component
             });
-            if (isRelative)
+
+            switch (tweenOperationType)
             {
-                startPos = initPos;
-                if (NotAdditiveSet.Contains((tweenMethod)))
-                {
-                    endPos = TypeConverter.ConvertToOriginalType(EndPos, componentValueType);
-                }
-                else
-                {
+                case TweenOperationType.Additive:
+                    startPos = initPos;
                     endPos = TypeConverter.AddDelta(startPos, EndPos, componentValueType);
-                }
+                    break;
+                case TweenOperationType.Relative:
+                    startPos = initPos;
+                    endPos = TypeConverter.ConvertToOriginalType(EndPos, componentValueType);
+                    break;
+                default:
+                    startPos = TypeConverter.ConvertToOriginalType(StartPos, componentValueType);
+                    endPos = TypeConverter.ConvertToOriginalType(EndPos, componentValueType);
+                    break;
             }
-            else
-            {
-                startPos = TypeConverter.ConvertToOriginalType(StartPos, componentValueType);
-                endPos = TypeConverter.ConvertToOriginalType(EndPos, componentValueType);
-            }
+
 
             float duration = animAction.ConvertDuration();
             if (startTimeOffset != 0)

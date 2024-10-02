@@ -44,13 +44,13 @@ namespace Cr7Sund.TweenTimeLine
             rootVisualElement.Add(effectCategoryElement);
             rootVisualElement.Add(saveBtn);
 
-            string path1 = @"C:\Users\liux4\Documents\UnityProjects\MyMiniGame\Assets\Plugins\TweenTimeline\Sample\Editor\Configs\Gifs\butterfly.gif";
-            // string path2 = @"C:\Users\liux4\Downloads\mgGif-main\mgGif-main\Assets\StreamingAssets\jellyfish.gif";
+            var path = AssetDatabase.GUIDToAssetPath("757c620178e724f419ab8f4269cca9da");
+            string absolutePath = PathUtility.ConvertToAbsolutePath(path);
 
             var gifContains = new VisualElement();
             gifContains.style.flexDirection = FlexDirection.Column;
-            VisualElement gifField1 = CreateGifField(path1);
-            VisualElement gifField2 = CreateGifField(path1);
+            VisualElement gifField1 = CreateGifField(absolutePath);
+            VisualElement gifField2 = CreateGifField(absolutePath);
 
             gifContains.Add(gifField1);
             gifContains.Add(gifField2);

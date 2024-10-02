@@ -4,9 +4,9 @@ using UnityEngine.UIElements;
 
 namespace Cr7Sund.TweenTimeLine
 {
-    [CustomEditor(typeof(HoverBinder))]
+    [CustomEditor(typeof(HoverAdapter))]
 
-    public class HoverBinderEditor : CompositeBinderEditor
+    public class HoverBinderEditor : ComponentBinderAdapterEditor
     {
         protected override List<string> _tweenFields => new List<string>()
         { "_onPointerEnterTween", "_onPointerExitTween" };

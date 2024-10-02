@@ -42,7 +42,7 @@ namespace Cr7Sund.TweenTimeLine
             tokenKey = Enum.Parse<MaterialEasingToken>(enumType);
             animationCurve = easing.Curve;
         }
-        
+
         public override BaseEasingTokenPreset GetReverseEasing(EasingTokenPresetLibrary easingTokenPresetLibrary)
         {
             switch (tokenKey)
@@ -66,17 +66,15 @@ namespace Cr7Sund.TweenTimeLine
 
 
 
-        public override double GetReverseDuration(double duration, int isIn)
+        protected override double GetReverseDelta(double duration, int isIn)
         {
             if (tokenKey == MaterialEasingToken.StandardAccelerate
                 || tokenKey == MaterialEasingToken.StandardDecelerate)
             {
-                double delta = 0.05;
-                delta *= Mathf.Sign(isIn);
-                return duration + delta;
+                return 0.05d;
             }
 
-            return base.GetReverseDuration(duration, isIn);
+            return base.GetReverseDelta(duration, isIn);
         }
     }
 

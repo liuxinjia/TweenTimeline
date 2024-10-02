@@ -32,18 +32,30 @@ namespace Cr7Sund.TweenTimeLine
 
     public static class ActionCenters
     {
-        public static void EndRecord(IUniqueBehaviour key)
+        public static void EndRecord(IUniqueBehaviour key, bool isStart)
         {
             var trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[key];
             var target = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
             var clipState = TweenTimeLineDataModel.ClipStateDict[key];
             object curValue = key.Get(target);
             if (curValue == null) return;
-            if (!key.EndPos.Equals(curValue))
+
+            if (isStart)
             {
-                clipState.actionTrackHistory.Add( key.EndPos);
+                if (!key.StartPos.Equals(curValue))
+                {
+                    clipState.actionTrackHistory.Add(key.StartPos);
+                }
+                key.StartPos = curValue;
             }
-            key.EndPos = curValue;
+            else
+            {
+                if (!key.EndPos.Equals(curValue))
+                {
+                    clipState.actionTrackHistory.Add(key.EndPos);
+                }
+                key.EndPos = curValue;
+            }
         }
 
         public static void StartPlay(IUniqueBehaviour key)
@@ -86,11 +98,12 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
 
-        internal static void MoveToRecordPos(IUniqueBehaviour key)
+        internal static void MoveToRecordPos(IUniqueBehaviour key, bool isStart)
         {
             var trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[key];
             var target = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
-            key.Set(target, key.EndPos);
+            key.Set(target,
+            isStart ? key.StartPos : key.EndPos);
         }
 
         internal static void Reset(IUniqueBehaviour key)

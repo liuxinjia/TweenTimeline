@@ -22,15 +22,15 @@ namespace Cr7Sund.TweenTimeLine
         }
 
 
-        public void AddEffect(TweenActionEffect effect)
+        public void AddEffect(TweenActionEffect effect, string category = "Custom")
         {
-            if (TryGetEffect(effect, out var animCollection))
+            if (TryGetEffect(effect, category, out var animCollection))
             {
                 animCollection.AddEffect(effect);
             }
         }
 
-        private bool TryGetEffect(TweenActionEffect effect, out TweenCollection animCollection)
+        private bool TryGetEffect(TweenActionEffect effect, string category, out TweenCollection animCollection)
         {
             animCollection = default;
             if (string.IsNullOrEmpty(effect.collectionCategory))
@@ -39,10 +39,10 @@ namespace Cr7Sund.TweenTimeLine
                 return false;
             }
 
-            int index = animationContainers.FindIndex(item => effect.collectionCategory == item.category);
+            int index = animationContainers.FindIndex(item => category == item.category);
             if (index < 0)
             {
-                animCollection = new TweenCollection("Custom");
+                animCollection = new TweenCollection(category);
                 animCollection.animationCollections = new List<TweenActionEffect>();
                 animationContainers.Add(animCollection);
             }
@@ -55,9 +55,9 @@ namespace Cr7Sund.TweenTimeLine
         }
 
 
-        public void RemoveEffect(TweenActionEffect tweenEffect)
+        public void RemoveEffect(TweenActionEffect tweenEffect, string category = "Custom")
         {
-            if (TryGetEffect(tweenEffect, out var animCollection))
+            if (TryGetEffect(tweenEffect, category, out var animCollection))
             {
                 animCollection.RemoveEffect(tweenEffect);
             }

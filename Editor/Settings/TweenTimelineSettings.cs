@@ -11,10 +11,7 @@ namespace Cr7Sund.TweenTimeLine
     {
         EnableGifPreview,
         AlwaysCreateTrack,
-        DealyResetTime, // you can not close the automatic reset action, bu you can control the delay time of reset action
-    }
-    public enum TweenElemenSettings
-    {
+        DelayResetTime, // you can not close the automatic reset action, bu you can control the delay time of reset action
     }
 
     public enum TweenGenSettings
@@ -63,7 +60,7 @@ namespace Cr7Sund.TweenTimeLine
             {ActionEditorSettings.EnableGifPreview, new Tuple<object, string>(true, string.Empty)},
             {ActionEditorSettings.AlwaysCreateTrack, new Tuple<object, string>(false, string.Empty)},
             {TweenGenSettings.UseFullPathName, new Tuple<object, string>(false, string.Empty)},
-            {ActionEditorSettings.DealyResetTime, new Tuple<object, string>(1.0f, string.Empty)},
+            {ActionEditorSettings.DelayResetTime, new Tuple<object, string>(1.0f, string.Empty)},
         };
 
         public void Reset()
@@ -73,19 +70,18 @@ namespace Cr7Sund.TweenTimeLine
                 AddSetting(item.ToString(), "Action Editor ", string.Empty);
             }
 
-            foreach (var item in Enum.GetValues(typeof(TweenElemenSettings)))
-            {
-                AddSetting(item.ToString(), "Tween Element ", string.Empty);
-            }
-
             foreach (var item in Enum.GetValues(typeof(TweenPreferenceDefine)))
             {
                 AddSetting(item.ToString(), "Custom ", string.Empty);
             }
+            foreach (var item in Enum.GetValues(typeof(TweenGenSettings)))
+            {
+                AddSetting(item.ToString(), "GenSettings ", string.Empty);
+            }
 
             foreach (var item in _customPairs)
             {
-                UpdateValue(item.Key.ToString(), item.Value, string.Empty);
+                UpdateValue(item.Key.ToString(), item.Value.Item1, item.Value.Item2);
             }
         }
 
@@ -98,6 +94,9 @@ namespace Cr7Sund.TweenTimeLine
 
             var settingType = defaultValue.GetType().FullName;
             var existingSetting = this.settings.FirstOrDefault(s => s.key == key);
+            if(existingSetting == null){
+                Debug.LogError($"Miss Settings {key}");
+            }
             existingSetting.settingType = settingType;
             existingSetting.toolTips = toolTips;
 

@@ -245,7 +245,7 @@ namespace Cr7Sund.TweenTimeLine
             var resetActions = BindAdapterEditorHelper.GetResetActions(binder, componentBindTracks);
             _curSequence = ((ITweenBinding)binder).Play(nameProp.stringValue);
 
-            float delayResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DealyResetTime);
+            float delayResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DelayResetTime);
             _updateSequenceID = EditorTweenCenter.RegisterSequence(_curSequence,
              binder.transform, _curSequence.duration);
             EditorTweenCenter.RegisterDelayCallback(target,

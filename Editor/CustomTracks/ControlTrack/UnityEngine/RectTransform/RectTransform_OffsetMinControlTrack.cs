@@ -9,7 +9,7 @@ namespace Cr7Sund.RectTransformTween
     [TrackClipType(typeof(RectTransform_OffsetMinControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.RectTransform))]
-    [TrackColor(0.344f, 0f, 0.198f)]
+    [TrackColor(0.751f, 0.378f, 0.983f)]
     public class RectTransform_OffsetMinControlTrack : TrackAsset,IBaseTrack
     {
 

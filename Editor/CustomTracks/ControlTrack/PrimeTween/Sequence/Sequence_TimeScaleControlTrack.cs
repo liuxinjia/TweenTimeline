@@ -9,7 +9,7 @@ namespace Cr7Sund.SequenceTween
     [TrackClipType(typeof(Sequence_TimeScaleControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(PrimeTween.Sequence))]
-    [TrackColor(0.876f, 0.901f, 0.04f)]
+    [TrackColor(0.075f, 0.82f, 0.615f)]
     public class Sequence_TimeScaleControlTrack : TrackAsset,IBaseTrack
     {
 

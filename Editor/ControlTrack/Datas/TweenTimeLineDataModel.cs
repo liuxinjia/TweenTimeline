@@ -17,7 +17,8 @@ namespace Cr7Sund.TweenTimeLine
 
         public static int ID;
         public static ClipBehaviourState StateInfo = new();
-
+        public static GroupTrack selectGroupTrack;
+ 
         public static Dictionary<IUniqueBehaviour, ClipInfo> ClipInfoDicts = new();
         public static Dictionary<IUniqueBehaviour, ClipBehaviourState> ClipStateDict = new();
         public static Dictionary<IUniqueBehaviour, TrackAsset> PlayBehaviourTrackDict = new();
@@ -26,7 +27,6 @@ namespace Cr7Sund.TweenTimeLine
         public static Dictionary<TrackAsset, List<IUniqueBehaviour>> TrackBehaviourDict = new();
         public static Dictionary<UnityEngine.Object, IUniqueBehaviour> ClipAssetBehaviourDict = new();
         public static Dictionary<PlayableAsset, TrackAsset> PlayableAssetTrackDict = new();
-
         public static List<GroupTrack> groupTracks = new(); // in, out track, Canvas1, Canvas 2
     }
 }

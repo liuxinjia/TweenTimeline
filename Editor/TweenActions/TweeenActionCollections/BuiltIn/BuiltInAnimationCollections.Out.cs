@@ -37,9 +37,9 @@ namespace Cr7Sund.TweenTimeLine
         {
             new TweenActionStep
             {
-                EndPos = new Vector2(-250, 0).ToString(), // 修改为 Vector2
+                EndPos = new Vector2(-250, 0).ToString(),
                 StartPos = string.Empty,
-                isRelative = true,
+             tweenOperationType=   TweenActionStep.TweenOperationType.Default,
                 tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionControlBehaviour>(),
                 label = "MoveX",
             },
@@ -170,7 +170,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 EndPos = new Vector3(200, 0, 0).ToString(),
                 StartPos = string.Empty,
-                isRelative = true,
+                tweenOperationType=    TweenActionStep.TweenOperationType.Additive,
                 tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionControlBehaviour>(), // 更新控制行为
                 label = "MoveX",
                 startTimeOffset = 400f,

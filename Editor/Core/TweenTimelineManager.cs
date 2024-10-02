@@ -43,7 +43,7 @@ namespace Cr7Sund.TweenTimeLine
 
         public static void LogProfile(string message)
         {
-            Debug.Log("<color=green>" + message + "</color>");
+            // Debug.Log("<color=green>" + message + "</color>");
         }
 
         [InitializeOnLoadMethod]
@@ -328,14 +328,14 @@ namespace Cr7Sund.TweenTimeLine
                     },
                     RecordAction = (uniqueBehaviour, targetState) =>
                     {
-                        var stateInfo = TweenTimeLineDataModel.ClipStateDict[uniqueBehaviour];
+                        ClipBehaviourState stateInfo = TweenTimeLineDataModel.ClipStateDict[uniqueBehaviour];
                         if (targetState == ClipBehaviourStateEnum.Recording)
                         {
-                            ActionCenters.MoveToRecordPos(uniqueBehaviour);
+                            ActionCenters.MoveToRecordPos(uniqueBehaviour, stateInfo.IsRecordStart);
                         }
                         else
                         {
-                            ActionCenters.EndRecord(uniqueBehaviour);
+                            ActionCenters.EndRecord(uniqueBehaviour, stateInfo.IsRecordStart);
                             ActionCenters.Reset(uniqueBehaviour);
                         }
                     }
@@ -409,7 +409,7 @@ namespace Cr7Sund.TweenTimeLine
 
         private static void RecreateTween()
         {
-            ReussablePrimeTweens();
+            ReusablePrimeTweens();
             foreach (var item in TweenTimeLineDataModel.ClipInfoDicts)
             {
                 item.Value.CreateTween(item.Key);
@@ -519,7 +519,7 @@ namespace Cr7Sund.TweenTimeLine
 
         public static void PreviewAllClip()
         {
-            ReussablePrimeTweens();
+            ReusablePrimeTweens();
 
             ChangeTweenManagerState(ClipBehaviourStateEnum.Preview);
             foreach (var item in TweenTimeLineDataModel.ClipStateDict)
@@ -582,7 +582,7 @@ namespace Cr7Sund.TweenTimeLine
 
         public static void PlayAllClip(bool controlPlay = false)
         {
-            ReussablePrimeTweens();
+            ReusablePrimeTweens();
 
             ChangeTweenManagerState(ClipBehaviourStateEnum.Playing);
             foreach (var item in TweenTimeLineDataModel.ClipStateDict)
@@ -591,7 +591,7 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
 
-        public static void ReussablePrimeTweens()
+        public static void ReusablePrimeTweens()
         {
             if (PrimeTweenManager.Instance)
             {
@@ -662,7 +662,7 @@ namespace Cr7Sund.TweenTimeLine
         }
 
         public static TrackAsset AddTrackWithParents(TrackInfoContext trackInfo,
-        bool createNewTrack, TrackAsset parentTrack)
+            bool createNewTrack, TrackAsset parentTrack)
         {
             PlayableDirector playableDirector = GameObject.FindFirstObjectByType<PlayableDirector>();
             TimelineAsset timelineAsset = playableDirector.playableAsset as TimelineAsset;
@@ -911,8 +911,9 @@ namespace Cr7Sund.TweenTimeLine
         }
 
         #region Utility
-        internal static object GetStartValue(IUniqueBehaviour behaviour, TrackAsset trackAsset)
+        internal static object GetStartValue(IUniqueBehaviour behaviour, bool isStart)
         {
+            TrackAsset trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[behaviour];
             if (TweenTimeLineDataModel.TrackBehaviourDict.TryGetValue(trackAsset, out var behaviourList))
             {
                 for (int i = 0; i < behaviourList.Count; i++)
@@ -920,13 +921,22 @@ namespace Cr7Sund.TweenTimeLine
                     if (behaviour.Equals(behaviourList[i]))
                     {
                         var target = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
-                        if (i == 0)
+
+                        if (isStart)
                         {
-                            return behaviour.Get(target);
+                            if (i == 0)
+                            {
+                                return behaviour.Get(target);
+                            }
+                            return behaviourList[i - 1].EndPos;
                         }
                         else
                         {
-                            return behaviourList[i - 1].EndPos;
+                            if (behaviourList.Count > i + 1)
+                            {
+                                return behaviourList[i + 1].StartPos;
+                            }
+                            return behaviourList[i].StartPos;
                         }
                     }
                 }
@@ -1020,12 +1030,14 @@ namespace Cr7Sund.TweenTimeLine
         public static void SelectBeforeToggle(IUniqueBehaviour behaviour)
         {
             ClipInfo clipInfo = TweenTimeLineDataModel.ClipInfoDicts[behaviour];
+            ClipBehaviourState stateInfo = TweenTimeLineDataModel.ClipStateDict[behaviour];
             var curTime = TimelineWindowExposer.GetSequenceTime();
             if (curTime >= clipInfo.start && curTime <= clipInfo.start + clipInfo.duration)
             {
                 return;
             }
-            TimelineWindowExposer.SkipToTimelinePos(clipInfo.start);
+            TimelineWindowExposer.SkipToTimelinePos(stateInfo.IsRecordStart ?
+            clipInfo.start : clipInfo.start + clipInfo.duration);
         }
 
         #endregion
