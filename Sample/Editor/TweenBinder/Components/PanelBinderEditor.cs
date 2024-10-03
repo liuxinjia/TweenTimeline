@@ -176,7 +176,7 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
 
-        protected void GetTweenNamMenus(SerializedProperty property, bool isIn,
+        private void GetTweenNamMenus(SerializedProperty property, bool isIn,
          out List<string> choices, out int initialIndex)
         {
             var binderAdapter = target as PanelBinder;

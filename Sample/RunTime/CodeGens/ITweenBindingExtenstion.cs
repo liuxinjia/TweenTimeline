@@ -30,6 +30,10 @@ public static class ITweenBindingExtenstion
     {
        return GenerateTween.SettingsPanel_InTween(tweenBinding);
     }
+    if (tweenBehaviour == nameof(GenerateTween. TansitionHolderPanel_InTween))
+    {
+       return GenerateTween.TansitionHolderPanel_InTween(tweenBinding);
+    }
     if (tweenBehaviour == nameof(GenerateTween. SettingsPanel_OutTween))
     {
        return GenerateTween.SettingsPanel_OutTween(tweenBinding);
@@ -37,6 +41,10 @@ public static class ITweenBindingExtenstion
     if (tweenBehaviour == nameof(GenerateTween. HomePanel_OutTween))
     {
        return GenerateTween.HomePanel_OutTween(tweenBinding);
+    }
+    if (tweenBehaviour == nameof(GenerateTween. TansitionHolderPanel_OutTween))
+    {
+       return GenerateTween.TansitionHolderPanel_OutTween(tweenBinding);
     }
             return Sequence.Create();
 }

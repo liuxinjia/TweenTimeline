@@ -57,7 +57,7 @@ namespace Cr7Sund.TweenTimeLine
         }
 
 
-        [TimelineShortcut("TweenResetTrackNameTrackAction", KeyCode.R, ShortcutModifiers.Shift)]
+        [TimelineShortcut("TweenResetTrackNameTrackAction", KeyCode.I, ShortcutModifiers.Shift)]
         public static void HandleShortCut(ShortcutArguments args)
         {
             Invoker.InvokeWithSelectedTracks<TweenResetTrackNameTrackAction>();

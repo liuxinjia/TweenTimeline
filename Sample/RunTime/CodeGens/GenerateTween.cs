@@ -81,6 +81,13 @@ public static class GenerateTween
             ;
     }
 
+    public static Sequence TansitionHolderPanel_InTween(ITweenBinding binding)
+    {
+        return Sequence.Create()
+           .Group(Tween.Custom(binding.GetBindObj<Coffee.UIEffects.UITransitionEffect>("Bg_UITransitionEffect"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Standard"), onValueChange: (target, updateValue) => target.effectFactor = updateValue))
+            ;
+    }
+
     public static Sequence SettingsPanel_OutTween(ITweenBinding binding)
     {
         return Sequence.Create()
@@ -113,6 +120,13 @@ public static class GenerateTween
            .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("leftMask_Image"), startValue: 1f, endValue: 0f, duration: 0.4f, startDelay: 0.1f, ease: binding.GetEasing("Emphasized")))
            .Group(Tween.UIAnchoredPositionX(binding.GetBindObj<UnityEngine.RectTransform>("rightMask_RectTransform"), startValue: 810f, endValue: 1842f, duration: 0.4f, startDelay: 0.1f, ease: binding.GetEasing("Emphasized")))
            .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("rightMask_Image"), startValue: 1f, endValue: 0f, duration: 0.4f, startDelay: 0.1f, ease: binding.GetEasing("Emphasized")))
+            ;
+    }
+
+    public static Sequence TansitionHolderPanel_OutTween(ITweenBinding binding)
+    {
+        return Sequence.Create()
+           .Group(Tween.Custom(binding.GetBindObj<Coffee.UIEffects.UITransitionEffect>("Bg_UITransitionEffect"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Emphasized"), onValueChange: (target, updateValue) => target.effectFactor = updateValue))
             ;
     }
 

@@ -22,7 +22,10 @@ namespace Cr7Sund.TweenTimeLine
 
         public static bool InitTimeline()
         {
-
+            if (Application.isPlaying)
+            {
+                return true;
+            }
             InitPreTween();
 
             if (!isInit && TimelineWindowExposer.IsValidTimelineWindow())
@@ -791,7 +794,16 @@ namespace Cr7Sund.TweenTimeLine
                     // && IsParent(selectGroupTrack, rootParentTrack)
                     )
                 {
-                    return selectTrack as GroupTrack;
+                    if (selectTrack.name == TweenTimelineDefine.InDefine
+                    || selectTrack.name == TweenTimelineDefine.OutDefine)
+                    {
+                        rootParentTrack = CreateRootTrack(timelineAsset, selectTrack.name);
+                        break;
+                    }
+                    else
+                    {
+                        return selectTrack as GroupTrack;
+                    }
                 }
             }
             return CreateGroupAsset(groupTrackName, timelineAsset, rootParentTrack);
