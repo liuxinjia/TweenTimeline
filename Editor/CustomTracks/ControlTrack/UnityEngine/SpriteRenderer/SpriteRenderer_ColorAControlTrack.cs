@@ -9,7 +9,7 @@ namespace Cr7Sund.SpriteRendererTween
     [TrackClipType(typeof(SpriteRenderer_ColorAControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.SpriteRenderer))]
-    [TrackColor(0.198f, 0.296f, 0.605f)]
+    [TrackColor(0.946f, 0.207f, 0.19f)]
     public class SpriteRenderer_ColorAControlTrack : TrackAsset,IBaseTrack
     {
 

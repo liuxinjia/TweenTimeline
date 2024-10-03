@@ -9,7 +9,7 @@ namespace Cr7Sund.GraphicTween
     [TrackClipType(typeof(Graphic_ColorControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.UI.Graphic))]
-    [TrackColor(0.626f, 0.039f, 0.502f)]
+    [TrackColor(0.891f, 0.983f, 0.122f)]
     public class Graphic_ColorControlTrack : TrackAsset,IBaseTrack
     {
 

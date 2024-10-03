@@ -35,8 +35,6 @@ namespace Cr7Sund.TweenTimeLine
             "sprite"
         };
 
-
-
         public static KeyframeDataWrapper GenerateKeyFrameDatas(AnimationClip clip)
         {
             EditorCurveBinding[] curveBindings = AnimationUtility.GetCurveBindings(clip);

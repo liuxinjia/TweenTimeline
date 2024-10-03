@@ -41,11 +41,11 @@ namespace Cr7Sund.TweenTimeLine
                 if (!TweenTimeLineDataModel.TrackBehaviourDict.ContainsKey(track)) return;
                 if (!TweenTimeLineDataModel.TrackObjectDict.ContainsKey(track)) return;
 
-                var behaviours = TweenTimeLineDataModel.TrackBehaviourDict[track];
+                var behaviors = TweenTimeLineDataModel.TrackBehaviourDict[track];
                 var target = TweenTimeLineDataModel.TrackObjectDict[track];
-                if (behaviours.Count > 0)
+                if (behaviors.Count > 0)
                 {
-                    var behaviour = behaviours[behaviours.Count - 1];
+                    var behaviour = behaviors[behaviors.Count - 1];
                     behaviour.Set(target,
                         behaviour.StartPos);
 

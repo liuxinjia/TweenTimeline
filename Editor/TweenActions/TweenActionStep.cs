@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using Cr7Sund.GraphicTween;
-using Cr7Sund.TransformTween;
 using PrimeTween;
 using UnityEngine;
 
@@ -24,10 +22,7 @@ namespace Cr7Sund.TweenTimeLine
         public string StartPos;
         public TweenOperationType tweenOperationType;
         public float startTimeOffset; // 动画结束时间点（正数为时间点，0为整个duration, 负数表示提前开始）
-        public HashSet<string> NotAdditiveSet = new()
-        {
-            nameof(Transform_LocalScaleControlBehaviour),
-        };
+
 
         public TweenActionStep()
         {

@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using static Cr7Sund.TweenTimeLine.TweenActionStep;
 
 namespace Cr7Sund.TweenTimeLine
 {
@@ -11,6 +13,14 @@ namespace Cr7Sund.TweenTimeLine
         [SerializeField] private string SetPropertyMethod;
         [SerializeField] private string PreTweenMethod;
 
+
+        public static HashSet<string> NotAdditiveSet = new()
+        {
+            nameof(TransformTween.Transform_LocalScaleControlBehaviour),
+            nameof(GraphicTween.Graphic_ColorControlBehaviour),
+            nameof(GraphicTween.Graphic_ColorAControlBehaviour),
+            nameof(ImageTween.Image_FillAmountControlBehaviour),
+        };
 
         public TweenComponentData()
         {
@@ -40,6 +50,15 @@ namespace Cr7Sund.TweenTimeLine
             // var result = SetPropertyMethod.Replace("target.", "");
             var result = SetPropertyMethod.TrimEnd(';');
             return result;
+        }
+
+        public TweenOperationType GetTweenOperationType(string tweenMethod){
+            TweenOperationType tweenOperationType = TweenOperationType.Additive;
+            if (NotAdditiveSet.Contains(tweenMethod))
+            {
+                tweenOperationType = TweenOperationType.Relative;
+            }
+            return tweenOperationType;
         }
     }
 }

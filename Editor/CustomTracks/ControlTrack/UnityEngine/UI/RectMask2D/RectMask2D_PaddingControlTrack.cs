@@ -9,7 +9,7 @@ namespace Cr7Sund.RectMask2DTween
     [TrackClipType(typeof(RectMask2D_PaddingControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.UI.RectMask2D))]
-    [TrackColor(0.541f, 0.265f, 0.327f)]
+    [TrackColor(0.699f, 0.632f, 0.533f)]
     public class RectMask2D_PaddingControlTrack : TrackAsset,IBaseTrack
     {
 

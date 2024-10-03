@@ -19,7 +19,7 @@ namespace Cr7Sund.TweenTimeLine
         private EasingTokenPresetLibrary _easingTokenPresetLibrary;
         private TweenActionEffect _selectTweenAction = new();
         private Sequence _curSequence;
-        private string _updateSequenveID;
+        private string _updateSequenceID;
         private VisualElement _selecGridItem;
         private string _curRestID;
 
@@ -75,7 +75,6 @@ namespace Cr7Sund.TweenTimeLine
             TemplateContainer root = visualTreeAsset.Instantiate();
             rootVisualElement.Add(root);
 
-
             UpdateConfigUI(_selectTweenAction);
             CreateAnimUnits(_selectTweenAction);
             BindActionBtns();
@@ -105,9 +104,9 @@ namespace Cr7Sund.TweenTimeLine
             }
             rootTabView.activeTabChanged += (t1, t2) =>
             {
-                UpdateTargetComponnet();
+                UpdateTargetComponents();
             };
-            UpdateTargetComponnet();
+            UpdateTargetComponents();
         }
 
         private void BindActionBtns()
@@ -364,13 +363,13 @@ namespace Cr7Sund.TweenTimeLine
             componentField.RegisterValueChangedCallback(evt =>
             {
                 selectTweenAction.target = (GameObject)evt.newValue;
-                UpdateTargetComponnet();
+                UpdateTargetComponents();
             });
 
             ToggleTweenAnimParis(durationField, easeField, animSettingType);
         }
 
-        private void UpdateTargetComponnet()
+        private void UpdateTargetComponents()
         {
             var tabView = rootVisualElement.Q<TabView>("rooTabView");
             var container = tabView.Q<VisualElement>($"tabContainer_{tabView.selectedTabIndex}");
@@ -699,7 +698,7 @@ namespace Cr7Sund.TweenTimeLine
                 }
             });
 
-            _updateSequenveID = EditorTweenCenter.RegisterSequence(_curSequence, animAction.target, animAction.ConvertDuration() + 1f);
+            _updateSequenceID = EditorTweenCenter.RegisterSequence(_curSequence, animAction.target, animAction.ConvertDuration() + 1f);
         }
         private void CancelTween()
         {
@@ -708,7 +707,7 @@ namespace Cr7Sund.TweenTimeLine
                 _curSequence.Complete();
                 _curSequence.Stop();
             }
-            EditorTweenCenter.UnRegisterEditorTimer(_updateSequenveID);
+            EditorTweenCenter.UnRegisterEditorTimer(_updateSequenceID);
         }
         #endregion
     }

@@ -256,24 +256,10 @@ namespace Cr7Sund.TweenTimeLine
                         behaviour.BindType = binComponent.GetType().FullName;
                     }
                 }
+
             }
 
             RecreateTween();
-        }
-        private static AnimationCurve GetBindClipCurve(TimelineClip clip)
-        {
-            // only handle first animation curve event it has multiple properties
-            AnimationClip animationClip = clip.curves;
-            if (animationClip == null) return null;
-            var editorCurveBindings = AnimationUtility.GetCurveBindings(animationClip);
-            foreach (var bind in editorCurveBindings)
-            {
-                AnimationUtility.SetEditorCurve(animationClip, bind, AnimationCurve.Constant(0, 1, 1));
-                AnimationCurve curve = AnimationUtility.GetEditorCurve(animationClip, bind);
-                return curve;
-            }
-
-            return null;
         }
 
         private static void BindClipAsset(TimelineClip clip, List<Tuple<IUniqueBehaviour, ClipBehaviourState>> validClipStateSet, IUniqueBehaviour behaviour, TrackAsset trackAsset)
@@ -650,22 +636,36 @@ namespace Cr7Sund.TweenTimeLine
         public static void AddTrack(Transform groupTrack,
             TrackInfoContext trackInfo, bool isIn, bool createNewTrack)
         {
-            PlayableDirector playableDirector = GameObject.FindFirstObjectByType<PlayableDirector>();
-            TimelineAsset timelineAsset = playableDirector.playableAsset as TimelineAsset;
+            var timelineAsset = TimelineWindowExposer.GetCurDirector().playableAsset as TimelineAsset;
 
-            Undo.RecordObject(playableDirector.playableAsset, "Add Track");
+            Undo.RecordObject(timelineAsset, "Add Track");
 
             GroupTrack parentTrack = GetParentGroup(groupTrack, timelineAsset, isIn);
+
 
             AdjustStartTime(ref trackInfo);
             AddTrackWithParents(trackInfo, createNewTrack, parentTrack);
         }
 
+        private static bool IsParent(GroupTrack selectGroupTrack, GroupTrack parentTrack)
+        {
+            while (selectGroupTrack != null)
+            {
+                if (selectGroupTrack == parentTrack)
+                {
+                    return true;
+                }
+                selectGroupTrack = selectGroupTrack.parent as GroupTrack;
+            }
+
+            return false;
+        }
+
         public static TrackAsset AddTrackWithParents(TrackInfoContext trackInfo,
             bool createNewTrack, TrackAsset parentTrack)
         {
-            PlayableDirector playableDirector = GameObject.FindFirstObjectByType<PlayableDirector>();
-            TimelineAsset timelineAsset = playableDirector.playableAsset as TimelineAsset;
+            PlayableDirector playableDirector = TimelineWindowExposer.GetCurDirector();
+            var timelineAsset = playableDirector.playableAsset as TimelineAsset;
             TrackAsset trackAsset = AddTrackToTimeline(trackInfo, timelineAsset, parentTrack, createNewTrack);
             var clipMethod = typeof(TrackAsset).GetMethod("CreateClip", BindingFlags.Instance | BindingFlags.NonPublic);
             var markMethod = typeof(TrackAsset).GetMethod("AddMarker", BindingFlags.Instance | BindingFlags.NonPublic);
@@ -753,11 +753,11 @@ namespace Cr7Sund.TweenTimeLine
 
         public static GroupTrack GetParentGroup(Transform groupTrack, TimelineAsset timelineAsset, bool isIn)
         {
-            string grouTrackName = groupTrack.name;
+            string groupTrackName = groupTrack.name;
             if (groupTrack.tag == TweenTimelineDefine.PanelTag
             && !groupTrack.name.EndsWith(TweenTimelineDefine.PanelTag))
             {
-                grouTrackName = $"{grouTrackName}{TweenTimelineDefine.PanelTag}";
+                groupTrackName = $"{groupTrackName}{TweenTimelineDefine.PanelTag}";
             }
             if (groupTrack.tag == TweenTimelineDefine.CompositeTag)
             {
@@ -774,7 +774,7 @@ namespace Cr7Sund.TweenTimeLine
                 if (!contains &&
                     !groupTrack.name.EndsWith(TweenTimelineDefine.CompositeTag))
                 {
-                    grouTrackName = $"{grouTrackName}{TweenTimelineDefine.CompositeTag}";
+                    groupTrackName = $"{groupTrackName}{TweenTimelineDefine.CompositeTag}";
                 }
             }
 
@@ -783,7 +783,18 @@ namespace Cr7Sund.TweenTimeLine
                   TweenTimelineDefine.OutDefine;
             GroupTrack rootParentTrack = CreateRootTrack(timelineAsset, rootTrackName);
 
-            return CreatGroupAsset(grouTrackName, timelineAsset, rootParentTrack);
+            var selectTracks = TimelineWindowExposer.GetSelectTracks();
+
+            foreach (var selectTrack in selectTracks)
+            {
+                if (selectTrack is GroupTrack selectGroupTrack
+                    // && IsParent(selectGroupTrack, rootParentTrack)
+                    )
+                {
+                    return selectTrack as GroupTrack;
+                }
+            }
+            return CreateGroupAsset(groupTrackName, timelineAsset, rootParentTrack);
         }
 
         private static GroupTrack CreateRootTrack(TimelineAsset timelineAsset, string rootTrackName)
@@ -795,13 +806,13 @@ namespace Cr7Sund.TweenTimeLine
             return rootParentTrack;
         }
 
-        public static GroupTrack CreatGroupAsset(string grouTrackName, TimelineAsset timelineAsset, TrackAsset parentTrack)
+        public static GroupTrack CreateGroupAsset(string groupTrackName, TimelineAsset timelineAsset, TrackAsset parentTrack)
         {
             GroupTrack groupTrack = null;
 
             bool MatchGroup(GroupTrack track)
             {
-                if (track.name == grouTrackName)
+                if (track.name == groupTrackName)
                 {
                     var root = GetTrackRoot(track);
                     if (parentTrack == null)
@@ -816,18 +827,18 @@ namespace Cr7Sund.TweenTimeLine
             }
 
             var groupTrackIndex = TweenTimeLineDataModel.groupTracks.FindIndex(MatchGroup);
-            groupTrack = AddGroup(grouTrackName, timelineAsset, parentTrack, groupTrackIndex);
+            groupTrack = AddGroup(groupTrackName, timelineAsset, parentTrack, groupTrackIndex);
 
             return groupTrack;
         }
 
-        private static GroupTrack AddGroup(string grouTrackName, TimelineAsset timelineAsset,
+        private static GroupTrack AddGroup(string groupTrackName, TimelineAsset timelineAsset,
         TrackAsset parentTrack, int groupTrackIndex)
         {
             GroupTrack groupTrack;
             if (groupTrackIndex < 0)
             {
-                groupTrack = timelineAsset.CreateTrack<GroupTrack>(parentTrack, grouTrackName);
+                groupTrack = timelineAsset.CreateTrack<GroupTrack>(parentTrack, groupTrackName);
                 TweenTimeLineDataModel.groupTracks.Add(groupTrack); // since we don't trigger timeline change immediately
             }
             else
@@ -869,7 +880,7 @@ namespace Cr7Sund.TweenTimeLine
             return track;
         }
 
-        private static string GetTrackName(Transform child, Transform root,
+        public static string GetTrackName(Transform child, Transform root,
         Type componentType, Type trackType)
         {
             string trackName = TweenTimelinePreferencesProvider.GetBool(TweenGenSettings.UseFullPathName)
@@ -1021,7 +1032,7 @@ namespace Cr7Sund.TweenTimeLine
 
             if (trackHierarchy.Count <= 0)
             {
-                throw new System.Exception("Please select panel track");
+                throw new System.Exception("Please select panel or composite group track");
             }
 
             return isIn;

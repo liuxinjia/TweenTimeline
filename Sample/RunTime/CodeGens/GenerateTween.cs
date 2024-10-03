@@ -4,19 +4,45 @@ using UnityEngine;
 
 public static class GenerateTween
 {
-    public static Sequence FadeBtn_InTween(ITweenBinding binding)
+    public static Sequence ScaleClickBtn_InTween(ITweenBinding binding)
     {
         return Sequence.Create()
-           .Group(Tween.Alpha(binding.GetBindObj<TMPro.TextMeshProUGUI>("UpgradeText_TextMeshProUGUI"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Standard")))
-           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("UpgradeBtn_Image"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Standard")))
+            .Group(Sequence.Create()
+                .Chain(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("Button_RectTransform"), startValue: new Vector3(1.00f, 1.00f, 1.00f), endValue: new Vector3(0.80f, 0.80f, 0.00f), duration: 0.1f, startDelay: 0f, ease: binding.GetEasing("InQuad")))
+                .Chain(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("Button_RectTransform"), startValue: new Vector3(0.80f, 0.80f, 0.00f), endValue: new Vector3(1.00f, 1.00f, 1.00f), duration: 0.1f, startDelay: 0.1f, ease: binding.GetEasing("OutQuad")))
+            )
+            .Group(Sequence.Create()
+                .Chain(Tween.Custom(binding.GetBindObj<TMPro.TextMeshProUGUI>("Text (TMP)_TextMeshProUGUI"), startValue: 60f, endValue: 50f, duration: 0.1f, startDelay: 0f, ease: binding.GetEasing("InQuad"), onValueChange: (target, updateValue) => target.fontSize = updateValue))
+                .Chain(Tween.Custom(binding.GetBindObj<TMPro.TextMeshProUGUI>("Text (TMP)_TextMeshProUGUI"), startValue: 50f, endValue: 60f, duration: 0.1f, startDelay: 0.1f, ease: binding.GetEasing("OutQuad"), onValueChange: (target, updateValue) => target.fontSize = updateValue))
+            )
             ;
     }
 
-    public static Sequence GrowBtn_InTween(ITweenBinding binding)
+    public static Sequence FadeClickBtn_InTween(ITweenBinding binding)
     {
         return Sequence.Create()
-           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("UpgradeBtn_RectTransform"), startValue: new Vector3(1.00f, 1.00f, 1.00f), endValue: new Vector3(1.20f, 1.20f, 1.20f), duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("InQuad")))
-           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("UpgradeBtn_Image"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("InExpo")))
+            .Group(Sequence.Create()
+                .Chain(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("Button_RectTransform"), startValue: new Vector3(1.00f, 1.00f, 1.00f), endValue: new Vector3(0.00f, 0.00f, 0.00f), duration: 0.15f, startDelay: 0f, ease: binding.GetEasing("Standard")))
+                .Chain(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("Button_RectTransform"), startValue: new Vector3(0.00f, 0.00f, 0.00f), endValue: new Vector3(1.00f, 1.00f, 1.00f), duration: 0.25f, startDelay: 0.15f, ease: binding.GetEasing("Emphasized")))
+            )
+            .Group(Sequence.Create()
+                .Chain(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Button_Image"), startValue: 1f, endValue: 0f, duration: 0.15f, startDelay: 0f, ease: binding.GetEasing("Standard")))
+                .Chain(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Button_Image"), startValue: 0f, endValue: 1f, duration: 0.25f, startDelay: 0.15f, ease: binding.GetEasing("Emphasized")))
+            )
+            ;
+    }
+
+    public static Sequence FillHoverBtn_InTween(ITweenBinding binding)
+    {
+        return Sequence.Create()
+           .Group(Tween.UIFillAmount(binding.GetBindObj<UnityEngine.UI.Image>("Button_Image"), startValue: 1f, endValue: 0f, duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Standard")))
+            ;
+    }
+
+    public static Sequence FillHoverBtn_OutTween(ITweenBinding binding)
+    {
+        return Sequence.Create()
+           .Group(Tween.UIFillAmount(binding.GetBindObj<UnityEngine.UI.Image>("Button_Image"), startValue: 0f, endValue: 1f, duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
             ;
     }
 

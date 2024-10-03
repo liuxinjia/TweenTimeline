@@ -6,13 +6,21 @@ public static class ITweenBindingExtenstion
 {
         public static Sequence Play(this ITweenBinding tweenBinding, string tweenBehaviour)
 {
-    if (tweenBehaviour == nameof(GenerateTween. FadeBtn_InTween))
+    if (tweenBehaviour == nameof(GenerateTween. ScaleClickBtn_InTween))
     {
-       return GenerateTween.FadeBtn_InTween(tweenBinding);
+       return GenerateTween.ScaleClickBtn_InTween(tweenBinding);
     }
-    if (tweenBehaviour == nameof(GenerateTween. GrowBtn_InTween))
+    if (tweenBehaviour == nameof(GenerateTween. FadeClickBtn_InTween))
     {
-       return GenerateTween.GrowBtn_InTween(tweenBinding);
+       return GenerateTween.FadeClickBtn_InTween(tweenBinding);
+    }
+    if (tweenBehaviour == nameof(GenerateTween. FillHoverBtn_InTween))
+    {
+       return GenerateTween.FillHoverBtn_InTween(tweenBinding);
+    }
+    if (tweenBehaviour == nameof(GenerateTween. FillHoverBtn_OutTween))
+    {
+       return GenerateTween.FillHoverBtn_OutTween(tweenBinding);
     }
     if (tweenBehaviour == nameof(GenerateTween. HomePanel_InTween))
     {

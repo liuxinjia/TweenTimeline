@@ -9,7 +9,7 @@ namespace Cr7Sund.ScrollRectTween
     [TrackClipType(typeof(ScrollRect_VerticalNormalizedPositionControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.UI.ScrollRect))]
-    [TrackColor(0.049f, 0.618f, 0.356f)]
+    [TrackColor(0.668f, 0.311f, 0.952f)]
     public class ScrollRect_VerticalNormalizedPositionControlTrack : TrackAsset,IBaseTrack
     {
 

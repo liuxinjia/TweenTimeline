@@ -9,7 +9,7 @@ namespace Cr7Sund.MaterialTween
     [TrackClipType(typeof(Material_MainTextureScaleControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.Material))]
-    [TrackColor(0.307f, 0.595f, 0.895f)]
+    [TrackColor(0.532f, 0.9f, 0.923f)]
     public class Material_MainTextureScaleControlTrack : TrackAsset,IBaseTrack
     {
 

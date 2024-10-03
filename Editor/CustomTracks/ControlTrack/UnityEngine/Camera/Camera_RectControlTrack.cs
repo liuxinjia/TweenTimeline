@@ -9,7 +9,7 @@ namespace Cr7Sund.CameraTween
     [TrackClipType(typeof(Camera_RectControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.Camera))]
-    [TrackColor(0.585f, 0.037f, 0.432f)]
+    [TrackColor(0.489f, 0.633f, 0.049f)]
     public class Camera_RectControlTrack : TrackAsset,IBaseTrack
     {
 

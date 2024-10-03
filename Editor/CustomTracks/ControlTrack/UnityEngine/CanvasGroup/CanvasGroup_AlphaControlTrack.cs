@@ -9,7 +9,7 @@ namespace Cr7Sund.CanvasGroupTween
     [TrackClipType(typeof(CanvasGroup_AlphaControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.CanvasGroup))]
-    [TrackColor(0.987f, 0.612f, 0.677f)]
+    [TrackColor(0.461f, 0.608f, 0.424f)]
     public class CanvasGroup_AlphaControlTrack : TrackAsset,IBaseTrack
     {
 

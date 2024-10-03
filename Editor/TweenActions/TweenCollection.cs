@@ -9,7 +9,11 @@ namespace Cr7Sund.TweenTimeLine
     {
         public List<TweenActionEffect> animationCollections;
         public string category;
-
+        public static HashSet<string> IgnoreDotSet = new()
+        {
+           "color.a"
+        };
+        
         public TweenCollection(string name)
         {
             animationCollections = new();
@@ -54,13 +58,15 @@ namespace Cr7Sund.TweenTimeLine
 
             return actionCategoryList;
         }
+
         public Dictionary<string, List<TweenActionEffect>> GetAnimActionCategory(GameObject selectGO)
         {
             var actionCategoryList = new Dictionary<string, List<TweenActionEffect>>();
 
             foreach (var action in animationCollections)
             {
-                if (action.label.Contains('.'))
+                if (!IgnoreDotSet.Contains(action.label)
+                && action.label.Contains('.'))// skip specific action, e.g. position.x 
                 {
                     continue;
                 }
@@ -75,7 +81,7 @@ namespace Cr7Sund.TweenTimeLine
                         continue;
                     }
 
-                    if (!typeof(Component).IsAssignableFrom(componentType))
+                    if (!typeof(Component).IsAssignableFrom(componentType)) // exclude material
                     {
                         continue;
                     }
@@ -108,7 +114,9 @@ namespace Cr7Sund.TweenTimeLine
 
         public void AddEffect(TweenActionEffect effect)
         {
-            var existingEffectIndex = animationCollections.FindIndex(e => e.label == effect.label);
+            var existingEffectIndex = animationCollections.FindIndex(e => e.label == effect.label
+            && e.collectionCategory == effect.collectionCategory
+            && e.effectCategory == effect.effectCategory);
             if (existingEffectIndex >= 0)
             {
                 // Update existing effect

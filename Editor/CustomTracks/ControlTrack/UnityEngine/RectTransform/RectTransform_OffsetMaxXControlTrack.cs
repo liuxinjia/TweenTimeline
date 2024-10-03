@@ -9,7 +9,7 @@ namespace Cr7Sund.RectTransformTween
     [TrackClipType(typeof(RectTransform_OffsetMaxXControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.RectTransform))]
-    [TrackColor(0.882f, 0.924f, 0.839f)]
+    [TrackColor(0.911f, 0.029f, 0.323f)]
     public class RectTransform_OffsetMaxXControlTrack : TrackAsset,IBaseTrack
     {
 

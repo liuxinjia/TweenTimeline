@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using PrimeTween;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace Cr7Sund.TweenTimeLine
 {
     public class BindAdapterEditorHelper
     {
+
         public static void Reset(ComponentBinderAdapter binderAdapter)
         {
             binderAdapter.easingTokenPresetLibrary = AssetDatabase.LoadAssetAtPath<EasingTokenPresetLibrary>(
@@ -68,6 +70,14 @@ namespace Cr7Sund.TweenTimeLine
                             Debug.LogError("Please assign the child of {root}");
                             return;
                         }
+                    }
+                    if (objectField.value == null)
+                    {
+                        objectField.parent.style.backgroundColor = Color.red;
+                    }
+                    else
+                    {
+                        objectField.parent.style.backgroundColor = Color.black;
                     }
                     onValueChange?.Invoke();
                 });
@@ -249,5 +259,7 @@ namespace Cr7Sund.TweenTimeLine
 
             return resultTweens.Values.ToList();
         }
+
+
     }
 }

@@ -9,7 +9,7 @@ namespace Cr7Sund.ShadowTween
     [TrackClipType(typeof(Shadow_EffectColorAControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.UI.Shadow))]
-    [TrackColor(0.622f, 0.107f, 0.233f)]
+    [TrackColor(0.4f, 0.556f, 0.765f)]
     public class Shadow_EffectColorAControlTrack : TrackAsset,IBaseTrack
     {
 

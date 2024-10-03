@@ -4,11 +4,14 @@ using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
+using static Cr7Sund.TweenTimeLine.TweenActionStep;
 
 namespace Cr7Sund.TweenTimeLine
 {
     public class AnimationCollectionGenerator
     {
+
+
         public static void CreateBuildInAnimation(TweenGenTrackConfig tweenConfig)
         {
             var builder = new AnimationCollectionGenerator();
@@ -168,6 +171,8 @@ namespace Cr7Sund.TweenTimeLine
             string typeName = TweenCustomTrackCodeGenerator.GetTypeName(method.ComponentType);
             namespaceName = $"using Cr7Sund.{typeName}Tween;";
             string identifier = TweenCustomTrackCodeGenerator.GetTweenBehaviourIdentifier(method);
+            string tweenMethod = $"{identifier}ControlBehaviour";
+            var tweenOperationType = method.GetTweenOperationType(tweenMethod);
             return $@"
             animEffect.Add(new {nameof(TweenActionEffect)}( ""{method.GetPropertyMethod}"",""{typeName}"")
             {{
@@ -178,8 +183,8 @@ namespace Cr7Sund.TweenTimeLine
                     new {nameof(TweenActionStep)}
                     {{
                         EndPos = ""{GetDefaultValue(method.ValueType)}"", 
-                        TweenActionStep.TweenOperationType.Additive
-                        tweenMethod = {nameof(TweenActionContainerBuilder)}.GetTweenMethodName<{identifier}ControlBehaviour>(),
+                        tweenOperationType=TweenActionStep.TweenOperationType.{tweenOperationType},
+                        tweenMethod = {nameof(TweenActionContainerBuilder)}.GetTweenMethodName<{tweenMethod}>(),
                         label = ""{method.GetPropertyMethod}"",
                     }}
                 }}

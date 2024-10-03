@@ -38,21 +38,12 @@ namespace Cr7Sund.TweenTimeLine
             {
                 TrackAsset newTrack = null;
                 TrackAsset parentTrack = null;
-                if (newTrackDict.ContainsKey(parentSourceTrack))
-                {
-                    parentTrack = newTrackDict[parentSourceTrack];
-                }
-                else
-                {
-                    var reverseGroupName = isIn < 0 ? TweenTimelineDefine.InDefine : TweenTimelineDefine.OutDefine;
-                    parentTrack = TweenTimelineManager.CreatGroupAsset(reverseGroupName, childSourceTrack.timelineAsset, null);
-                    newTrackDict.Add(parentSourceTrack, newTrack);
-                }
+                parentTrack = GetParentTrack(isIn, childSourceTrack, parentSourceTrack, newTrackDict, newTrack);
 
                 if (childSourceTrack is GroupTrack groupSourceTrack)
                 {
                     string groupName = childSourceTrack.name;
-                    newTrack = TweenTimelineManager.CreatGroupAsset(groupName, childSourceTrack.timelineAsset, parentTrack);
+                    newTrack = TweenTimelineManager.CreateGroupAsset(groupName, childSourceTrack.timelineAsset, parentTrack);
                 }
                 else
                 {
@@ -94,6 +85,24 @@ namespace Cr7Sund.TweenTimeLine
             TimelineEditor.Refresh(RefreshReason.ContentsAddedOrRemoved);
             return true;
         }
+
+        private static TrackAsset GetParentTrack(int isIn, TrackAsset childSourceTrack, TrackAsset parentSourceTrack, Dictionary<TrackAsset, TrackAsset> newTrackDict, TrackAsset newTrack)
+        {
+            TrackAsset parentTrack;
+            if (newTrackDict.ContainsKey(parentSourceTrack))
+            {
+                parentTrack = newTrackDict[parentSourceTrack];
+            }
+            else
+            {
+                var reverseGroupName = isIn < 0 ? TweenTimelineDefine.InDefine : TweenTimelineDefine.OutDefine;
+                parentTrack = TweenTimelineManager.CreateGroupAsset(reverseGroupName, childSourceTrack.timelineAsset, null);
+                newTrackDict.Add(parentSourceTrack, newTrack);
+            }
+
+            return parentTrack;
+        }
+
         public TrackInfoContext GetReverseClipInfo(TrackAsset trackAsset, int isIn)
         {
             var resultTrackInfo = new TrackInfoContext();

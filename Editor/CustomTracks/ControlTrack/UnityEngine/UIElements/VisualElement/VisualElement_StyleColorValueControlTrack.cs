@@ -9,7 +9,7 @@ namespace Cr7Sund.VisualElementTween
     [TrackClipType(typeof(VisualElement_StyleColorValueControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.UIElements.VisualElement))]
-    [TrackColor(0.406f, 0.307f, 0.501f)]
+    [TrackColor(0.776f, 0.574f, 0.988f)]
     public class VisualElement_StyleColorValueControlTrack : TrackAsset,IBaseTrack
     {
 

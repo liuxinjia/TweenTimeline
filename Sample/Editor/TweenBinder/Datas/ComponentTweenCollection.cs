@@ -19,7 +19,8 @@ namespace Cr7Sund.TweenTimeLine
             return tweenActions[index].tweenNames;
         }
 
-        public void Reset()
+        [ContextMenu(nameof(Rebuild))]
+        public void Rebuild()
         {
             string inputFilePath = TweenTimelineDefine.EditorDataSourcePath;
             var assetGUIDs = AssetDatabase.FindAssets("t:TimelineAsset", new[]
@@ -40,6 +41,8 @@ namespace Cr7Sund.TweenTimeLine
                     }
                 }
             }
+
+            TweenCodeGenerator.GenerateRunTimeCode();
         }
 
         private static List<ComponentTween> GetTweenTypes(TimelineAsset timeLineAsset)

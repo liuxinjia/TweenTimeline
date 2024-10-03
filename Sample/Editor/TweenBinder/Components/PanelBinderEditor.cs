@@ -235,25 +235,27 @@ namespace Cr7Sund.TweenTimeLine
         {
             var binder = target as PanelBinder;
             ComponentBindTracks componentBindTracks = GetBindTrack(nameProp);
-
             TweenTimelineManager.InitPreTween();
-            if (!string.IsNullOrEmpty(_updateSequenceID))
-            {
-                EditorTweenCenter.UnRegisterEditorTimer(_updateSequenceID);
-                _curSequence.Stop();
-            }
-            var resetActions = BindAdapterEditorHelper.GetResetActions(binder, componentBindTracks);
+            CancelTween();
+            List<Action> resetActions = BindAdapterEditorHelper.GetResetActions(binder, componentBindTracks);
             _curSequence = ((ITweenBinding)binder).Play(nameProp.stringValue);
-
             float delayResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DelayResetTime);
+            _curSequence.ChainDelay(delayResetTime).OnComplete(() =>
+            {
+                resetActions.ForEach(t => t?.Invoke());
+            });
             _updateSequenceID = EditorTweenCenter.RegisterSequence(_curSequence,
              binder.transform, _curSequence.duration);
-            EditorTweenCenter.RegisterDelayCallback(target,
-              _curSequence.duration + delayResetTime, (_, _) =>
-              {
-                  _updateSequenceID = string.Empty;
-                  resetActions.ForEach(t => t?.Invoke());
-              });
+        }
+
+        private void CancelTween()
+        {
+            if (_curSequence.isAlive)
+            {
+                _curSequence.Complete();
+                _curSequence.Stop();
+            }
+            EditorTweenCenter.UnRegisterEditorTimer(_updateSequenceID);
         }
 
         private ComponentBindTracks GetBindTrack(SerializedProperty nameProp)

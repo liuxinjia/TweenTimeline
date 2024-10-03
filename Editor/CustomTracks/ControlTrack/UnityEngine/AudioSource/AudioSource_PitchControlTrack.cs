@@ -9,7 +9,7 @@ namespace Cr7Sund.AudioSourceTween
     [TrackClipType(typeof(AudioSource_PitchControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.AudioSource))]
-    [TrackColor(0.736f, 0.368f, 0.798f)]
+    [TrackColor(0.016f, 0.495f, 0.51f)]
     public class AudioSource_PitchControlTrack : TrackAsset,IBaseTrack
     {
 

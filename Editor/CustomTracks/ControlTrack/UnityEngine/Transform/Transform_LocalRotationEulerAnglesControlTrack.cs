@@ -9,7 +9,7 @@ namespace Cr7Sund.TransformTween
     [TrackClipType(typeof(Transform_LocalRotationEulerAnglesControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.Transform))]
-    [TrackColor(0.829f, 0.249f, 0.463f)]
+    [TrackColor(0.424f, 0.917f, 0.843f)]
     public class Transform_LocalRotationEulerAnglesControlTrack : TrackAsset,IBaseTrack
     {
 

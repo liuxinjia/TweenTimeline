@@ -9,7 +9,7 @@ namespace Cr7Sund.TweenTimeLine
     public class ClickBinderEditor : ComponentBinderAdapterEditor
     {
         protected override List<string> _tweenFields => new List<string>()
-        { "_onPointerClickTween",  };
+        { "_onClickTween"};
 
 
         public override VisualElement CreateInspectorGUI()

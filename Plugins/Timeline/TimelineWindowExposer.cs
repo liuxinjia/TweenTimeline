@@ -225,6 +225,11 @@ namespace Cr7Sund.Timeline.Extension
             return TimelineWindow.instance.state.editSequence.time;
         }
 
+        public static IEnumerable<TrackAsset> GetSelectTracks(){
+            var tracks = SelectionManager.SelectedTracks();
+            return tracks;
+        }
+
         public static double GetPlayDuration()
         {
             // TODO : get current edit duration, excluding mute one
@@ -256,12 +261,10 @@ namespace Cr7Sund.Timeline.Extension
             return TimelineWindow.instance.state.editSequence.frameRate;
         }
 
-
         public static void PlayEditTimeline()
         {
             if (TimelineWindow.instance != null)
                 TimelineWindow.instance.state.Play();
-
         }
 
         public static void SkipToTimelinePos(double time)

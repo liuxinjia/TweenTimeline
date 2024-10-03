@@ -9,7 +9,7 @@ namespace Cr7Sund.LayoutElementTween
     [TrackClipType(typeof(LayoutElement_GetFlexibleSizeControlAsset))]
     [TrackClipType(typeof(EmptyControlAsset))]
     [TrackBindingType(typeof(UnityEngine.UI.LayoutElement))]
-    [TrackColor(0.326f, 0.106f, 0.052f)]
+    [TrackColor(0.411f, 0.743f, 0.724f)]
     public class LayoutElement_GetFlexibleSizeControlTrack : TrackAsset,IBaseTrack
     {
 
