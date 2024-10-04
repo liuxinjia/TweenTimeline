@@ -640,7 +640,7 @@ namespace Cr7Sund.TweenTimeLine
 
         private void OnCombineTrack(TweenActionEffect animAction)
         {
-            if (animAction == null || animAction.target == null)
+            if (animAction == null)
             {
                 return;
             }
