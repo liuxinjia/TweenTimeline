@@ -126,7 +126,7 @@ namespace Cr7Sund.TweenTimeLine
                 resetActions.ForEach(t => t?.Invoke());
             });
             _updateSequenceID = EditorTweenCenter.RegisterSequence(_curSequence,
-             binder.transform, _curSequence.duration);
+             binder.transform, _curSequence.durationTotal);
         }
 
         private void CancelTween()
@@ -215,7 +215,7 @@ namespace Cr7Sund.TweenTimeLine
                 Component component = null;
                 if (transform != null)
                 {
-                    component = BindAdapterEditorHelper.GetComponent(componentTypeFullName, transform);
+                    component = transform.GetNotNullComponent(componentTypeFullName);
                 }
 
                 binderAdapter.cacheList.Add(new ComponentPairs()

@@ -79,6 +79,7 @@ namespace Cr7Sund.TweenTimeLine
             var parts = value.Trim('(', ')').Split(',');
             if (parts.Length == 4)
             {
+                parts[0] = parts[0].Replace("RGBA(", string.Empty);
                 return $"new Color({parts[0].Trim()}f, {parts[1].Trim()}f, {parts[2].Trim()}f, {parts[3].Trim()}f)";
             }
             return value; // Return the original value if format is not as expected

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using PrimeTween;
+using UnityEngine;
+using Assert = UnityEngine.Assertions.Assert;
+
 namespace Cr7Sund.TweenTimeLine
 {
     public class ClipInfo : IDisposable
     {
-        public double start;
+        public double delayTime;
         public double duration;
         // public AnimationCurve curve;
         public List<MarkInfo> valueMakers;
@@ -46,14 +49,24 @@ namespace Cr7Sund.TweenTimeLine
             }
             var newTween = behaviour.CreateTween(target, duration, startValue);
             // newTween.isPaused = true;
+            float tweenDelay = TweenTimeLineDataModel.IsPlaySingleTween ? 0 :
+                 (float)delayTime;
 
-            _sequence = Sequence.Create().Chain(newTween);
+            if (tweenDelay <= 0)
+            {
+                _sequence = Sequence.Create().Chain(newTween);
+            }
+            else
+            {
+                _sequence = Sequence.Create().ChainDelay(tweenDelay).Chain(newTween);
+            }
             _sequence.isPaused = true;
             foreach (var valueMarker in clipInfo.valueMakers)
             {
                 // another gc
-                float time = (float)valueMarker.Time;
-                _sequence.InsertCallback(time, valueMarker, (marker) => marker.Set(target, marker.UpdateValue));
+                float markerTime = TweenTimeLineDataModel.IsPlaySingleTween ? (float)valueMarker.Time - (float)delayTime :
+                         (float)valueMarker.Time;
+                _sequence.InsertCallback(markerTime, valueMarker, (marker) => marker.Set(target, marker.UpdateValue));
             }
         }
 
@@ -64,7 +77,7 @@ namespace Cr7Sund.TweenTimeLine
                 return;
             }
 
-            EditorTweenCenter.RegisterSequence(Sequence, target, (float)duration);
+            EditorTweenCenter.RegisterSequence(Sequence, target, (float)Sequence.durationTotal);
         }
     }
 }

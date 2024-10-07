@@ -45,6 +45,7 @@ namespace Cr7Sund.TweenTimeLine
         {
             image.sprite = AddressableLoader.Load<Sprite>(sprite);
         }
+
     }
 
 }

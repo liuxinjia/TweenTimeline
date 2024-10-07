@@ -54,10 +54,11 @@ namespace Cr7Sund.TweenTimeLine
         {
             AssemblyReloadEvents.afterAssemblyReload -= OnAfterAssemblyReload;
             AssemblyReloadEvents.afterAssemblyReload += OnAfterAssemblyReload;
+            AssemblyReloadEvents.beforeAssemblyReload += OnBeforeAssemblyReload;
+            AssemblyReloadEvents.beforeAssemblyReload += OnBeforeAssemblyReload;
             EditorApplication.playModeStateChanged -= TweenTimelineManager.OnPlayModeChanged;
             EditorApplication.playModeStateChanged += TweenTimelineManager.OnPlayModeChanged;
         }
-
 
         #region Events
         private static bool TryRegisterTimelineEvents()
@@ -79,7 +80,8 @@ namespace Cr7Sund.TweenTimeLine
 
         private static void OnRebuildGraphChange()
         {
-            Refresh();
+            if (TimelineWindowExposer.IsFocusTimeLineWindow())
+                Refresh();
         }
 
         private static void OnPlayStateChange(bool isPlay)
@@ -106,6 +108,18 @@ namespace Cr7Sund.TweenTimeLine
             if (GetActionEditorWindow() != null)
             {
                 InitTimeline();
+            }
+        }
+
+        private static void OnBeforeAssemblyReload()
+        {
+            if (Application.isPlaying)
+            {
+                return;
+            }
+            if (isInit)
+            {
+                ResetDefaultAllClip();
             }
         }
 
@@ -160,6 +174,12 @@ namespace Cr7Sund.TweenTimeLine
                     {
                         // if (trackAsset is IBaseTrack)
                         Debug.LogWarning($"{trackAsset} don't bind target");
+                        continue;
+                    }
+
+                    if (!trackAsset.hasClips)
+                    {
+                        Debug.LogWarning($"{trackAsset} don't have clips");
                         continue;
                     }
 
@@ -227,7 +247,8 @@ namespace Cr7Sund.TweenTimeLine
                 }
 
                 var behaviour = value as IUniqueBehaviour;
-                if (behaviour == null) return;
+                if (behaviour == null)
+                    return;
                 if (!TweenTimeLineDataModel.TrackObjectDict.ContainsKey(trackAsset))
                 {
                     // just skip if the bind component is null
@@ -255,7 +276,8 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     foreach (var behaviour in behaviourList)
                     {
-                        behaviour.BindTarget = binComponent.gameObject.name;
+                        behaviour.BindTarget = GetTrackName(binComponent.transform);
+                        //  binComponent.gameObject.name;
                         behaviour.BindType = binComponent.GetType().FullName;
                     }
                 }
@@ -271,7 +293,7 @@ namespace Cr7Sund.TweenTimeLine
 
             var clipInfo = new ClipInfo()
             {
-                start = clip.start,
+                delayTime = clip.start,
                 duration = clip.duration,
             };
             clipInfo.valueMakers = new();
@@ -494,10 +516,13 @@ namespace Cr7Sund.TweenTimeLine
 
         public static void ResetDefaultAllClipWhenStop()
         {
-            ChangeTweenManagerState(ClipBehaviourStateEnum.Default);
+            if (!TweenTimeLineDataModel.StateInfo.IsRecording)
+            {
+                ChangeTweenManagerState(ClipBehaviourStateEnum.Default);
+            }
             foreach (var item in TweenTimeLineDataModel.ClipStateDict)
             {
-                // avoid state change when chagne select object when recording
+                // avoid state change when change select object when recording
                 if (item.Value.BehaviourState == ClipBehaviourStateEnum.Recording)
                 {
                     continue;
@@ -591,24 +616,24 @@ namespace Cr7Sund.TweenTimeLine
         private static void ChangeTweenManagerState(ClipBehaviourStateEnum behaviourStateType)
         {
             // Debug.Log(behaviourStateType + "===>" + TweenTimeLineDataModel.StateInfo.BehaviourState);
-            TweenTimeLineDataModel.StateInfo.ChangeState(null, behaviourStateType);
-            var window = GetActionEditorWindow();
-            if (window != null)
-                window.RefreshBtns();
+
+            if (TweenTimeLineDataModel.StateInfo.ChangeState(null, behaviourStateType))
+            {
+                TweenTimeLineDataModel.RefreshViewAction?.Invoke();
+            }
         }
 
         private static void ToggleTweenManagerState(ClipBehaviourStateEnum behaviourStateType)
         {
             // Debug.Log(behaviourStateType + "===>" + TweenTimeLineDataModel.StateInfo.BehaviourState);
-            TweenTimeLineDataModel.StateInfo.ToggleState(null, behaviourStateType);
-            var window = GetActionEditorWindow();
-            if (window != null)
-                window.RefreshBtns();
+            if (TweenTimeLineDataModel.StateInfo.ToggleState(null, behaviourStateType))
+            {
+                TweenTimeLineDataModel.RefreshViewAction?.Invoke();
+            }
         }
 
         public static void RecordAllSelectClip()
         {
-            TweenTimeLineDataModel.StateInfo.IsSelect = true;
             ChangeTweenManagerState(ClipBehaviourStateEnum.Recording);
 
             foreach (var item in TweenTimeLineDataModel.ClipStateDict)
@@ -619,7 +644,6 @@ namespace Cr7Sund.TweenTimeLine
 
         public static void ToggleRecordAllSelectClip()
         {
-            TweenTimeLineDataModel.StateInfo.IsSelect = true;
             ToggleTweenManagerState(ClipBehaviourStateEnum.Recording);
 
             foreach (var item in TweenTimeLineDataModel.ClipStateDict)
@@ -741,7 +765,7 @@ namespace Cr7Sund.TweenTimeLine
                         foreach (var behaviour in behaviourList)
                         {
                             var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[behaviour];
-                            clipEnd = Math.Max(clipEnd, clipInfo.start + clipInfo.duration);
+                            clipEnd = Math.Max(clipEnd, clipInfo.delayTime + clipInfo.duration);
                         }
 
                         foreach (var clipInfoContext in trackInfo.clipInfos)
@@ -764,17 +788,18 @@ namespace Cr7Sund.TweenTimeLine
             }
             if (groupTrack.tag == TweenTimelineDefine.CompositeTag)
             {
-                bool contains = false;
-                foreach (var item in TweenTimelineDefine.UIComponentTypeMatch)
-                {
-                    if (groupTrack.name.EndsWith(item.Key))
-                    {
-                        contains = true;
-                        break;
-                    }
-                }
+                // bool contains = false;
+                // foreach (var item in TweenTimelineDefine.UIComponentTypeMatch)
+                // {
+                //     if (groupTrack.name.EndsWith(item.Key))
+                //     {
+                //         contains = true;
+                //         break;
+                //     }
+                // }
 
-                if (!contains &&
+                if (
+                    // !contains &&
                     !groupTrack.name.EndsWith(TweenTimelineDefine.CompositeTag))
                 {
                     groupTrackName = $"{groupTrackName}{TweenTimelineDefine.CompositeTag}";
@@ -882,24 +907,54 @@ namespace Cr7Sund.TweenTimeLine
             TrackAsset track = FindExistTrackAsset(component, trackType);
             if (track == null || createNewTrack)
             {
-                var trackRoot = BindUtility.GetAttachRoot(component.transform);
-                string trackName = GetTrackName(component.transform, trackRoot,
-                 trackInfoContext.component.GetType(), trackType);
+                string trackName = GetTrackName(component.transform);
                 track = timelineAsset.CreateTrack(trackType, groupTrack, trackName);
                 Debug.Log("Track added: " + track.name);
             }
-
             return track;
         }
 
-        public static string GetTrackName(Transform child, Transform root,
-        Type componentType, Type trackType)
+        public static string GetTrackName(Transform child)
         {
-            string trackName = TweenTimelinePreferencesProvider.GetBool(TweenGenSettings.UseFullPathName)
-            ? child.GetFullPathTrans(root)
+            bool isFullPath = TweenTimelinePreferencesProvider.GetBool(TweenGenSettings.UseFullPathName);
+
+            Transform trackRoot = isFullPath ?
+             BindUtility.GetAttachRoot(child.transform) : null;
+
+            string trackName = isFullPath
+            ? child.GetFullPathTrans(trackRoot)
             : child.gameObject.name;
 
-            return $"{trackName}_{componentType.FullName}_{trackType.Name}";
+            return trackName;
+            // return $"{trackName}_{componentType.FullName}_{trackType.Name}";
+        }
+
+        public static Transform FindTrackBindTarget(Transform root, TrackAsset trackAsset)
+        {
+            bool isFullPath = TweenTimelinePreferencesProvider.GetBool(TweenGenSettings.UseFullPathName);
+
+            var uniqueBehaviour = GetBehaviourByTrackAsset(trackAsset);
+            if (isFullPath)
+            {
+                return root.Find(uniqueBehaviour.BindTarget);
+            }
+            return root.transform.FindChildByName(uniqueBehaviour.BindTarget);
+        }
+
+        public static IUniqueBehaviour GetBehaviourByTrackAsset(TrackAsset trackAsset)
+        {
+            IUniqueBehaviour uniqueBehaviour = null;
+            foreach (var clip in trackAsset.GetClips())
+            {
+                if (!TimelineWindowExposer.GetBehaviourValue(clip.asset, out var value))
+                {
+                    throw new System.Exception($"BehaviourValue is null ");
+                }
+                uniqueBehaviour = value as IUniqueBehaviour;
+                break;
+            }
+
+            return uniqueBehaviour;
         }
 
         public static TrackAsset FindExistTrackAsset(Component component, Type trackAssetType)
@@ -914,7 +969,8 @@ namespace Cr7Sund.TweenTimeLine
         {
             if (EditorWindow.HasOpenInstances<TweenActionEditorWindow>())
             {
-                return EditorWindow.GetWindow<TweenActionEditorWindow>();
+                TweenActionEditorWindow window = EditorWindow.GetWindow<TweenActionEditorWindow>();
+                return window;
             }
             return null;
         }
@@ -1055,12 +1111,12 @@ namespace Cr7Sund.TweenTimeLine
             ClipInfo clipInfo = TweenTimeLineDataModel.ClipInfoDicts[behaviour];
             ClipBehaviourState stateInfo = TweenTimeLineDataModel.ClipStateDict[behaviour];
             var curTime = TimelineWindowExposer.GetSequenceTime();
-            if (curTime >= clipInfo.start && curTime <= clipInfo.start + clipInfo.duration)
+            if (curTime >= clipInfo.delayTime && curTime <= clipInfo.delayTime + clipInfo.duration)
             {
                 return;
             }
             TimelineWindowExposer.SkipToTimelinePos(stateInfo.IsRecordStart ?
-            clipInfo.start : clipInfo.start + clipInfo.duration);
+            clipInfo.delayTime : clipInfo.delayTime + clipInfo.duration);
         }
 
         #endregion

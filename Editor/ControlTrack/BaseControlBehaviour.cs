@@ -26,6 +26,7 @@ namespace Cr7Sund.TweenTimeLine
         [SerializeField] private string _bindTargetName;
         [HideInInspector]
         [SerializeField] private string _bindType;
+        [SerializeField] private bool _isDynamicPos;
 
         private readonly int _id = TweenTimeLineDataModel.ID++;
 
@@ -68,9 +69,13 @@ namespace Cr7Sund.TweenTimeLine
         public string BindType
         {
             get => _bindType;
-            set => _bindType = value; // {{ edit_1 }}
+            set
+            {
+                _bindType = value;
+            } // {{ edit_1 }}
         }
 
+        public bool IsDynamicPos => _isDynamicPos;
 
         public override void OnBehaviourPlay(Playable playable, FrameData info)
         {
@@ -120,7 +125,8 @@ namespace Cr7Sund.TweenTimeLine
             {
                 var curTime = TimelineWindowExposer.GetSequenceTime();
                 var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[this];
-                var elapsedTime = curTime - clipInfo.start;
+                // var elapsedTime = curTime - clipInfo.delayTime;
+                var elapsedTime = curTime;
                 if (elapsedTime <= 0)
                 {
                     return;
@@ -130,7 +136,8 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     return;
                 }
-                if (_startPos.Equals(_endPos))
+                if (_startPos != null &&
+                 _startPos.Equals(_endPos))
                 {
                     return;
                 }

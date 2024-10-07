@@ -433,7 +433,7 @@ namespace Cr7Sund.TweenTimeLine
                 PropertyKeyframes frameProperty, Transform transform)
         {
             KeyframeData startKeyframeData = frameProperty.Keyframes[0];
-            bool isActiveProp = startKeyframeData.Property == TweenTimelineDefine.IsActiveFieleName;
+            bool isActiveProp = startKeyframeData.Property == TweenTimelineDefine.IsActiveFieldName;
             if (!isActiveProp &&
              startKeyframeData.Value.GetType() == typeof(float))
             {

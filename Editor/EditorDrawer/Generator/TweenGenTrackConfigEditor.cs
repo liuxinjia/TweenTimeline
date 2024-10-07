@@ -65,6 +65,7 @@ public class TweenGenTrackConfigEditor : Editor
             .FindAll(pair =>
                 FuzzyMatch(pair.GetPropertyMethod, searchText)
                 || FuzzyMatch(pair.ComponentType, searchText)
+                || FuzzyMatch(pair.PreTweenMethod,searchText)
             );
 
         RefreshListView();

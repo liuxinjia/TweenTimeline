@@ -5,6 +5,8 @@ using UnityEditor;
 using UnityEngine;
 using System.Linq;
 using System;
+using Cr7Sund.Timeline.Extension;
+using JetBrains.Annotations;
 
 namespace Cr7Sund.TweenTimeLine
 {
@@ -37,7 +39,23 @@ namespace Cr7Sund.TweenTimeLine
                     List<ComponentTween> collection = GetTweenTypes(timelineAsset);
                     if (collection != null)
                     {
-                        tweenActions.AddRange(collection);
+                        foreach (ComponentTween item in collection)
+                        {
+                            var findIndex = tweenActions.FindIndex(tweenAction =>
+                            tweenAction.Equals(item));
+                            ComponentTween componentTween = null;
+                            if (findIndex < 0)
+                            {
+                                componentTween = new ComponentTween();
+                                componentTween.category = item.category;
+                                tweenActions.Add(componentTween);
+                            }
+                            else
+                            {
+                                componentTween = tweenActions[findIndex];
+                            }
+                            componentTween.tweenNames.AddRange(item.tweenNames);
+                        }
                     }
                 }
             }
@@ -56,6 +74,10 @@ namespace Cr7Sund.TweenTimeLine
             BindAdapterEditorHelper.IterateTimeLineTrackAssets(timeLineAsset, (trackAsset) =>
             {
                 if (trackAsset is GroupTrack)
+                {
+                    return;
+                }
+                if (trackAsset is not IBaseTrack)//Mark Track
                 {
                     return;
                 }
@@ -94,14 +116,10 @@ namespace Cr7Sund.TweenTimeLine
                     findTween = tweenAction.tweenNames[findIndex];
                 }
 
-                string[] splits = trackAsset.name.Split('_');
-                if (splits.Length < 2)
-                {
-                    Debug.LogWarning($"Invalid TweenNames  TrackAsset:{trackAsset.name} int TimeLineAsset: {timeLineAsset}  ");
-                    return;
-                }
-                findTween.bindTargets.Add(splits[0]);
-                findTween.bindTypes.Add(splits[1]);
+                var uniqueBehaviour = TweenTimelineManager.GetBehaviourByTrackAsset(trackAsset);
+
+                findTween.bindTargets.Add(uniqueBehaviour.BindTarget);
+                findTween.bindTypes.Add(uniqueBehaviour.BindType);
 
                 findTween.trackTypeNames.Add(trackAsset.GetType().FullName);
             });
@@ -112,6 +130,9 @@ namespace Cr7Sund.TweenTimeLine
 
         private static string GetTweenTypesCategory(string trackName)
         {
+            if(trackName.EndsWith(TweenTimelineDefine.CompositeTag)){
+                return TweenTimelineDefine.CompositeTag;
+            }
             foreach (var item in TweenTimelineDefine.UIComponentTypeMatch)
             {
                 if (trackName.EndsWith(item.Key))
@@ -119,6 +140,7 @@ namespace Cr7Sund.TweenTimeLine
                     return item.Key;
                 }
             }
+
             return string.Empty;
         }
 

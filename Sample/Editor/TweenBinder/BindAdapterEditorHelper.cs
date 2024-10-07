@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Cr7Sund.Timeline.Extension;
 using PrimeTween;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -173,17 +174,6 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
 
-        public static Component GetComponent(string componentTypeFullName, Transform transform)
-        {
-            Component component = transform.GetComponent(componentTypeFullName);
-            if (componentTypeFullName == typeof(RectTransform).FullName)
-            {
-                component = transform.transform as RectTransform;
-            }
-
-            return component;
-        }
-
         public static string GetCategory(GameObject go)
         {
             foreach (var item in TweenTimelineDefine.UIComponentTypeMatch)
@@ -217,6 +207,9 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     return;
                 }
+                if(trackAsset is not IBaseTrack){
+                    return;
+                }
                 var parentGroup = TweenTimelineManager.GetTrackSecondRoot(trackAsset);
                 if (parentGroup.name == TweenTimelineDefine.InDefine) return;
                 if (parentGroup.name == TweenTimelineDefine.OutDefine) return;
@@ -245,14 +238,9 @@ namespace Cr7Sund.TweenTimeLine
                     findTween = tweenAction.tweenNames[findIndex];
                 }
 
-                string[] splits = trackAsset.name.Split('_');
-                if (splits.Length < 2)
-                {
-                    Debug.LogWarning($"Invalid TweenNames TimeLineAsset: {timeLineAsset} TrackAsset:{trackAsset.name} ");
-                    return;
-                }
-                findTween.bindTargets.Add(splits[0]);
-                findTween.bindTypes.Add(splits[1]);
+                var uniqueBehaviour = TweenTimelineManager.GetBehaviourByTrackAsset(trackAsset);
+                findTween.bindTargets.Add(uniqueBehaviour.BindTarget);
+                findTween.bindTypes.Add(uniqueBehaviour.BindType);
 
                 findTween.trackTypeNames.Add(trackAsset.GetType().FullName);
             });

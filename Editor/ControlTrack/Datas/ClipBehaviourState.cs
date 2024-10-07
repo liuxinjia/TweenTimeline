@@ -20,26 +20,26 @@ namespace Cr7Sund.TweenTimeLine
         public bool IsRecording => BehaviourState == ClipBehaviourStateEnum.Recording;
 
 
-        public void ToggleState(IUniqueBehaviour behaviour, ClipBehaviourStateEnum targetState)
+        public bool ToggleState(IUniqueBehaviour behaviour, ClipBehaviourStateEnum targetState)
         {
             if (BehaviourState == targetState)
             {
                 targetState = ClipBehaviourStateEnum.Default;
             }
 
-            ChangeState(behaviour, targetState);
+            return ChangeState(behaviour, targetState);
         }
 
-        public void ChangeState(IUniqueBehaviour behaviour, ClipBehaviourStateEnum targetState)
+        public bool ChangeState(IUniqueBehaviour behaviour, ClipBehaviourStateEnum targetState)
         {
             if (BehaviourState == targetState)
             {
-                return;
+                return false;
             }
             if (targetState == ClipBehaviourStateEnum.Recording && !IsSelect)
             {
                 // Debug.LogError("Please select the clip first, which means you should drag the timeline to the clip pos ");
-                return;
+                return false;
             }
 
             // stop Other Action First
@@ -51,6 +51,8 @@ namespace Cr7Sund.TweenTimeLine
 
             // play Target Action 
             DoAction(behaviour, targetState);
+
+            return true;
         }
 
         private void DoAction(IUniqueBehaviour behaviour, ClipBehaviourStateEnum targetState)

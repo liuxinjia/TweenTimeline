@@ -28,6 +28,7 @@ namespace Cr7Sund.TweenTimeLine
         void Set(System.Object target, object updateValue);
         object EndPos { get; set; }
         object StartPos { get; set; }
+        bool IsDynamicPos{get;}
     }
 
     public static class ActionCenters

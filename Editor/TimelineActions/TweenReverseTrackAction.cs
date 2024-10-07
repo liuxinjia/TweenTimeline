@@ -115,7 +115,7 @@ namespace Cr7Sund.TweenTimeLine
                 var clipInfoContext = new ClipInfoContext();
                 resultTrackInfo.clipInfos.Add(clipInfoContext);
 
-                clipInfoContext.start = clipInfo.start;
+                clipInfoContext.start = clipInfo.delayTime;
                 clipInfoContext.duration = clipBehaviour.EasePreset.GetReverseDuration(clipInfo.duration, isIn);
 
                 clipInfoContext.startPos = clipBehaviour.EndPos;

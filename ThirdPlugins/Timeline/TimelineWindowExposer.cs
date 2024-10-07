@@ -118,7 +118,10 @@ namespace Cr7Sund.Timeline.Extension
                     foreach (TimelineClip clip in timelineClips)
                     {
                         var clipAsset = clip.asset;
-                        if (clipAsset == null) continue;
+                        if (clipAsset == null)
+                        {
+                            continue;
+                        }
                         GetBehaviourValue(clipAsset, out var value);
                         iterateAction?.Invoke(value, clip, track);
                     }
@@ -220,12 +223,18 @@ namespace Cr7Sund.Timeline.Extension
             return true;
         }
 
+        public static bool IsFocusTimeLineWindow()
+        {
+            return true;
+        }
+
         public static double GetSequenceTime()
         {
             return TimelineWindow.instance.state.editSequence.time;
         }
 
-        public static IEnumerable<TrackAsset> GetSelectTracks(){
+        public static IEnumerable<TrackAsset> GetSelectTracks()
+        {
             var tracks = SelectionManager.SelectedTracks();
             return tracks;
         }
@@ -286,5 +295,6 @@ namespace Cr7Sund.Timeline.Extension
         {
             BindingUtility.Bind(director, bindTo, objectToBind);
         }
+
     }
 }

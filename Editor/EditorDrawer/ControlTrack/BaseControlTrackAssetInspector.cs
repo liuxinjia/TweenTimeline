@@ -8,32 +8,6 @@ using UnityEngine.UIElements;
 
 namespace Cr7Sund.TweenTimeLine
 {
-    public class ControlTrackWindow : EditorWindow
-    {
-        private SerializedObject _serializedObject;
-        private IUniqueBehaviour _behaviour;
-
-        public static void Open(SerializedObject serializedObject, IUniqueBehaviour behaviour)
-        {
-            var window = EditorWindow.GetWindow<ControlTrackWindow>(desiredDockNextTo: new[]
-            {
-                System.Type.GetType("UnityEditor.GameView,UnityEditor.dll")
-            });
-            window._behaviour = behaviour;
-            window._serializedObject = serializedObject;
-            window.UpdateUI();
-        }
-
-        private void UpdateUI()
-        {
-            rootVisualElement.Clear();
-
-            var trackUIBuilder = new ControlTrackUIBuilder();
-            VisualElement container = trackUIBuilder.CreateContainer(_serializedObject, _behaviour);
-
-            rootVisualElement.Add(container);
-        }
-    }
 
     [CustomEditor(typeof(ControlAsset), true, isFallback = true)]
     [CanEditMultipleObjects]
@@ -41,6 +15,11 @@ namespace Cr7Sund.TweenTimeLine
     {
         public override VisualElement CreateInspectorGUI()
         {
+            if (target is EmptyControlAsset)
+            {
+                return new Label("Empty Control Asset");
+            }
+
             TweenTimelineManager.EnsureCanPreview();
             if (!TimelineWindowExposer.GetBehaviourValue(target, out var value))
             {
@@ -49,14 +28,14 @@ namespace Cr7Sund.TweenTimeLine
             var _behaviour = value as IUniqueBehaviour;
             if (!TweenTimeLineDataModel.ClipStateDict.ContainsKey(_behaviour))
             {
-                return base.CreateInspectorGUI();
+                return new HelpBox("Please assign the target component first", HelpBoxMessageType.Warning);
             }
 
             var root = new VisualElement();
             var trackUIBuilder = new ControlTrackUIBuilder();
             VisualElement container = trackUIBuilder.CreateContainer(serializedObject, _behaviour);
 
-            var windBtn = new Button(()=> ControlTrackWindow.Open(new SerializedObject(target), _behaviour));
+            var windBtn = new Button(() => ControlTrackWindow.Open(new SerializedObject(target), _behaviour));
             windBtn.text = "open window";
 
             root.Add(windBtn);
@@ -128,19 +107,22 @@ namespace Cr7Sund.TweenTimeLine
         private void DrawTrackProperties(VisualElement container, SerializedObject serializedObject)
         {
             var templateProp = serializedObject.FindProperty("template");
-            
+
             var easePresetProp = templateProp.FindPropertyRelative("_easePreset");
             var endPosProp = templateProp.FindPropertyRelative("_endPos");
             var startPosProp = templateProp.FindPropertyRelative("_startPos");
+            var isDynamicProp = templateProp.FindPropertyRelative("_isDynamicPos");
 
             // var easeProp = DrawEasePresetField();
             var easePropField = new PropertyField(easePresetProp);
+            var isDynamicPropField = new PropertyField(isDynamicProp);
             var endPosPropField = CreatePosField(endPosProp, false);
             var startPosPropField = CreatePosField(startPosProp, true);
 
             container.Add(easePropField);
-            container.Add(endPosPropField);
             container.Add(startPosPropField);
+            container.Add(endPosPropField);
+            container.Add(isDynamicPropField);
         }
 
 
@@ -203,20 +185,24 @@ namespace Cr7Sund.TweenTimeLine
             {
                 EditorTweenCenter.UnRegisterEditorTimer(_curRestID);
                 TweenTimelineManager.TogglePlayClip(_behaviour);
+                TweenTimeLineDataModel.IsPlaySingleTween = false;
             }
 
             var stateInfo = TweenTimeLineDataModel.ClipStateDict[_behaviour];
             var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[_behaviour];
+
+            TweenTimeLineDataModel.IsPlaySingleTween = true;
             TweenTimelineManager.TogglePlayClip(_behaviour);
 
             // Yeah! it cost more gc compare to create sequence
-            float dealyResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DelayResetTime);
+            float delayResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DelayResetTime);
             _curRestID = EditorTweenCenter.RegisterDelayCallback(_behaviour,
-            (float)clipInfo.duration + dealyResetTime,
+            (float)clipInfo.duration + delayResetTime,
              (t, elapsedTime) =>
              {
                  TweenTimelineManager.TogglePlayClip(_behaviour);
                  _curRestID = string.Empty;
+                 TweenTimeLineDataModel.IsPlaySingleTween = false;
              });
         }
 

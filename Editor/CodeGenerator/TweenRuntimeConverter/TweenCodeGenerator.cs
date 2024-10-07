@@ -11,6 +11,7 @@ using UnityEngine.Timeline;
 using System;
 using Cr7Sund.Timeline.Extension;
 using UnityEngine.Assertions;
+using System.Text;
 
 namespace Cr7Sund.TweenTimeLine
 {
@@ -66,6 +67,7 @@ namespace Cr7Sund.TweenTimeLine
 
         public async Task GenerateTweenCodeAsync(List<GenTweenSequence> sequences, StreamWriter writer)
         {
+            await writer.WriteLineAsync("using Cr7Sund;");
             await writer.WriteLineAsync("using Cr7Sund.TweenTimeLine;");
             await writer.WriteLineAsync("using PrimeTween;");
             await writer.WriteLineAsync("using UnityEngine;");
@@ -76,111 +78,298 @@ namespace Cr7Sund.TweenTimeLine
             for (int i = 0; i < sequences.Count; i++)
             {
                 var sequence = sequences[i];
-                float progress = (i + 1) / (float)sequences.Count * 0.5f + 0.5f; // Progress from 0.5 to 1.0
+                await GenerateSequenceCodeAsync(writer, sequence);
 
-                string parentTrackName = sequence.parentTrackName;
-                EditorUtility.DisplayProgressBar("Generating Code", $"Generating {parentTrackName}Tween", progress);
-
-                await writer.WriteLineAsync($"    public static Sequence {parentTrackName}Tween(ITweenBinding binding)");
-                await writer.WriteLineAsync("    {");
-
-                // Multiple trackInfos, use Sequence.Create()
-                await writer.WriteLineAsync("        return Sequence.Create()");
-
-                for (int j = 0; j < sequence.trackInfos.Count; j++)
+                if (sequence.endDynamicParams.Count > 0)
                 {
-                    var track = sequence.trackInfos[j];
-                    if (track.clipInfos.Count < 1)
-                    {
-                        continue;
-                    }
-
-                    if (track.clipInfos.Count == 1)
-                    {
-                        var clip = track.clipInfos[0];
-                        if (string.IsNullOrEmpty(clip.TweenMethod))
-                        {
-                            await writer.WriteLineAsync($"           .Group(Sequence.Create()");
-                        }
-                        else
-                        {
-                            if (string.IsNullOrEmpty(clip.CustomTweenMethod))
-                            {
-                                await writer.WriteLineAsync($"           .Group(Tween.{clip.TweenMethod}(binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), " +
-                                                            $"startValue: {UnityValueFormatter.FormatValue(clip.StartValue)}, endValue: {UnityValueFormatter.FormatValue(clip.EndValue)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\")))");
-                            }
-                            else
-                            {
-                                await writer.WriteLineAsync($"           .Group(Tween.{clip.TweenMethod}(binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), " +
-                                                            $"startValue: {UnityValueFormatter.FormatValue(clip.StartValue)}, endValue: {UnityValueFormatter.FormatValue(clip.EndValue)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\"), onValueChange: (target, updateValue) => {clip.CustomTweenMethod}))");
-                            }
-                        }
-
-                        // Generate code for genMarkInfos
-                        foreach (var mark in clip.genMarkInfos)
-                        {
-                            if (mark.filedName == "PlayAudioClip")
-                            {
-                                await writer.WriteLineAsync($"                .InsertCallback({mark.Time}f, binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), (target) => {{ binding.{mark.filedName}(target, {mark.addictiveValue}, {mark.value});}})");
-                            }
-                            else if (mark.filedName == "StopAudioClip")
-                            {
-                                await writer.WriteLineAsync($"                .InsertCallback({mark.Time}f, binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), (target) => target.Stop())");
-                            }
-                            else if (mark.filedName == TweenTimelineDefine.IsActiveFieleName)
-                            {
-                                await writer.WriteLineAsync($"                .InsertCallback({mark.Time}f, binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), (target) => {{ target.gameObject.SetActive({mark.value});}})");
-                            }
-                            else if (mark.filedName == "sprite")
-                            {
-                                await writer.WriteLineAsync($"                .InsertCallback({mark.Time}f, binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), (target) => {{ binding.SetSprite(target, {mark.value});}})");
-                            }
-                            else
-                            {
-                                await writer.WriteLineAsync($"                .InsertCallback({mark.Time}f, binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), (target) => {{ target.{mark.filedName}= {mark.value};}})");
-                            }
-                        }
-
-                        if (string.IsNullOrEmpty(clip.TweenMethod))
-                        {
-                            await writer.WriteLineAsync($"           )");
-                        }
-                    }
-                    else
-                    {
-                        await writer.WriteLineAsync("            .Group(Sequence.Create()");
-                        for (int k = 0; k < track.clipInfos.Count; k++)
-                        {
-                            var clip = track.clipInfos[k];
-                            if (string.IsNullOrEmpty(clip.CustomTweenMethod))
-                            {
-                                await writer.WriteLineAsync($"                .Chain(Tween.{clip.TweenMethod}(binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), " +
-                                                            $"startValue: {UnityValueFormatter.FormatValue(clip.StartValue)}, endValue: {UnityValueFormatter.FormatValue(clip.EndValue)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\")))");
-                            }
-                            else
-                            {
-                                await writer.WriteLineAsync($"                .Chain(Tween.{clip.TweenMethod}(binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), " +
-                                                            $"startValue: {UnityValueFormatter.FormatValue(clip.StartValue)}, endValue: {UnityValueFormatter.FormatValue(clip.EndValue)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\"), onValueChange: (target, updateValue) => {clip.CustomTweenMethod}))");
-                            }
-
-                            // Generate code for genMarkInfos
-                            foreach (var mark in clip.genMarkInfos)
-                            {
-                                await writer.WriteLineAsync($"                .InsertCallback({mark.Time}f, binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), (target) => {{ target.{mark.filedName}= {mark.value};}})");
-                            }
-                        }
-                        await writer.WriteLineAsync("            )");
-                    }
-
+                    await GenerateDynamicSequenceCodeAsync(writer, sequence);
                 }
-
-                await writer.WriteLineAsync("            ;");
-                await writer.WriteLineAsync("    }");
-                await writer.WriteLineAsync();
             }
 
             await writer.WriteLineAsync("}");
             EditorUtility.ClearProgressBar();
+        }
+
+        private async Task GenerateSequenceCodeAsync(StreamWriter writer, GenTweenSequence sequence)
+        {
+            string parentTrackName = sequence.parentTrackName;
+
+            await writer.WriteLineAsync($"    public static Sequence {parentTrackName}Tween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)");
+            await writer.WriteLineAsync("    {");
+
+            // Multiple trackInfos, use Sequence.Create()
+            await writer.WriteLineAsync("        return Sequence.Create(cycles, cycleMode, sequenceEase)");
+
+            for (int j = 0; j < sequence.trackInfos.Count; j++)
+            {
+                var track = sequence.trackInfos[j];
+                if (track.clipInfos.Count < 1)
+                {
+                    continue;
+                }
+
+                if (track.clipInfos.Count == 1)
+                {
+                    var clip = track.clipInfos[0];
+                    if (string.IsNullOrEmpty(clip.TweenMethod)
+                    && string.IsNullOrEmpty(clip.CustomTweenMethod))
+                    {
+                        await writer.WriteLineAsync($"           .Group(Sequence.Create()");
+                    }
+                    else
+                    {
+                        if (string.IsNullOrEmpty(clip.CustomTweenMethod))
+                        {
+                            await writer.WriteLineAsync($"           .Group(Tween.{clip.TweenMethod}(binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), " +
+                                                        $"startValue: {GetStartValue(clip)}, endValue: {GetEndValue(clip)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\")))");
+                        }
+                        else
+                        {
+                            await writer.WriteLineAsync($"           .Group(Tween.{clip.TweenMethod}(binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), " +
+                                                        $"startValue: {GetStartValue(clip)}, endValue: {GetEndValue(clip)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\"), onValueChange: (target, updateValue) => {clip.CustomTweenMethod}))");
+                        }
+                    }
+
+                    await GenMarkInfoCodeAsync(writer, clip);
+
+                    if (string.IsNullOrEmpty(clip.TweenMethod))
+                    {
+                        await writer.WriteLineAsync($"           )");
+                    }
+                }
+                else
+                {
+                    await writer.WriteLineAsync("            .Group(Sequence.Create()");
+                    for (int k = 0; k < track.clipInfos.Count; k++)
+                    {
+                        var clip = track.clipInfos[k];
+                        if (!string.IsNullOrEmpty(clip.CustomTweenMethod)
+                        || !string.IsNullOrEmpty(clip.TweenMethod))
+                        {
+                            if (string.IsNullOrEmpty(clip.CustomTweenMethod))
+                            {
+                                await writer.WriteLineAsync($"                .Chain(Tween.{clip.TweenMethod}(binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), " +
+                                                            $"startValue: {GetStartValue(clip)}, endValue: {GetEndValue(clip)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\")))");
+                            }
+                            else
+                            {
+                                await writer.WriteLineAsync($"                .Chain(Tween.{clip.TweenMethod}(binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), " +
+                                                            $"startValue: {GetStartValue(clip)}, endValue: {GetEndValue(clip)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\"), onValueChange: (target, updateValue) => {clip.CustomTweenMethod}))");
+                            }
+                        }
+ 
+                        // Generate code for genMarkInfos
+                        await GenMarkInfoCodeAsync(writer, clip);
+                    }
+                    await writer.WriteLineAsync("            )");
+                }
+
+            }
+
+            await writer.WriteLineAsync("            ;");
+            await writer.WriteLineAsync("    }");
+            await writer.WriteLineAsync();
+        }
+
+        private static async Task GenMarkInfoCodeAsync(StreamWriter writer, GenClipInfo clip)
+        {
+            // Generate code for genMarkInfos
+            foreach (var mark in clip.genMarkInfos)
+            {
+                if (mark.filedName == "PlayAudioClip")
+                {
+                    await writer.WriteLineAsync($"                .InsertCallback({mark.Time}f, binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), (target) => {{ binding.{mark.filedName}(target, {mark.addictiveValue}, {mark.value});}})");
+                }
+                else if (mark.filedName == "StopAudioClip")
+                {
+                    await writer.WriteLineAsync($"                .InsertCallback({mark.Time}f, binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), (target) => target.Stop())");
+                }
+                else if (mark.filedName == TweenTimelineDefine.IsActiveFieldName)
+                {
+                    await writer.WriteLineAsync($"                .InsertCallback({mark.Time}f, binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), (target) => {{ target.Fade({mark.value});}})");
+                }
+                else if (mark.filedName == "sprite")
+                {
+                    await writer.WriteLineAsync($"                .InsertCallback({mark.Time}f, binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), (target) => {{ binding.SetSprite(target, {mark.value});}})");
+                }
+                else
+                {
+                    await writer.WriteLineAsync($"                .InsertCallback({mark.Time}f, binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), (target) => {{ target.{mark.filedName}= {mark.value};}})");
+                }
+            }
+        }
+
+        private async Task GenerateDynamicSequenceCodeAsync(StreamWriter writer, GenTweenSequence sequence)
+        {
+            string parentTrackName = sequence.parentTrackName;
+            var paramsSb = new StringBuilder();
+            foreach (var item in sequence.startDynamicParams)
+            {
+                paramsSb.Append(',');
+                paramsSb.Append(GetStartPrams(item.Key, sequence));
+            }
+            foreach (var item in sequence.endDynamicParams)
+            {
+                paramsSb.Append(',');
+                paramsSb.Append(GetEndPrams(item.Key, sequence));
+            }
+            paramsSb.AppendLine();
+
+            await writer.WriteLineAsync(@$"    public static Sequence {parentTrackName}Tween(ITweenBinding binding {paramsSb.ToString()},    int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)");
+            await writer.WriteLineAsync("    {");
+
+
+            await writer.WriteLineAsync("        return Sequence.Create(cycles, cycleMode, sequenceEase)");
+
+            for (int j = 0; j < sequence.trackInfos.Count; j++)
+            {
+                var track = sequence.trackInfos[j];
+                if (track.clipInfos.Count < 1)
+                {
+                    continue;
+                }
+
+                if (track.clipInfos.Count == 1)
+                {
+                    var clip = track.clipInfos[0];
+                    if (string.IsNullOrEmpty(clip.CustomTweenMethod)
+                    && string.IsNullOrEmpty(clip.TweenMethod))
+                    {
+                        await writer.WriteLineAsync($"           .Group(Sequence.Create()");
+                    }
+                    else
+                    {
+                        if (string.IsNullOrEmpty(clip.CustomTweenMethod))
+                        {
+                            await writer.WriteLineAsync($"           .Group(Tween.{clip.TweenMethod}(binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), " +
+                                                        $"startValue: {GetStartValue(clip, sequence)}, endValue: {GetEndValue(clip, sequence)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\")))");
+                        }
+                        else
+                        {
+                            await writer.WriteLineAsync($"           .Group(Tween.{clip.TweenMethod}(binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), " +
+                                                        $"startValue: {GetStartValue(clip, sequence)}, endValue: {GetEndValue(clip, sequence)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\"), onValueChange: (target, updateValue) => {clip.CustomTweenMethod}))");
+                        }
+                    }
+
+                    // Generate code for genMarkInfos
+                    await GenMarkInfoCodeAsync(writer, clip);
+
+                    if (string.IsNullOrEmpty(clip.TweenMethod))
+                    {
+                        await writer.WriteLineAsync($"           )");
+                    }
+                }
+                else
+                {
+                    await writer.WriteLineAsync("            .Group(Sequence.Create()");
+                    for (int k = 0; k < track.clipInfos.Count; k++)
+                    {
+                        var clip = track.clipInfos[k];
+                        if (!string.IsNullOrEmpty(clip.CustomTweenMethod)
+                             || !string.IsNullOrEmpty(clip.TweenMethod))
+                        {
+                            if (string.IsNullOrEmpty(clip.CustomTweenMethod))
+                            {
+                                await writer.WriteLineAsync($"                .Chain(Tween.{clip.TweenMethod}(binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), " +
+                                                            $"startValue: {GetStartValue(clip, sequence)}, endValue: {GetEndValue(clip, sequence)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\")))");
+                            }
+                            else
+                            {
+                                await writer.WriteLineAsync($"                .Chain(Tween.{clip.TweenMethod}(binding.GetBindObj<{clip.BindType}>(\"{clip.BindName}\"), " +
+                                                            $"startValue: {GetStartValue(clip, sequence)}, endValue: {GetEndValue(clip, sequence)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\"), onValueChange: (target, updateValue) => {clip.CustomTweenMethod}))");
+                            }
+                        }
+
+                        // Generate code for genMarkInfos
+                        await GenMarkInfoCodeAsync(writer, clip);
+                    }
+                    await writer.WriteLineAsync("            )");
+                }
+
+            }
+
+            await writer.WriteLineAsync("            ;");
+            await writer.WriteLineAsync("    }");
+            await writer.WriteLineAsync();
+        }
+
+        private static string GetStartValue(GenClipInfo clip, GenTweenSequence sequence)
+        {
+            if (sequence.startDynamicParams.TryGetValue(clip, out var paramsName))
+            {
+                return paramsName;
+            }
+
+            return UnityValueFormatter.FormatValue(clip.StartValue);
+        }
+
+        private static string GetEndValue(GenClipInfo clip, GenTweenSequence sequence)
+        {
+            if (sequence.endDynamicParams.TryGetValue(clip, out var paramsName))
+            {
+                return paramsName;
+            }
+            return UnityValueFormatter.FormatValue(clip.EndValue);
+        }
+
+        private static string GetStartValue(GenClipInfo clip)
+        {
+            return UnityValueFormatter.FormatValue(clip.StartValue);
+        }
+
+        private static string GetEndValue(GenClipInfo clip)
+        {
+            return UnityValueFormatter.FormatValue(clip.EndValue);
+        }
+
+        private string GetParamsStartPosName(GenClipInfo clip, GenTweenSequence sequence, int index)
+        {
+            string typeName = clip.StartValue.GetType().Name;
+            return $"{clip.BindName}_Start{typeName}_{index}";
+        }
+
+        private string GetParamsEndPosName(GenClipInfo clip, GenTweenSequence sequence, int index)
+        {
+            string typeName = clip.StartValue.GetType().Name;
+            return $"{clip.BindName}_End{typeName}_{index}";
+        }
+
+        private static string GetEndPrams(GenClipInfo clip, GenTweenSequence sequence)
+        {
+            if (!sequence.endDynamicParams.TryGetValue(clip, out var paramsName))
+            {
+                return string.Empty;
+            }
+            var sb = new StringBuilder();
+            sb.Append(clip.EndValue.GetType().FullName);
+            sb.Append(" ");
+            sb.Append(paramsName);
+            if (TypeConverter.CanBeConst(clip.EndValue.GetType()))
+            {
+                sb.Append(" = ");
+                return UnityValueFormatter.FormatValue(clip.EndValue);
+            }
+
+            return sb.ToString();
+        }
+
+        private static string GetStartPrams(GenClipInfo clip, GenTweenSequence sequence)
+        {
+            if (!sequence.startDynamicParams.TryGetValue(clip, out var paramsName))
+            {
+                return string.Empty;
+            }
+            var sb = new StringBuilder();
+            sb.Append(clip.StartValue.GetType().FullName);
+            sb.Append(" ");
+            sb.Append(paramsName);
+            if (TypeConverter.CanBeConst(clip.StartValue.GetType()))
+            {
+                sb.Append(" = ");
+                return UnityValueFormatter.FormatValue(clip.StartValue);
+            }
+
+            return sb.ToString();
         }
 
         public async Task GenerateTweenExtensionCodeAsync(List<GenTweenSequence> sequences, StreamWriter writer)
@@ -192,7 +381,7 @@ namespace Cr7Sund.TweenTimeLine
             await writer.WriteLineAsync("public static class ITweenBindingExtenstion");
             await writer.WriteLineAsync("{");
 
-            await writer.WriteLineAsync("        public static Sequence Play(this ITweenBinding tweenBinding, string tweenBehaviour)");
+            await writer.WriteLineAsync("        public static Sequence Play(this ITweenBinding tweenBinding, string tweenBehaviour, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)");
             await writer.WriteLineAsync("{");
 
             for (int i = 0; i < sequences.Count; i++)
@@ -204,7 +393,7 @@ namespace Cr7Sund.TweenTimeLine
                 EditorUtility.DisplayProgressBar("Generating Code", $"Generating {parentTrackName}Tween Extension", progress);
                 await writer.WriteLineAsync($"    if (tweenBehaviour == nameof(GenerateTween. {parentTrackName}Tween))");
                 await writer.WriteLineAsync("    {");
-                await writer.WriteLineAsync($"       return GenerateTween.{parentTrackName}Tween(tweenBinding);");
+                await writer.WriteLineAsync($"       return GenerateTween.{parentTrackName}Tween(tweenBinding, cycles, cycleMode, sequenceEase);");
                 await writer.WriteLineAsync("    }");
             }
             await writer.WriteLineAsync("            return Sequence.Create();");
@@ -408,6 +597,23 @@ namespace Cr7Sund.TweenTimeLine
                     }
                 },
                 tracks);
+
+            foreach (var sequenceKeyParis in resultSequences)
+            {
+                GenTweenSequence sequence = sequenceKeyParis.Value;
+
+                foreach (var genTrack in sequence.trackInfos)
+                {
+                    foreach (var genClip in genTrack.clipInfos)
+                    {
+                        if (genClip.IsDynamicPos)
+                        {
+                            sequence.endDynamicParams.Add(genClip, GetParamsEndPosName(genClip, sequence, sequence.endDynamicParams.Count));
+                            sequence.startDynamicParams.Add(genClip, GetParamsStartPosName(genClip, sequence, sequence.startDynamicParams.Count));
+                        }
+                    }
+                }
+            }
         }
 
         private void GenAnimTrackInfo(TimelineClip timelineClip, GenTweenSequence sequence,
@@ -454,8 +660,8 @@ namespace Cr7Sund.TweenTimeLine
                 var markInfo = new GenMarkInfo();
                 markInfo.filedName = "PlayAudioClip";
                 markInfo.Time = (float)clipAsset.start;
-                markInfo.value = GenMarkInfo.ConvertValue((float)clipAsset.clipIn);
-                markInfo.addictiveValue = GenMarkInfo.ConvertValue(audioAsset.clip.name);
+                markInfo.value = TweenTimeLine.GenMarkInfo.ConvertValue((float)clipAsset.clipIn);
+                markInfo.addictiveValue = TweenTimeLine.GenMarkInfo.ConvertValue(audioAsset.clip.name);
                 trackInfo.clipInfos[0].genMarkInfos.Add(markInfo);
             }
         }
@@ -473,6 +679,7 @@ namespace Cr7Sund.TweenTimeLine
                 }
                 else
                 {
+                    //e.g. empty track
                     GenMakerSteps(trackInfo, clipAsset, trackAsset, behaviour);
                 }
             }
@@ -504,6 +711,7 @@ namespace Cr7Sund.TweenTimeLine
                 Duration = (float)clipAsset.duration,
                 EndValue = behaviour.EndPos,
                 StartValue = behaviour.StartPos,
+                IsDynamicPos = behaviour.IsDynamicPos,
                 BindType = behaviour.BindType,
                 BindName = behaviour.BindTarget,
                 TweenMethod = tweenMethod,

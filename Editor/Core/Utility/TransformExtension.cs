@@ -36,7 +36,8 @@ namespace Cr7Sund.TweenTimeLine
         }
         public static Transform FindChildByName(this Transform parent, string childName)
         {
-            if(childName == parent.name){
+            if (childName == parent.name)
+            {
                 return parent;
             }
             // 首先检查直接子节点
@@ -60,6 +61,16 @@ namespace Cr7Sund.TweenTimeLine
             return null;
         }
 
+        public static Component GetNotNullComponent(this Transform transform, string componentTypeFullName)
+        {
+            Component component = transform.gameObject.GetComponent(componentTypeFullName);
+            if (componentTypeFullName == typeof(RectTransform).FullName)
+            {
+                component = transform.transform as RectTransform;
+            }
+
+            return component;
+        }
     }
 
 }

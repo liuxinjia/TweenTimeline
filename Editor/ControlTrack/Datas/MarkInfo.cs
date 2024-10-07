@@ -1,4 +1,8 @@
-﻿namespace Cr7Sund.TweenTimeLine
+﻿using UnityEngine;
+using UnityEngine.Assertions;
+using UnityEngine.UI;
+
+namespace Cr7Sund.TweenTimeLine
 {
     public class MarkInfo
     {
@@ -17,10 +21,21 @@
 
         public void Set(object target, object updateValue)
         {
+            Assert.IsNotNull(updateValue);
+            Assert.IsNotNull(target);
+
+            if (FieldName == TweenTimelineDefine.IsActiveFieldName)
+            {
+                var targetComponent = target as Graphic;
+                targetComponent.Fade((bool)updateValue);
+                return;
+            }
+
             var fieldInfo = target.GetType().GetField(FieldName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
             if (fieldInfo == null)
             {
                 var propInfo = target.GetType().GetProperty(FieldName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                Assert.IsNotNull(propInfo, $"{target} don't have set property {FieldName}");
                 propInfo.SetMethod.Invoke(target, new object[] { updateValue });
             }
             else
@@ -36,7 +51,7 @@
                 return null;
             }
 
-            if (FieldName == TweenTimelineDefine.IsActiveFieleName)
+            if (FieldName == TweenTimelineDefine.IsActiveFieldName)
             {
                 return UpdateValue;
             }

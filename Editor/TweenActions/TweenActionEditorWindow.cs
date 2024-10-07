@@ -50,6 +50,7 @@ namespace Cr7Sund.TweenTimeLine
         {
             this.maxSize = TweenTimelineDefine.windowMaxSize;
             this.minSize = TweenTimelineDefine.windowMaxSize;
+            TweenTimeLineDataModel.RefreshViewAction = this.RefreshBtns;
 
             // AssemblyReloadEvents.beforeAssemblyReload -= OnBeforeAssemblyReload;
             // AssemblyReloadEvents.beforeAssemblyReload += OnBeforeAssemblyReload;
@@ -60,6 +61,8 @@ namespace Cr7Sund.TweenTimeLine
 
         public void OnDestroy()
         {
+            TweenTimeLineDataModel.RefreshViewAction = null;
+
             TweenTimelineManager.ResetDefaultAllClip();
             TweenTimelineManager.TryRemoveTweenManager();
         }
@@ -223,11 +226,11 @@ namespace Cr7Sund.TweenTimeLine
                         TweenTimelineManager.ToggleAllPLayClips();
                     }
 
-                    float dealyResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DelayResetTime);
+                    float delayResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DelayResetTime);
                     TweenTimelineManager.ToggleAllPLayClips();
 
                     _curRestID = EditorTweenCenter.RegisterDelayCallback(this,
-                      (float)TimelineWindowExposer.GetPlayDuration() + dealyResetTime,
+                      (float)TimelineWindowExposer.GetPlayDuration() + delayResetTime,
                      (t, elapsedTime) =>
                      {
                          TweenTimelineManager.ToggleAllPLayClips();
@@ -265,7 +268,7 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
 
-        private void RefreshBtnImges()
+        private void RefreshBtnImages()
         {
             Button playBtn = rootVisualElement.Q<Button>("playBtn");
             var recordBtn = rootVisualElement.Q<Button>("recordBtn");
@@ -304,7 +307,7 @@ namespace Cr7Sund.TweenTimeLine
             var recordBtn = rootVisualElement.Q<Button>("recordBtn");
             Button playBtn = rootVisualElement.Q<Button>("playBtn");
 
-            RefreshBtnImges();
+            RefreshBtnImages();
 
             OnUpdateRunBtn(previewBtn, () => TweenTimeLineDataModel.StateInfo.IsPreview);
             OnUpdateRunBtn(recordBtn, () => TweenTimeLineDataModel.StateInfo.IsRecording);
@@ -689,8 +692,8 @@ namespace Cr7Sund.TweenTimeLine
                 onResetActions.Add(onResetAction);
             }
 
-            float dealyResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DelayResetTime);
-            _curSequence.ChainDelay(dealyResetTime).OnComplete(() =>
+            float delayResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DelayResetTime);
+            _curSequence.ChainDelay(delayResetTime).OnComplete(() =>
             {
                 foreach (var item in onResetActions)
                 {
@@ -698,7 +701,8 @@ namespace Cr7Sund.TweenTimeLine
                 }
             });
 
-            _updateSequenceID = EditorTweenCenter.RegisterSequence(_curSequence, animAction.target, animAction.ConvertDuration() + 1f);
+            _updateSequenceID = EditorTweenCenter.RegisterSequence(_curSequence, animAction.target, 
+            animAction.ConvertDuration() + delayResetTime);
         }
         private void CancelTween()
         {

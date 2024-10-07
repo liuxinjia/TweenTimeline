@@ -350,4 +350,30 @@ public static class TypeConverter
     {
         return fullType.Substring(fullType.LastIndexOf('.') + 1);
     }
+
+    public static bool CanBeConst(Type type)
+    {
+        // 基本类型或布尔类型
+        if (type.IsPrimitive)
+        {
+            // 检查是否为非支持类型，如 `float`, `double`, `int`, `bool` 等
+            return type != typeof(IntPtr) && type != typeof(UIntPtr);
+        }
+
+        // string 类型
+        if (type == typeof(string))
+        {
+            return true;
+        }
+
+        // decimal 类型
+        if (type == typeof(decimal))
+        {
+            return true;
+        }
+
+        // 其他类型不支持 const
+        return false;
+    }
+
 }

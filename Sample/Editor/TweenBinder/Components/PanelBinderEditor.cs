@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using PlasticPipe.Client;
 using PrimeTween;
 using UnityEditor;
-using UnityEditor.Search;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Timeline;
 using UnityEngine.UIElements;
 using ObjectField = UnityEditor.UIElements.ObjectField;
@@ -16,51 +15,87 @@ namespace Cr7Sund.TweenTimeLine
     [CustomEditor(typeof(PanelBinder))]
     public class PanelBinderEditor : UnityEditor.Editor
     {
-        private VisualElement _root;
+        protected VisualElement _root;
         private Sequence _curSequence;
         private string _updateSequenceID;
 
+        protected virtual List<string> tweenPropNames => new List<string>() { "inTweenName", "outTweenName" };
+        protected string timelineFieldName = "timelineAsset";
+
         public override VisualElement CreateInspectorGUI()
         {
+            DrawUI();
+            return _root;
+        }
+
+        protected void DrawUI()
+        {
             _root = new VisualElement();
-            var binderAdapter = target as PanelBinder;
+            var tweenContainer = new VisualElement();
+            var binderAdapter = target as ComponentBinderAdapter;
             var cacheListProp = serializedObject.FindProperty("cacheList");
-            var inTweenNameProp = serializedObject.FindProperty(nameof(binderAdapter.inTweenName));
-            var outTweenNameProp = serializedObject.FindProperty(nameof(binderAdapter.outTweenName));
-            var timelineAssetProp = serializedObject.FindProperty(nameof(binderAdapter.timelineAsset));
+            var timelineAssetProp = serializedObject.FindProperty(timelineFieldName);
             BindAdapterEditorHelper.Reset(binderAdapter);
 
-            var cacheListPropField = BindAdapterEditorHelper.CreateList(cacheListProp, binderAdapter,
-            null);
+            CreateTweenContains(tweenContainer);
+
+            var cacheListPropField = BindAdapterEditorHelper.CreateList(cacheListProp, binderAdapter, null);
             cacheListPropField.name = "cacheList";
             var rebindBtn = new Button(RebindComponents);
             rebindBtn.text = "Rebind";
-            var inTweenMenu = AddTweenField(inTweenNameProp, true);
-            var outTweenMenu = AddTweenField(outTweenNameProp);
+
+            ObjectField timeLineField = CreateTimeLineField(timelineAssetProp);
+
+            _root.Add(timeLineField);
+            _root.Add(tweenContainer);
+            _root.Add(cacheListPropField);
+            _root.Add(rebindBtn);
+        }
 
 
+        private ObjectField CreateTimeLineField(SerializedProperty timelineAssetProp)
+        {
             var timeLineField = new ObjectField();
             timeLineField.objectType = typeof(TimelineAsset);
-            timeLineField.value = binderAdapter.timelineAsset;
+            timeLineField.value = GetTimelineAsset();
             timeLineField.RegisterValueChangedCallback(evt =>
             {
                 if (evt.previousValue == evt.newValue)
                 {
                     return;
                 }
-
-                UpdateMenu(inTweenNameProp, true);
-                UpdateMenu(outTweenNameProp);
+                OnUpdateTimeLineField();
                 // RebindComponents();
             });
             timeLineField.BindProperty(timelineAssetProp); // if will trigger ValueChanged when switch each time
+            return timeLineField;
+        }
 
-            _root.Add(timeLineField);
-            _root.Add(inTweenMenu);
-            _root.Add(outTweenMenu);
-            _root.Add(cacheListPropField);
-            _root.Add(rebindBtn);
-            return _root;
+        protected virtual TimelineAsset GetTimelineAsset()
+        {
+            var binderAdapter = target as PanelBinder;
+            return binderAdapter.timelineAsset;
+        }
+
+        protected virtual void OnUpdateTimeLineField()
+        {
+            var binderAdapter = target as PanelBinder;
+            var inTweenNameProp = serializedObject.FindProperty(nameof(binderAdapter.inTweenName));
+            var outTweenNameProp = serializedObject.FindProperty(nameof(binderAdapter.outTweenName));
+            UpdateMenu(inTweenNameProp, true);
+            UpdateMenu(outTweenNameProp);
+        }
+
+        protected virtual void CreateTweenContains(VisualElement tweenContainer)
+        {
+            var binderAdapter = target as PanelBinder;
+            var inTweenNameProp = serializedObject.FindProperty(nameof(binderAdapter.inTweenName));
+            var outTweenNameProp = serializedObject.FindProperty(nameof(binderAdapter.outTweenName));
+            var inTweenMenu = AddTweenField(inTweenNameProp, true);
+            var outTweenMenu = AddTweenField(outTweenNameProp);
+
+            tweenContainer.Add(inTweenMenu);
+            tweenContainer.Add(outTweenMenu);
         }
 
         private void UpdateMenu(SerializedProperty property, PopupField<string> popup, bool isIn = false)
@@ -70,7 +105,7 @@ namespace Cr7Sund.TweenTimeLine
             popup.index = initialIndex;
         }
 
-        private void UpdateMenu(SerializedProperty property, bool isIn = false)
+        protected void UpdateMenu(SerializedProperty property, bool isIn = false)
         {
             PopupField<string> popup = _root.Q<PopupField<string>>(property.displayName);
             UpdateMenu(property, popup, isIn);
@@ -105,8 +140,8 @@ namespace Cr7Sund.TweenTimeLine
 
         private void RebindComponents()
         {
-            var binderAdapter = target as PanelBinder;
-            var timelineAsset = binderAdapter.timelineAsset;
+            var binderAdapter = target as ComponentBinderAdapter;
+            var timelineAsset = GetTimelineAsset();
 
             binderAdapter.cacheList.Clear();
             if (timelineAsset == null)
@@ -114,20 +149,18 @@ namespace Cr7Sund.TweenTimeLine
                 return;
             }
 
-            var inTweenNameProp = serializedObject.FindProperty(nameof(binderAdapter.inTweenName));
-            var outTweenNameProp = serializedObject.FindProperty(nameof(binderAdapter.outTweenName));
-
+            var propList = new List<SerializedProperty>();
+            foreach (var tweenName in tweenPropNames)
+            {
+                propList.Add(serializedObject.FindProperty(tweenName));
+            }
 
             List<ComponentTween> tweenComponents = BindAdapterEditorHelper.GetTweenTypes(timelineAsset);
             foreach (ComponentTween item in tweenComponents)
             {
-                if (RebindComponent(item, inTweenNameProp.stringValue))
+                foreach (var prop in propList)
                 {
-
-                }
-                if (RebindComponent(item, outTweenNameProp.stringValue))
-                {
-
+                    RebindComponent(item, prop.stringValue);
                 }
             }
         }
@@ -164,7 +197,7 @@ namespace Cr7Sund.TweenTimeLine
                 Component component = null;
                 if (transform != null)
                 {
-                    component = BindAdapterEditorHelper.GetComponent(componentTypeFullName, transform);
+                    component = transform.GetNotNullComponent(componentTypeFullName);
                 }
 
                 binderAdapter.cacheList.Add(new ComponentPairs()
@@ -179,11 +212,11 @@ namespace Cr7Sund.TweenTimeLine
         private void GetTweenNamMenus(SerializedProperty property, bool isIn,
          out List<string> choices, out int initialIndex)
         {
-            var binderAdapter = target as PanelBinder;
+            var binderAdapter = target as ComponentBinderAdapter;
             choices = new List<string>();
             initialIndex = 0;
 
-            var timelineAsset = binderAdapter.timelineAsset;
+            var timelineAsset = GetTimelineAsset();
             if (timelineAsset == null)
             {
                 return;
@@ -233,19 +266,22 @@ namespace Cr7Sund.TweenTimeLine
 
         public void PreviewAction(SerializedProperty nameProp)
         {
-            var binder = target as PanelBinder;
+            var binder = target as ComponentBinderAdapter;
             ComponentBindTracks componentBindTracks = GetBindTrack(nameProp);
+            Assert.IsNotNull(componentBindTracks, $"{nameProp.displayName} don't have match ComponentBindTracks");
             TweenTimelineManager.InitPreTween();
             CancelTween();
-            List<Action> resetActions = BindAdapterEditorHelper.GetResetActions(binder, componentBindTracks);
-            _curSequence = ((ITweenBinding)binder).Play(nameProp.stringValue);
+
+            var resetActions = BindAdapterEditorHelper.GetResetActions(binder, componentBindTracks);
+            _curSequence = ((ITweenBinding)binder).Play(nameProp.stringValue, cycles: GetLoopCount());
             float delayResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DelayResetTime);
             _curSequence.ChainDelay(delayResetTime).OnComplete(() =>
             {
                 resetActions.ForEach(t => t?.Invoke());
             });
+
             _updateSequenceID = EditorTweenCenter.RegisterSequence(_curSequence,
-             binder.transform, _curSequence.duration);
+                binder.transform, _curSequence.durationTotal);
         }
 
         private void CancelTween()
@@ -260,8 +296,9 @@ namespace Cr7Sund.TweenTimeLine
 
         private ComponentBindTracks GetBindTrack(SerializedProperty nameProp)
         {
-            var binderAdapter = target as PanelBinder;
-            var timelineAsset = binderAdapter.timelineAsset;
+            Assert.IsFalse(string.IsNullOrEmpty(nameProp.stringValue), $"{nameProp.displayName} is empty");
+            var binderAdapter = target as ComponentBinderAdapter;
+            var timelineAsset = GetTimelineAsset();
             string category = binderAdapter.transform.name;
             if (timelineAsset == null)
             {
@@ -280,6 +317,11 @@ namespace Cr7Sund.TweenTimeLine
             }
 
             return null;
+        }
+
+        protected virtual int GetLoopCount()
+        {
+            return 1;
         }
     }
 }

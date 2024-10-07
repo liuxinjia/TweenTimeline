@@ -66,7 +66,10 @@ namespace Cr7Sund
                     return;
                 }
                 if (elapsedTime > 0)
-                    sequence.elapsedTime = elapsedTime;
+                {
+                    var cycleElapsedTime = elapsedTime - sequence.cyclesDone * sequence.duration;
+                    sequence.elapsedTime = cycleElapsedTime;
+                }
             };
 
             return RegisterEditorTimer(target, (float)duration, timeAction);
@@ -84,7 +87,10 @@ namespace Cr7Sund
                     return;
                 }
                 if (elapsedTime > 0)
-                    tween.elapsedTime = elapsedTime;
+                {
+                    var cycleElapsedTime = elapsedTime - tween.cyclesDone * tween.duration;
+                    tween.elapsedTime = cycleElapsedTime;
+                }
             };
 
             return RegisterEditorTimer(target, (float)duration, timeAction);

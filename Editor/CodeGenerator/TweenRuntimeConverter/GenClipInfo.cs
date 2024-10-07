@@ -8,6 +8,7 @@ namespace Cr7Sund.TweenTimeLine
         public float Duration;
         public object EndValue;
         public object StartValue;
+        public bool IsDynamicPos;
         public string TweenMethod;
         public string CustomTweenMethod;
         public string EaseName;
@@ -19,7 +20,7 @@ namespace Cr7Sund.TweenTimeLine
         {
             get
             {
-                Assert.IsNotNull(BindType);
+                Assert.IsNotNull(BindType, $"{bindName} don have bind type");
                 return $"{bindName}_{TypeConverter.GetSimplifyTypeName(BindType)}";
             }
             set => bindName = value;

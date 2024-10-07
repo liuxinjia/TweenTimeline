@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
+using UnityEngine.Assertions;
 
 
 namespace Cr7Sund.TweenTimeLine
@@ -12,6 +13,8 @@ namespace Cr7Sund.TweenTimeLine
 
         public static VisualElement CreateField(SerializedProperty serializedProperty)
         {
+            Assert.IsNotNull(serializedProperty);
+
             switch (serializedProperty.propertyType)
             {
                 case SerializedPropertyType.Integer:

@@ -74,9 +74,9 @@ namespace Cr7Sund.TweenTimeLine
 
             filterNames.AddRange(setProps);
 
-            if (isBoolType)
+            if (isBoolType && typeof(UnityEngine.UI.Graphic).IsAssignableFrom(targetComponent.GetType()))
             {
-                filterNames.Add(TweenTimelineDefine.IsActiveFieleName);
+                filterNames.Add(TweenTimelineDefine.IsActiveFieldName);
             }
             return filterNames;
         }

@@ -11,7 +11,7 @@ namespace Cr7Sund.TweenTimeLine
         public string ValueType;
         public string GetPropertyMethod;
         [SerializeField] private string SetPropertyMethod;
-        [SerializeField] private string PreTweenMethod;
+        [SerializeField] public string PreTweenMethod;
 
 
         public static HashSet<string> NotAdditiveSet = new()

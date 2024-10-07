@@ -135,10 +135,10 @@ namespace Cr7Sund.TweenTimeLine
            { "ContentSizeFitter", typeof(UnityEngine.UI.ContentSizeFitter)},
            { "LayoutElement", typeof(UnityEngine.UI.LayoutElement)},
            { "LayoutGroup", typeof(UnityEngine.UI.LayoutGroup)},
-           { "CanvasGroup", typeof(UnityEngine.CanvasGroup)}
+           { "CanvasGroup", typeof(UnityEngine.CanvasGroup)},
         };
 
-        public const string IsActiveFieleName = "isActive";
+        public const string IsActiveFieldName = "isActive"; // it match more, use dictionary instead
         #endregion
     }
 
