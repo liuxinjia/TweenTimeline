@@ -72,6 +72,10 @@ namespace Cr7Sund.TweenTimeLine
             {
                 component = transform.GetComponent<AudioSource>() ;
             }
+            if (componentTypeFullName == typeof(CanvasGroup).FullName)
+            {
+                component = transform.GetComponent<CanvasGroup>();
+            }
             return component;
         }
     }

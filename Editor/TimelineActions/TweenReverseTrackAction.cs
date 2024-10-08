@@ -5,6 +5,7 @@ using UnityEditor.ShortcutManagement;
 using UnityEditor.Timeline;
 using UnityEditor.Timeline.Actions;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Timeline;
 
 namespace Cr7Sund.TweenTimeLine
@@ -120,6 +121,8 @@ namespace Cr7Sund.TweenTimeLine
             {
                 var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[clipBehaviour];
                 var clipInfoContext = new ClipInfoContext();
+                Assert.IsNotNull(clipBehaviour.EasePreset);
+                
                 resultTrackInfo.clipInfos.Add(clipInfoContext);
 
                 clipInfoContext.start = clipInfo.delayTime;

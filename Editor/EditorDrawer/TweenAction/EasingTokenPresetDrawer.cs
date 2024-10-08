@@ -20,6 +20,10 @@ namespace Cr7Sund.TweenTimeLine
 
         private VisualElement DrawEasePresetField(SerializedProperty _easePresetProp)
         {
+            if(_easePresetProp.managedReferenceValue == null){
+                var easePropInstance = Activator.CreateInstance<MaterialEasingTokenPreset>() as BaseEasingTokenPreset;
+                _easePresetProp.managedReferenceValue = easePropInstance;
+            }
             Type currentType = _easePresetProp.managedReferenceValue?.GetType();
 
             var derivedTypes = TweenTimelineDefine.DerivedEaseTokenTypes;

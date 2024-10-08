@@ -20,5 +20,10 @@ namespace Cr7Sund
                 targetComponent.color = alphaColor;
             }
         }
+
+        public static void Fade(this CanvasGroup targetComponent, bool targetValue)
+        {
+            targetComponent.alpha = targetValue ? 1 : 0;
+        }
     }
 }

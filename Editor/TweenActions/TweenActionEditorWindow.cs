@@ -28,10 +28,11 @@ namespace Cr7Sund.TweenTimeLine
         {
             TweenTimelineManager.InitTimeline();
 
-            var window = EditorWindow.GetWindow<TweenActionEditorWindow>(desiredDockNextTo: new[]
-            {
-            System.Type.GetType("UnityEditor.GameView,UnityEditor.dll")
-            });
+            // var window = EditorWindow.GetWindow<TweenActionEditorWindow>(desiredDockNextTo: new[]
+            // {
+            // System.Type.GetType("UnityEditor.GameView,UnityEditor.dll")
+            // });
+            var window = EditorWindow.GetWindow<TweenActionEditorWindow>();
             window.maxSize = TweenTimelineDefine.windowMaxSize;
             window.minSize = TweenTimelineDefine.windowMaxSize;
         }

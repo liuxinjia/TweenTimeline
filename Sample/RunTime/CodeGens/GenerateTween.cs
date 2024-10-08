@@ -60,6 +60,7 @@ public static class GenerateTween
                 .InsertCallback(0.3f, binding.GetBindObj<UnityEngine.AudioSource>("MenuDoorSource_AudioSource"), (target) => target.Stop())
                 .InsertCallback(0f, binding.GetBindObj<UnityEngine.AudioSource>("MenuDoorSource_AudioSource"), (target) => { binding.PlayAudioClip(target, "door", 1.37f);})
            )
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.CanvasGroup>("IndicatorComposite_CanvasGroup"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
             ;
     }
 
@@ -78,6 +79,7 @@ public static class GenerateTween
            .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("BackBtn_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
            .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("KingdomButtonsContainer_RectTransform"), startValue: new Vector2(0.00f, 106.40f), endValue: new Vector2(0.00f, -147.00f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
            .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("KingdomButtonsContainer_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.CanvasGroup>("IndicatorComposite_CanvasGroup"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Standard")))
             ;
     }
 

@@ -113,8 +113,8 @@ namespace Cr7Sund.TweenTimeLine
             var startPosProp = templateProp.FindPropertyRelative("_startPos");
             var isDynamicProp = templateProp.FindPropertyRelative("_isDynamicPos");
 
-            // var easeProp = DrawEasePresetField();
-            var easePropField = new PropertyField(easePresetProp);
+                // var easeProp = DrawEasePresetField();
+                var easePropField = new PropertyField(easePresetProp);
             var isDynamicPropField = new PropertyField(isDynamicProp);
             var endPosPropField = CreatePosField(endPosProp, false);
             var startPosPropField = CreatePosField(startPosProp, true);

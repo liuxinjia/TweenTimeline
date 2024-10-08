@@ -26,8 +26,14 @@ namespace Cr7Sund.TweenTimeLine
 
             if (FieldName == TweenTimelineDefine.IsActiveFieldName)
             {
-                var targetComponent = target as Graphic;
-                targetComponent.Fade((bool)updateValue);
+                if (target is Graphic graphic)
+                {
+                    graphic.Fade((bool)updateValue);
+                }
+                else if (target is CanvasGroup canvasGroup)
+                {
+                    canvasGroup.Fade((bool)updateValue);
+                }
                 return;
             }
 
