@@ -22,6 +22,14 @@ public static class ITweenBindingExtenstion
     {
        return GenerateTween.FillHoverBtn_OutTween(tweenBinding, cycles, cycleMode, sequenceEase);
     }
+    if (tweenBehaviour == nameof(GenerateTween. MenuPanel_InTween))
+    {
+       return GenerateTween.MenuPanel_InTween(tweenBinding, cycles, cycleMode, sequenceEase);
+    }
+    if (tweenBehaviour == nameof(GenerateTween. MenuPanel_OutTween))
+    {
+       return GenerateTween.MenuPanel_OutTween(tweenBinding, cycles, cycleMode, sequenceEase);
+    }
     if (tweenBehaviour == nameof(GenerateTween. HomePanel_InTween))
     {
        return GenerateTween.HomePanel_InTween(tweenBinding, cycles, cycleMode, sequenceEase);

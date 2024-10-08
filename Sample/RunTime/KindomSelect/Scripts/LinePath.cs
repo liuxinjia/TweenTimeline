@@ -12,7 +12,7 @@ namespace Cr7Sund.TweenTimeLine
         public Transform[] points = new Transform[3];
 
         private int numPoints = 50;
-        public Vector3[] positions = new Vector3[50];
+        public Vector3[] positions;
 
         public float distance;
         [Range(0, 1)]
@@ -26,31 +26,37 @@ namespace Cr7Sund.TweenTimeLine
 
             Transform nextPoint;
 
-            if (transform.GetSiblingIndex() + 1 < transform.parent.childCount)
+            if (transform.GetSiblingIndex() == transform.parent.childCount - 1)
             {
-                nextPoint = transform.parent.GetChild(transform.GetSiblingIndex() + 1);
-                SetMidPoint(nextPoint);
-                DrawQuadraticCurve();
+                return;
             }
 
+            int nextIndex = transform.GetSiblingIndex() + 1;
+            if (nextIndex < transform.parent.childCount)
+            {
+                positions = new Vector3[50];
+                nextPoint = transform.parent.GetChild(nextIndex);
+                SetMidPoint(transform, nextPoint);
+                DrawQuadraticCurve();
+            }
         }
 
-        void SetMidPoint(Transform nextPoint)
+        void SetMidPoint(Transform startPoint, Transform nextPoint)
         {
-            distance = Vector3.Distance(transform.GetChild(0).position, nextPoint.GetChild(0).position);
+            distance = Vector3.Distance(startPoint.GetChild(0).position, nextPoint.GetChild(0).position);
 
             GameObject pivot = new GameObject("pivot");
             GameObject point = new GameObject("point");
 
-            pivot.transform.parent = transform.parent.parent;
+            pivot.transform.parent = startPoint.parent.parent;
 
             point.transform.parent = pivot.transform;
             point.transform.position += (Vector3.forward / 2) + Vector3.forward * distance * distanceAmount;
 
-            pivot.transform.localEulerAngles = new Vector3((transform.localEulerAngles.x + nextPoint.localEulerAngles.x) / 2,
-                (transform.localEulerAngles.y + nextPoint.localEulerAngles.y) / 2, 0);
+            pivot.transform.localEulerAngles = new Vector3((startPoint.localEulerAngles.x + nextPoint.localEulerAngles.x) / 2,
+                (startPoint.localEulerAngles.y + nextPoint.localEulerAngles.y) / 2, 0);
 
-            points[0] = transform.GetChild(0);
+            points[0] = startPoint.GetChild(0);
             points[1] = point.transform;
             points[2] = nextPoint.GetChild(0);
         }
@@ -77,6 +83,8 @@ namespace Cr7Sund.TweenTimeLine
             p += tt * p2;
             return p;
         }
+
+
     }
 
 }

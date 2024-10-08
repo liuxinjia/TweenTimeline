@@ -54,7 +54,6 @@ namespace Cr7Sund.TweenTimeLine
             _root.Add(rebindBtn);
         }
 
-
         private ObjectField CreateTimeLineField(SerializedProperty timelineAssetProp)
         {
             var timeLineField = new ObjectField();
@@ -171,6 +170,7 @@ namespace Cr7Sund.TweenTimeLine
         {
             List<ComponentBindTracks> tweenNames = componentTween.tweenNames;
             var componentBindTracks = tweenNames.Find((ts) =>
+              !string.IsNullOrEmpty(tweenName) &&
                 BindAdapterEditorHelper.GetTweenName(ts.tweenName) == tweenName);
 
             if (componentBindTracks == null)
@@ -281,7 +281,7 @@ namespace Cr7Sund.TweenTimeLine
             // {
             // resetActions.ForEach(t => t?.Invoke());
             // });
-            
+
             // encounter editor flot precision
             // https://github.com/KyryloKuzyk/PrimeTween/discussions/116
             _resetTweenID = EditorTweenCenter.RegisterDelayCallback(binder, _curSequence.durationTotal + delayResetTime,
@@ -332,7 +332,7 @@ namespace Cr7Sund.TweenTimeLine
 
         private int GetLoopCount()
         {
-            var binder = target as CompositeBinder;
+            var binder = target as ComponentBinderAdapter;
             if (binder.loopCount < 0)
             {
                 return 5;

@@ -157,7 +157,7 @@ namespace Cr7Sund.TweenTimeLine
                                                             $"startValue: {GetStartValue(clip)}, endValue: {GetEndValue(clip)}, duration: {clip.Duration}f, startDelay: {clip.DelayTime}f, ease: binding.GetEasing(\"{clip.EaseName}\"), onValueChange: (target, updateValue) => {clip.CustomTweenMethod}))");
                             }
                         }
- 
+
                         // Generate code for genMarkInfos
                         await GenMarkInfoCodeAsync(writer, clip);
                     }
@@ -410,19 +410,26 @@ namespace Cr7Sund.TweenTimeLine
 
             while (parent != null)
             {
-                if (parent.name.EndsWith(TweenTimelineDefine.PanelTag)
-                    || parent.name.EndsWith(TweenTimelineDefine.CompositeTag))
+                string parentTrackName = parent.name;
+
+                if (TweenTimelineManager.IsIgnoreTrack(parentTrackName))
                 {
-                    sequenceName = parent.name;
+                    return string.Empty;
+                }
+
+                if (parentTrackName.EndsWith(TweenTimelineDefine.PanelTag)
+                    || parentTrackName.EndsWith(TweenTimelineDefine.CompositeTag))
+                {
+                    sequenceName = parentTrackName;
                     break;
                 }
 
                 bool contains = false;
                 foreach (var item in TweenTimelineDefine.UIComponentTypeMatch)
                 {
-                    if (parent.name.EndsWith(item.Key))
+                    if (parentTrackName.EndsWith(item.Key))
                     {
-                        sequenceName = parent.name;
+                        sequenceName = parentTrackName;
                         contains = true;
                         break;
                     }
@@ -449,6 +456,8 @@ namespace Cr7Sund.TweenTimeLine
             }
 
             Assert.IsNotNull(sequenceName, $"{trackAsset.name} dont have parentTrack");
+
+
             return sequenceName;
         }
 
@@ -554,6 +563,10 @@ namespace Cr7Sund.TweenTimeLine
             TimelineWindowExposer.IterateClips((clipAsset, trackAsset) =>
                 {
                     string tweenGenName = GetGenSequenceName(trackAsset.parent as GroupTrack);
+                    if (string.IsNullOrEmpty(tweenGenName))
+                    {
+                        return;
+                    }
                     if (!resultSequences.TryGetValue(tweenGenName, out var sequence))
                     {
                         sequence = new GenTweenSequence();
@@ -637,7 +650,7 @@ namespace Cr7Sund.TweenTimeLine
 
         private void GenAudioSequence(GenTrackInfo trackInfo, TimelineClip clipAsset, TrackAsset trackAsset)
         {
-            if (clipAsset.asset is CustomAudioPlayableAsset audioAsset)
+            if (clipAsset.asset is AudioPlayableAsset audioAsset)
             {
                 GenClipInfo clipInfo = null;
                 if (trackInfo.clipInfos.Count < 1)
@@ -648,7 +661,7 @@ namespace Cr7Sund.TweenTimeLine
                     // clipInfo.Duration = (float)trackAsset.duration;
                     // clipInfo.StartValue = (float)clipAsset.clipIn;
                     clipInfo.BindType = typeof(UnityEngine.AudioSource).ToString();
-                    clipInfo.BindName = audioAsset.bindTarget;
+                    clipInfo.BindName = trackAsset.name;
                     clipInfo.TweenMethod = string.Empty;
 
                     var endMarkInfo = new GenMarkInfo();

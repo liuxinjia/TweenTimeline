@@ -10,7 +10,139 @@ namespace Cr7Sund.TweenTimeLine
 {
     public static class SerializedPropertyValueExtension
     {
+        public static void UpdateField(VisualElement element, SerializedProperty serializedProperty, object value)
+        {
+            Assert.IsNotNull(serializedProperty);
 
+            switch (serializedProperty.propertyType)
+            {
+                case SerializedPropertyType.Boolean:
+                    var toggle = element as Toggle;
+                    if (toggle != null)
+                    {
+                        toggle.value = (bool)value;
+                    }
+                    return;
+                case SerializedPropertyType.Float:
+                    var floatField = element as FloatField;
+                    if (floatField != null)
+                    {
+                        floatField.value = (float)value;
+                    }
+                    return;
+                case SerializedPropertyType.String:
+                    var textField = element as TextField;
+                    if (textField != null)
+                    {
+                        textField.value = (string)value;
+                    }
+                    return;
+                case SerializedPropertyType.Color:
+                    var colorField = element as ColorField;
+                    if (colorField != null)
+                    {
+                        colorField.value = (Color)value;
+                    }
+                    return;
+                case SerializedPropertyType.Vector2:
+                    var vector2Field = element as Vector2Field;
+                    if (vector2Field != null)
+                    {
+                        vector2Field.value = (Vector2)value;
+                    }
+                    return;
+                case SerializedPropertyType.Integer:
+                    var intField = element as IntegerField;
+                    if (intField != null)
+                    {
+                        intField.value = (int)value;
+                    }
+                    return;
+                case SerializedPropertyType.Vector3:
+                    var vector3Field = element as Vector3Field;
+                    if (vector3Field != null)
+                    {
+                        vector3Field.value = (Vector3)value;
+                    }
+                    return;
+                case SerializedPropertyType.Vector4:
+                    var vector4Field = element as Vector4Field;
+                    if (vector4Field != null)
+                    {
+                        vector4Field.value = (Vector4)value;
+                    }
+                    return;
+                case SerializedPropertyType.Rect:
+                    var rectField = element as RectField;
+                    if (rectField != null)
+                    {
+                        rectField.value = (Rect)value;
+                    }
+                    return;
+                case SerializedPropertyType.Bounds:
+                    var boundsField = element as BoundsField;
+                    if (boundsField != null)
+                    {
+                        boundsField.value = (Bounds)value;
+                    }
+                    return;
+ 
+                case SerializedPropertyType.ObjectReference:
+                    var objectField = element as ObjectField;
+                    if (objectField != null)
+                    {
+                        objectField.value = (UnityEngine.Object)value;
+                    }
+                    return;
+                case SerializedPropertyType.LayerMask:
+                    var layerMaskField = element as LayerMaskField;
+                    if (layerMaskField != null)
+                    {
+                        layerMaskField.value = (LayerMask)value;
+                    }
+                    return;
+                case SerializedPropertyType.Enum:
+                    var enumField = element as EnumField;
+                    if (enumField != null)
+                    {
+                        enumField.value = (Enum)value;
+                    }
+                    return;
+                case SerializedPropertyType.ArraySize:
+                    var arraySizeField = element as IntegerField;
+                    if (arraySizeField != null)
+                    {
+                        arraySizeField.value = (int)value;
+                    }
+                    return;
+                case SerializedPropertyType.Character:
+                    var charField = element as TextField;
+                    if (charField != null)
+                    {
+                        charField.value = (string)value;
+                    }
+                    return;
+                case SerializedPropertyType.AnimationCurve:
+                    var animationCurveField = element as CurveField;
+                    if (animationCurveField != null)
+                    {
+                        animationCurveField.value = (AnimationCurve)value;
+                    }
+                    return;
+                case SerializedPropertyType.BoundsInt:
+                    var boundsIntField = element as BoundsIntField;
+                    if (boundsIntField != null)
+                    {
+                        boundsIntField.value = (BoundsInt)value;
+                    }
+                    return;
+                default:
+                    return;
+            }
+           
+
+        }
+        
         public static VisualElement CreateField(SerializedProperty serializedProperty)
         {
             Assert.IsNotNull(serializedProperty);

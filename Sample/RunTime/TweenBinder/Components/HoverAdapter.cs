@@ -12,14 +12,14 @@ namespace Cr7Sund.TweenTimeLine
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-
-            _currentSequence = this.PlayTween(_onPointerEnterTween);
+            if (EventSystem.current.currentSelectedGameObject != gameObject)
+                _currentSequence = this.PlayTween(_onPointerEnterTween);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-
-            _currentSequence = this.PlayTween(_onPointerExitTween);
+            if (EventSystem.current.currentSelectedGameObject != gameObject)
+                _currentSequence = this.PlayTween(_onPointerExitTween);
         }
     }
 }

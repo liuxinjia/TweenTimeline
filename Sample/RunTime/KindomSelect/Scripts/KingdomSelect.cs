@@ -8,6 +8,7 @@ namespace Cr7Sund.TweenTimeLine
     public class KingdomSelect : MonoBehaviour
     {
         public List<Kingdom> kingdoms = new List<Kingdom>();
+        private List<GameObject> kingdomBtns = new List<GameObject>();
 
         [Space]
 
@@ -26,11 +27,13 @@ namespace Cr7Sund.TweenTimeLine
         [Header("Tween Settings")]
         public float lookDuration;
         public Ease lookEase;
-        private void Start()
+
+        public void Show()
         {
+            var sequence = Sequence.Create();
             foreach (Kingdom k in kingdoms)
             {
-                SpawnKingdomPoint(k);
+                sequence.Chain(SpawnKingdomPoint(k));
             }
 
             if (kingdoms.Count > 0)
@@ -40,43 +43,64 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
 
+        public void Hide()
+        {
+            foreach (var kingdom in kingdoms)
+            {
+                Destroy(kingdom.visualPoint.parent.gameObject);
+            }
+            foreach (var kingdom in kingdomBtns)
+            {
+                Destroy(kingdom);
+            }
+            kingdomBtns.Clear();
+        }
+
         private void LookAtKingdom(Kingdom k)
         {
             Transform cameraParent = mainCamera.transform.parent;
             Transform cameraPivot = cameraParent.parent;
             //dynamic -animation
+            Vector3 endCameraRotation = new Vector3(k.y, 0, 0);
+            Vector3 endCameraPivotRotation = new Vector3(0, -k.x, 0);
             var sequence = Sequence.Create().Group(
             PrimeTween.Tween.LocalRotation(
-                cameraParent, new Vector3(k.y, 0, 0), lookDuration, lookEase))
+                cameraParent, endCameraRotation, lookDuration, lookEase))
             .Group(
             PrimeTween.Tween.LocalRotation(
-                cameraPivot, new Vector3(0, -k.x, 0), lookDuration, lookEase));
+                cameraPivot, endCameraPivotRotation, lookDuration, lookEase));
 
             sequence.OnComplete(followTarget, (target) =>
             {
-                var screenPos = mainCamera.WorldToScreenPoint(k.visualPoint.position);
-                if (target.gameObject.activeInHierarchy)
+                if (!followTarget.gameObject.activeInHierarchy)
                 {
-                    target.gameObject.SetActive(true);
+                    followTarget.gameObject.SetActive(true);
                 }
+                var screenPos = mainCamera.WorldToScreenPoint(k.visualPoint.position);
                 target.position = screenPos;
             });
         }
 
-        private void SpawnKingdomPoint(Kingdom k)
+        private Tween SpawnKingdomPoint(Kingdom k)
         {
             GameObject kingdom = Instantiate(kingdomPointPrefab, modelTransform);
             kingdom.transform.localEulerAngles = new Vector3(k.y + visualOffset.y, -k.x - visualOffset.x, 0);
             k.visualPoint = kingdom.transform.GetChild(0);
 
             SpawnKingdomButton(k);
+
+            return Tween.LocalPositionY(kingdom.transform, kingdom.transform.position.y - 20f, kingdom.transform.position.y, 0.2f);
         }
 
         private void SpawnKingdomButton(Kingdom k)
         {
             Kingdom kingdom = k;
             Button kingdomButton = Instantiate(kingdomButtonPrefab, kingdomButtonsContainer).GetComponent<Button>();
-            kingdomButton.onClick.AddListener(() => LookAtKingdom(kingdom));
+            kingdomBtns.Add(kingdomButton.gameObject);
+            kingdomButton.onClick.AddListener(() =>
+            {
+                LookAtKingdom(kingdom);
+            });
 
             kingdomButton.transform.GetChild(0).GetComponentInChildren<TMPro.TMP_Text>().text = k.name;
         }
@@ -131,5 +155,8 @@ namespace Cr7Sund.TweenTimeLine
 
         [HideInInspector]
         public Transform visualPoint;
+
+        // [HideInInspector]
+        // public LinePath linePath;
     }
 }

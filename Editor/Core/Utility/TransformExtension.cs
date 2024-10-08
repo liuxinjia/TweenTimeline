@@ -68,7 +68,10 @@ namespace Cr7Sund.TweenTimeLine
             {
                 component = transform.transform as RectTransform;
             }
-
+            if (componentTypeFullName == typeof(AudioSource).FullName)
+            {
+                component = transform.GetComponent<AudioSource>() ;
+            }
             return component;
         }
     }

@@ -98,11 +98,17 @@ namespace Cr7Sund.TweenTimeLine
             for (int i = 0; i < componentBindTracks.trackTypeNames.Count; i++)
             {
                 string trackTypeName = componentBindTracks.trackTypeNames[i];
+                if (trackTypeName == typeof(AudioTrack).FullName)
+                {
+                    continue;
+                }
+                
                 var componentPairs = binder.cacheList.FirstOrDefault(
                     x => BindAdapterEditorHelper.GetTweenTarget(
                         componentBindTracks.bindTargets[i], componentBindTracks.bindTypes[i]) == x.key);
                 var component = componentPairs.component;
 
+         
                 GetBehaviourInfo(trackTypeName,
                  out var getMethodInfo, out var setMethodInfo, out var behaviour);
 
@@ -190,6 +196,7 @@ namespace Cr7Sund.TweenTimeLine
 
         public static string GetTweenName(string name)
         {
+            if (string.IsNullOrEmpty(name)) return name;
             return $"{name}Tween";
         }
 
@@ -207,9 +214,12 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     return;
                 }
-                if(trackAsset is not IBaseTrack){
+                if (trackAsset is not IBaseTrack
+                && trackAsset is not AudioTrack)
+                {
                     return;
                 }
+
                 var parentGroup = TweenTimelineManager.GetTrackSecondRoot(trackAsset);
                 if (parentGroup.name == TweenTimelineDefine.InDefine) return;
                 if (parentGroup.name == TweenTimelineDefine.OutDefine) return;
@@ -222,6 +232,10 @@ namespace Cr7Sund.TweenTimeLine
                 }
 
                 string sequenceName = TweenCodeGenerator.GetGenSequenceName(parentGroup);
+                if (string.IsNullOrEmpty(sequenceName))
+                {
+                    return;
+                }
                 var findIndex = tweenAction.tweenNames.FindIndex(ts => ts.tweenName == sequenceName);
 
                 ComponentBindTracks findTween = null;
@@ -238,9 +252,17 @@ namespace Cr7Sund.TweenTimeLine
                     findTween = tweenAction.tweenNames[findIndex];
                 }
 
-                var uniqueBehaviour = TweenTimelineManager.GetBehaviourByTrackAsset(trackAsset);
-                findTween.bindTargets.Add(uniqueBehaviour.BindTarget);
-                findTween.bindTypes.Add(uniqueBehaviour.BindType);
+                if (trackAsset is AudioTrack)
+                {
+                    findTween.bindTargets.Add(trackAsset.name);
+                    findTween.bindTypes.Add(typeof(AudioSource).FullName);
+                }
+                else
+                {
+                    var uniqueBehaviour = TweenTimelineManager.GetBehaviourByTrackAsset(trackAsset);
+                    findTween.bindTargets.Add(uniqueBehaviour.BindTarget);
+                    findTween.bindTypes.Add(uniqueBehaviour.BindType);
+                }
 
                 findTween.trackTypeNames.Add(trackAsset.GetType().FullName);
             });

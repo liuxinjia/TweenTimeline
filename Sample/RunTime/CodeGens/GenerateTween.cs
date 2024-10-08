@@ -47,6 +47,40 @@ public static class GenerateTween
             ;
     }
 
+    public static Sequence MenuPanel_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
+    {
+        return Sequence.Create(cycles, cycleMode, sequenceEase)
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("Fade_RectTransform"), startValue: new Vector2(0.00f, -154.00f), endValue: new Vector2(5.00f, 161.70f), duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Fade_Image"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("BackBtn_RectTransform"), startValue: new Vector2(-1539.00f, 588.25f), endValue: new Vector2(-1019.96f, 588.25f), duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("BackBtn_Image"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("KingdomButtonsContainer_RectTransform"), startValue: new Vector2(0.00f, -147.00f), endValue: new Vector2(0.00f, 106.40f), duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("KingdomButtonsContainer_Image"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
+           .Group(Sequence.Create()
+                .InsertCallback(0.3f, binding.GetBindObj<UnityEngine.AudioSource>("MenuDoorSource_AudioSource"), (target) => target.Stop())
+                .InsertCallback(0f, binding.GetBindObj<UnityEngine.AudioSource>("MenuDoorSource_AudioSource"), (target) => { binding.PlayAudioClip(target, "door", 1.37f);})
+           )
+            ;
+    }
+
+    public static Sequence MenuPanel_OutTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
+    {
+        return Sequence.Create(cycles, cycleMode, sequenceEase)
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("Fade_RectTransform"), startValue: new Vector2(5.00f, 161.70f), endValue: new Vector2(0.00f, -154.00f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Fade_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("BackBtn_RectTransform"), startValue: new Vector2(-1019.96f, 588.25f), endValue: new Vector2(-1539.00f, 588.25f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("BackBtn_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("KingdomButtonsContainer_RectTransform"), startValue: new Vector2(0.00f, 106.40f), endValue: new Vector2(0.00f, -147.00f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("KingdomButtonsContainer_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("Fade_RectTransform"), startValue: new Vector2(5.00f, 161.70f), endValue: new Vector2(0.00f, -154.00f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Fade_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("BackBtn_RectTransform"), startValue: new Vector2(-1019.96f, 588.25f), endValue: new Vector2(-1539.00f, 588.25f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("BackBtn_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("KingdomButtonsContainer_RectTransform"), startValue: new Vector2(0.00f, 106.40f), endValue: new Vector2(0.00f, -147.00f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("KingdomButtonsContainer_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+            ;
+    }
+
     public static Sequence HomePanel_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
     {
         return Sequence.Create(cycles, cycleMode, sequenceEase)
@@ -153,9 +187,9 @@ public static class GenerateTween
         return Sequence.Create(cycles, cycleMode, sequenceEase)
            .Group(Tween.UISizeDelta(binding.GetBindObj<UnityEngine.RectTransform>("Circle_one_RectTransform"), startValue: new Vector2(109.84f, 109.84f), endValue: new Vector2(27.46f, 27.46f), duration: 1f, startDelay: 0.5f, ease: binding.GetEasing("Standard")))
             .Group(Sequence.Create()
-                .InsertCallback(0f, binding.GetBindObj<UnityEngine.UI.Image>("Circle_one_Image"), (target) => { target.Fade(false);})
                 .Chain(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Circle_one_Image"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0.5f, ease: binding.GetEasing("Standard")))
                 .Chain(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Circle_one_Image"), startValue: 1f, endValue: 0f, duration: 0.25f, startDelay: 1.25f, ease: binding.GetEasing("Standard")))
+                .InsertCallback(0f, binding.GetBindObj<UnityEngine.UI.Image>("Circle_one_Image"), (target) => { target.Fade(false);})
             )
            .Group(Tween.UISizeDelta(binding.GetBindObj<UnityEngine.RectTransform>("Circle_two_RectTransform"), startValue: new Vector2(109.84f, 109.84f), endValue: new Vector2(17.50f, 17.50f), duration: 1f, startDelay: 0f, ease: binding.GetEasing("Standard")))
             .Group(Sequence.Create()
@@ -177,7 +211,7 @@ public static class GenerateTween
     public static Sequence ColorPointerExitButton_OutTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
     {
         return Sequence.Create(cycles, cycleMode, sequenceEase)
-           .Group(Tween.Color(binding.GetBindObj<UnityEngine.UI.Image>("Rect_Image"), startValue: new Color(1.000f, 1.000f, 1.000f, 0.200f), endValue: new Color(0.000f, 0.000f, 0.000f, 0.055f), duration: 0.1f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Color(binding.GetBindObj<UnityEngine.UI.Image>("Rect_Image"), startValue: new Color(1.000f, 1.000f, 1.000f, 0.200f), endValue: new Color(0.000f, 0.000f, 0.000f, 0.200f), duration: 0.1f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
             ;
     }
 

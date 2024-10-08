@@ -57,6 +57,10 @@ namespace Cr7Sund.TweenTimeLine
                     var trackAssetType = trackType.Assembly.GetType(assetName);
 
                     var trackInfo = GetReverseClipInfo(childSourceTrack, isIn);
+                    if (trackInfo == null)
+                    {
+                        return;
+                    }
                     trackInfo.trackAssetType = trackAssetType;
                     trackInfo.trackType = trackType;
                     trackInfo.component = component;
@@ -105,9 +109,12 @@ namespace Cr7Sund.TweenTimeLine
 
         public TrackInfoContext GetReverseClipInfo(TrackAsset trackAsset, int isIn)
         {
+            if (trackAsset is not IBaseTrack)
+            {
+                return null;
+            }
+
             var resultTrackInfo = new TrackInfoContext();
-
-
             var childBehaviors = TweenTimeLineDataModel.TrackBehaviourDict[trackAsset];
             foreach (var clipBehaviour in childBehaviors)
             {

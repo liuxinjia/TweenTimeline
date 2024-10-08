@@ -233,8 +233,7 @@ namespace Cr7Sund.TweenTimeLine
 
                     if (trackAsset is AudioTrack customAudioTrack)
                     {
-                        var animationPlayableAsset = clip.asset as CustomAudioPlayableAsset;
-                        animationPlayableAsset.bindTarget = bindTrans.name;
+                        trackAsset.name = binComponent.name;
                     }
                 }
             });
@@ -669,7 +668,6 @@ namespace Cr7Sund.TweenTimeLine
 
             GroupTrack parentTrack = GetParentGroup(groupTrack, timelineAsset, isIn);
 
-
             AdjustStartTime(ref trackInfo);
             AddTrackWithParents(trackInfo, createNewTrack, parentTrack);
         }
@@ -816,7 +814,7 @@ namespace Cr7Sund.TweenTimeLine
             foreach (var selectTrack in selectTracks)
             {
                 if (selectTrack is GroupTrack selectGroupTrack
-                    // && IsParent(selectGroupTrack, rootParentTrack)
+                    && IsParent(selectGroupTrack, rootParentTrack) //disallowed  when select track but with different attach root
                     )
                 {
                     if (selectTrack.name == TweenTimelineDefine.InDefine
@@ -1119,6 +1117,15 @@ namespace Cr7Sund.TweenTimeLine
             clipInfo.delayTime : clipInfo.delayTime + clipInfo.duration);
         }
 
+        public static bool IsIgnoreTrack(string parentTrackName)
+        {
+            if (parentTrackName.ToLower().Contains("ignore")
+        || parentTrackName.ToLower().Contains("duplicate"))
+            {
+                return true;
+            }
+            return false;
+        }
         #endregion
     }
 

@@ -10,8 +10,6 @@ namespace Cr7Sund.TweenTimeLine
         {
             var binder = GetComponent<CompositeBinder>();
             binder.PlayInTween();
-
-
         }
 
     }

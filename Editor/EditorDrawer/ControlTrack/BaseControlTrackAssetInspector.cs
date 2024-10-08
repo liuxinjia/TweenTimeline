@@ -132,7 +132,7 @@ namespace Cr7Sund.TweenTimeLine
             posContainer.style.flexDirection = FlexDirection.Row;
             var endPosProp = SerializedPropertyValueExtension.CreateField(prop);
             Button resetBtn = new Button(() => ResetPos(isStart));
-            Button recordBtn = new Button(() => Record(isStart));
+            Button recordBtn = new Button(() => Record(isStart, prop, endPosProp));
             resetBtn.text = "Reset";
             recordBtn.text = "Record";
             recordBtn.name = isStart ? recordBtnStartDefine : recordBtnEndDefine;
@@ -206,7 +206,7 @@ namespace Cr7Sund.TweenTimeLine
              });
         }
 
-        private void Record(bool isStart)
+        private void Record(bool isStart, SerializedProperty serializedProperty, VisualElement endPosProp)
         {
             var stateInfo = TweenTimeLineDataModel.ClipStateDict[_behaviour];
             var trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[_behaviour];
@@ -219,6 +219,12 @@ namespace Cr7Sund.TweenTimeLine
             {
                 Selection.activeObject = trackTarget;
             }
+            else
+            {
+                SerializedPropertyValueExtension.UpdateField(endPosProp, serializedProperty,
+                stateInfo.IsRecordStart ? _behaviour.StartPos : _behaviour.EndPos);
+            }
+            stateInfo.IsRecordStart = false;
         }
 
         public void RefreshBtns(VisualElement container)
