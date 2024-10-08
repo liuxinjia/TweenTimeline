@@ -12,18 +12,10 @@ namespace Cr7Sund.TweenTimeLine
         public override VisualElement CreateInspectorGUI()
         {
             DrawUI();
-            var loopCountProp = serializedObject.FindProperty(nameof(CompositeBinder.loopCount));
-            IntegerField loopField = new IntegerField();
-            loopField.label = "Loop Count";
-            loopField.BindProperty(loopCountProp);
-            _root.Add(loopField);
+
             return _root;
         }
 
-        protected override int GetLoopCount()
-        {
-            var binder = target as CompositeBinder;
-            return binder.loopCount;
-        }
+
     }
 }

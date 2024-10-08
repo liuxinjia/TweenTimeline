@@ -10,12 +10,13 @@ namespace Cr7Sund.TweenTimeLine
 
         public virtual void PlayInTween()
         {
-            this.Play(inTweenName);
+            this.PlayTween(inTweenName);
         }
 
         public virtual void PlayOutTween()
         {
-            this.Play(outTweenName);
+
+            this.PlayTween(outTweenName);
         }
     }
 }

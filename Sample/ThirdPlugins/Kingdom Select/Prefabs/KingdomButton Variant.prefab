@@ -177,6 +177,21 @@ PrefabInstance:
       propertyPath: text
       value: 
       objectReference: {fileID: 6962604859523780909}
+    - target: {fileID: 114913091495623792, guid: 6a5cd4db0f6086a4292785ad3676401f,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114913091495623792, guid: 6a5cd4db0f6086a4292785ad3676401f,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114913091495623792, guid: 6a5cd4db0f6086a4292785ad3676401f,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 224229338129998342, guid: 6a5cd4db0f6086a4292785ad3676401f,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -317,7 +332,8 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 7.7
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114905998943323156, guid: 6a5cd4db0f6086a4292785ad3676401f, type: 3}
     m_RemovedGameObjects:
     - {fileID: 1393165286045106, guid: 6a5cd4db0f6086a4292785ad3676401f, type: 3}
     m_AddedGameObjects:
@@ -348,7 +364,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1172927090449995313}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f256ec98cc1e3c8449b93840e806cc3a, type: 3}
   m_Name: 
@@ -364,8 +380,8 @@ MonoBehaviour:
     key: Rect_RectTransform
   easingTokenPresetLibrary: {fileID: 11400000, guid: c44b58ffe59d7424aa756ffb11fc39aa,
     type: 2}
-  selectTween: FadeSelectBtn_InTween
-  deSelectTween: FadeSelectBtn_OutTween
+  selectTween: FadeSelectButton_InTween
+  deSelectTween: FadeSelectButton_OutTween
 --- !u!114 &8938192641264439190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,7 +389,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1172927090449995313}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 35f6578cf4cad9a418c18e44ac1b7e0b, type: 3}
   m_Name: 
@@ -381,9 +397,12 @@ MonoBehaviour:
   cacheList:
   - component: {fileID: 1284228495367181225}
     key: Rect_Image
-  easingTokenPresetLibrary: {fileID: 0}
-  _onPointerEnterTween: ColorPointerEnterBtn_InTween
-  _onPointerExitTween: ColorPointerExitBtn_OutTween
+  - component: {fileID: 1287071441765352507}
+    key: Circle_Image
+  easingTokenPresetLibrary: {fileID: 11400000, guid: c44b58ffe59d7424aa756ffb11fc39aa,
+    type: 2}
+  _onPointerEnterTween: ColorPointerEnterButton_InTween
+  _onPointerExitTween: ColorPointerExitButton_OutTween
 --- !u!114 &1284228495367181225 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 114462948957727714, guid: 6a5cd4db0f6086a4292785ad3676401f,

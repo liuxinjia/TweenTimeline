@@ -11,6 +11,28 @@ namespace Cr7Sund.TweenTimeLine
     {
         public List<ComponentPairs> cacheList;
         public EasingTokenPresetLibrary easingTokenPresetLibrary;
+        public int loopCount = 1;
+
+        protected Sequence _currentSequence;
+
+        public void OnDisable()
+        {
+            StopTween();
+        }
+
+        protected Sequence PlayTween(string tweenName)
+        {
+            StopTween();
+            return this.Play(tweenName, loopCount);
+        }
+
+        public void StopTween()
+        {
+            if (_currentSequence.isAlive)
+            {
+                _currentSequence.Stop();
+            }
+        }
 
         public T GetBindObj<T>(string name) where T : class
         {

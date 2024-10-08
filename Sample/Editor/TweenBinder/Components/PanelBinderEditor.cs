@@ -18,6 +18,7 @@ namespace Cr7Sund.TweenTimeLine
         protected VisualElement _root;
         private Sequence _curSequence;
         private string _updateSequenceID;
+        private string _resetTweenID;
 
         protected virtual List<string> tweenPropNames => new List<string>() { "inTweenName", "outTweenName" };
         protected string timelineFieldName = "timelineAsset";
@@ -45,6 +46,7 @@ namespace Cr7Sund.TweenTimeLine
             rebindBtn.text = "Rebind";
 
             ObjectField timeLineField = CreateTimeLineField(timelineAssetProp);
+            BindAdapterEditorHelper.DrawLoopField(serializedObject, _root);
 
             _root.Add(timeLineField);
             _root.Add(tweenContainer);
@@ -275,7 +277,15 @@ namespace Cr7Sund.TweenTimeLine
             var resetActions = BindAdapterEditorHelper.GetResetActions(binder, componentBindTracks);
             _curSequence = ((ITweenBinding)binder).Play(nameProp.stringValue, cycles: GetLoopCount());
             float delayResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DelayResetTime);
-            _curSequence.ChainDelay(delayResetTime).OnComplete(() =>
+            // _curSequence.ChainDelay(delayResetTime).OnComplete(() =>
+            // {
+            // resetActions.ForEach(t => t?.Invoke());
+            // });
+            
+            // encounter editor flot precision
+            // https://github.com/KyryloKuzyk/PrimeTween/discussions/116
+            _resetTweenID = EditorTweenCenter.RegisterDelayCallback(binder, _curSequence.durationTotal + delayResetTime,
+            (_, _) =>
             {
                 resetActions.ForEach(t => t?.Invoke());
             });
@@ -291,6 +301,7 @@ namespace Cr7Sund.TweenTimeLine
                 _curSequence.Complete();
                 _curSequence.Stop();
             }
+            EditorTweenCenter.UnRegisterEditorTimer(_resetTweenID);
             EditorTweenCenter.UnRegisterEditorTimer(_updateSequenceID);
         }
 
@@ -319,9 +330,14 @@ namespace Cr7Sund.TweenTimeLine
             return null;
         }
 
-        protected virtual int GetLoopCount()
+        private int GetLoopCount()
         {
-            return 1;
+            var binder = target as CompositeBinder;
+            if (binder.loopCount < 0)
+            {
+                return 5;
+            }
+            return binder.loopCount;
         }
     }
 }

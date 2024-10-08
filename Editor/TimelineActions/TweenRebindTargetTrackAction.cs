@@ -45,7 +45,8 @@ namespace Cr7Sund.TweenTimeLine
                         bindTarget = rootBindTarget;
                     }
                     var director = TimelineWindowExposer.GetCurDirector();
-                    if (!TweenTimeLineDataModel.TrackObjectDict.TryGetValue(trackAsset, out var component))
+                    if (!TweenTimeLineDataModel.TrackObjectDict.TryGetValue(trackAsset, out var component)
+                    || component == null)
                     {
                         var target = TweenTimelineManager.FindTrackBindTarget(bindTarget.transform, trackAsset);
                         IUniqueBehaviour uniqueBehaviour = TweenTimelineManager.GetBehaviourByTrackAsset(trackAsset);

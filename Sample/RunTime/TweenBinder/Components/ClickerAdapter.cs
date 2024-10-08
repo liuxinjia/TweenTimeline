@@ -8,14 +8,13 @@ namespace Cr7Sund.TweenTimeLine
     [RequireComponent(typeof(Button))]
     public class ClickerAdapter : ComponentBinderAdapter, IPointerClickHandler
     {
-        private Sequence _currentSequence;
 
         [SerializeField] private string _onClickTween;
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            _currentSequence.Stop();
-            _currentSequence = this.Play(_onClickTween);
+
+            _currentSequence = this.PlayTween(_onClickTween);
         }
     }
 }

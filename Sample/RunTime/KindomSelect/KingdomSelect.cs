@@ -28,7 +28,6 @@ namespace Cr7Sund.TweenTimeLine
         public Ease lookEase;
         private void Start()
         {
-
             foreach (Kingdom k in kingdoms)
             {
                 SpawnKingdomPoint(k);
@@ -56,6 +55,10 @@ namespace Cr7Sund.TweenTimeLine
             sequence.OnComplete(followTarget, (target) =>
             {
                 var screenPos = mainCamera.WorldToScreenPoint(k.visualPoint.position);
+                if (target.gameObject.activeInHierarchy)
+                {
+                    target.gameObject.SetActive(true);
+                }
                 target.position = screenPos;
             });
         }

@@ -8,19 +8,18 @@ namespace Cr7Sund.TweenTimeLine
     {
         [SerializeField] private string _onPointerEnterTween;
         [SerializeField] private string _onPointerExitTween;
-        private Sequence _currentSequence;
 
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            _currentSequence.Stop();
-            _currentSequence = this.Play(_onPointerEnterTween);
+
+            _currentSequence = this.PlayTween(_onPointerEnterTween);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            _currentSequence.Stop();
-            _currentSequence = this.Play(_onPointerExitTween);
+
+            _currentSequence = this.PlayTween(_onPointerExitTween);
         }
     }
 }

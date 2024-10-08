@@ -144,7 +144,7 @@ public static class GenerateTween
     public static Sequence ColorPointerEnterButton_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
     {
         return Sequence.Create(cycles, cycleMode, sequenceEase)
-           .Group(Tween.Color(binding.GetBindObj<UnityEngine.UI.Image>("Rect_Image"), startValue: new Color(0.000f, 0.000f, 0.000f, 0.000f), endValue: new Color(0.000f, 0.000f, 0.000f, 0.000f), duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.Color(binding.GetBindObj<UnityEngine.UI.Image>("Rect_Image"), startValue: new Color(0.000f, 0.000f, 0.000f, 0.000f), endValue: new Color(1.000f, 1.000f, 1.000f, 0.200f), duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Standard")))
             ;
     }
 
@@ -153,9 +153,9 @@ public static class GenerateTween
         return Sequence.Create(cycles, cycleMode, sequenceEase)
            .Group(Tween.UISizeDelta(binding.GetBindObj<UnityEngine.RectTransform>("Circle_one_RectTransform"), startValue: new Vector2(109.84f, 109.84f), endValue: new Vector2(27.46f, 27.46f), duration: 1f, startDelay: 0.5f, ease: binding.GetEasing("Standard")))
             .Group(Sequence.Create()
+                .InsertCallback(0f, binding.GetBindObj<UnityEngine.UI.Image>("Circle_one_Image"), (target) => { target.Fade(false);})
                 .Chain(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Circle_one_Image"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0.5f, ease: binding.GetEasing("Standard")))
                 .Chain(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Circle_one_Image"), startValue: 1f, endValue: 0f, duration: 0.25f, startDelay: 1.25f, ease: binding.GetEasing("Standard")))
-                .InsertCallback(0f, binding.GetBindObj<UnityEngine.UI.Image>("Circle_one_Image"), (target) => { target.Fade(false);})
             )
            .Group(Tween.UISizeDelta(binding.GetBindObj<UnityEngine.RectTransform>("Circle_two_RectTransform"), startValue: new Vector2(109.84f, 109.84f), endValue: new Vector2(17.50f, 17.50f), duration: 1f, startDelay: 0f, ease: binding.GetEasing("Standard")))
             .Group(Sequence.Create()
@@ -169,15 +169,15 @@ public static class GenerateTween
     {
         return Sequence.Create(cycles, cycleMode, sequenceEase)
            .Group(Tween.Color(binding.GetBindObj<UnityEngine.UI.Image>("Rect_Image"), startValue: new Color(1.000f, 1.000f, 1.000f, 1.000f), endValue: new Color(0.000f, 0.000f, 0.000f, 0.000f), duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.Color(binding.GetBindObj<TMPro.TextMeshProUGUI>("Text (TMP)_TextMeshProUGUI"), startValue: new Color(0.169f, 0.169f, 0.169f, 1.000f), endValue: new Color(0.000f, 0.000f, 0.000f, 1.000f), duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.Color(binding.GetBindObj<UnityEngine.UI.Image>("Circle_Image"), startValue: new Color(1.000f, 0.000f, 0.000f, 1.000f), endValue: new Color(1.000f, 0.127f, 0.127f, 1.000f), duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Color(binding.GetBindObj<TMPro.TextMeshProUGUI>("Text (TMP)_TextMeshProUGUI"), startValue: new Color(0.000f, 0.000f, 0.000f, 1.000f), endValue: new Color(1.000f, 1.000f, 1.000f, 1.000f), duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Color(binding.GetBindObj<UnityEngine.UI.Image>("Circle_Image"), startValue: new Color(1.000f, 0.000f, 0.000f, 1.000f), endValue: new Color(1.000f, 1.000f, 1.000f, 1.000f), duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
             ;
     }
 
     public static Sequence ColorPointerExitButton_OutTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
     {
         return Sequence.Create(cycles, cycleMode, sequenceEase)
-           .Group(Tween.Color(binding.GetBindObj<UnityEngine.UI.Image>("Circle_Image"), startValue: new Color(1.000f, 1.000f, 1.000f, 0.200f), endValue: new Color(0.000f, 0.000f, 0.000f, 0.000f), duration: 0.1f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Color(binding.GetBindObj<UnityEngine.UI.Image>("Rect_Image"), startValue: new Color(1.000f, 1.000f, 1.000f, 0.200f), endValue: new Color(0.000f, 0.000f, 0.000f, 0.055f), duration: 0.1f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
             ;
     }
 

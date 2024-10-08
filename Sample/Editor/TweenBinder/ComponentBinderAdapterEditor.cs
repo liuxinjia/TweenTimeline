@@ -48,6 +48,7 @@ namespace Cr7Sund.TweenTimeLine
             });
             rebindBtn.text = "Rebind";
 
+            BindAdapterEditorHelper.DrawLoopField(serializedObject, root);
             if (topField != null)
             {
                 root.Add(topField);

@@ -248,6 +248,13 @@ namespace Cr7Sund.TweenTimeLine
             return resultTweens.Values.ToList();
         }
 
-
+        public static void DrawLoopField(SerializedObject serializedObject, VisualElement container)
+        {
+            var loopCountProp = serializedObject.FindProperty(nameof(ComponentBinderAdapter.loopCount));
+            IntegerField loopField = new IntegerField();
+            loopField.label = "Loop Count";
+            loopField.BindProperty(loopCountProp);
+            container.Add(loopField);
+        }
     }
 }
