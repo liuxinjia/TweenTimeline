@@ -38,11 +38,6 @@ namespace Cr7Sund.TweenTimeLine
             var root = new VisualElement();
             var trackUIBuilder = new ControlTrackUIBuilder();
             VisualElement container = trackUIBuilder.CreateContainer(serializedObject, _behaviour);
-
-            var windBtn = new Button(() => ControlTrackWindow.Open(new SerializedObject(target), _behaviour));
-            windBtn.text = "open window";
-
-            root.Add(windBtn);
             root.Add(container);
             return root;
         }
@@ -221,6 +216,7 @@ namespace Cr7Sund.TweenTimeLine
             TweenTimelineManager.ToggleRecordClip(_behaviour);
             if (stateInfo.BehaviourState == ClipBehaviourStateEnum.Recording)
             {
+                ControlTrackWindow.Open(serializedProperty.serializedObject, _behaviour);
                 Selection.activeObject = trackTarget;
             }
             else

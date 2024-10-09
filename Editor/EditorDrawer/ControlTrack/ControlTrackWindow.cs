@@ -12,7 +12,7 @@ namespace Cr7Sund.TweenTimeLine
         {
             var window = EditorWindow.GetWindow<ControlTrackWindow>(desiredDockNextTo: new[]
             {
-                System.Type.GetType("UnityEditor.GameView,UnityEditor.dll")
+                System.Type.GetType("UnityEditor.SceneHierarchyWindow,UnityEditor.dll")
             });
             window._behaviour = behaviour;
             window._serializedObject = serializedObject;

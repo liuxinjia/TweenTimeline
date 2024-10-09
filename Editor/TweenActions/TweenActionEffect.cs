@@ -13,7 +13,7 @@ namespace Cr7Sund.TweenTimeLine
         public UnityEngine.GameObject target;
         public DurationToken durationToken;
         public MaterialEasingToken easeToken;
-
+        public TimeEasePairs timeEasePairs = TimeEasePairs.Standard;
 
         public List<TweenActionStep> animationSteps;
 
@@ -51,6 +51,7 @@ namespace Cr7Sund.TweenTimeLine
             easeToken = animAction.easeToken;
             effectCategory = animAction.effectCategory;
             collectionCategory = animAction.collectionCategory;
+            timeEasePairs = animAction.timeEasePairs;
             label = animAction.label;
         }
 

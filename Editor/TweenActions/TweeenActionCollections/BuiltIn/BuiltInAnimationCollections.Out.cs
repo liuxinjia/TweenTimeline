@@ -163,7 +163,7 @@ namespace Cr7Sund.TweenTimeLine
             outAnimationCollection.animationCollections.Add(new TweenActionEffect("Move & Scale Out", "Scale")
             {
                 image = "move_and_scale_out_example.png",
-                durationToken = DurationToken.ExtraLong4,
+                timeEasePairs = TimeEasePairs.StandardAccelerate,
                 animationSteps = new List<TweenActionStep>
         {
             new TweenActionStep
@@ -198,7 +198,7 @@ namespace Cr7Sund.TweenTimeLine
             outAnimationCollection.animationCollections.Add(new TweenActionEffect("Mask Unveil", "Mask")
             {
                 image = "mask_unveil_example.png",
-                durationToken = DurationToken.Medium2,
+                 timeEasePairs = TimeEasePairs.StandardAccelerate,
                 animationSteps = new List<TweenActionStep>
         {
             new TweenActionStep
@@ -216,7 +216,7 @@ namespace Cr7Sund.TweenTimeLine
             outAnimationCollection.animationCollections.Add(new TweenActionEffect("Mask Contract", "Mask")
             {
                 image = "mask_contract_example.png",
-                durationToken = DurationToken.Medium2,
+                 timeEasePairs = TimeEasePairs.StandardAccelerate,
                 animationSteps = new List<TweenActionStep>
         {
             new TweenActionStep
@@ -234,7 +234,7 @@ namespace Cr7Sund.TweenTimeLine
             outAnimationCollection.animationCollections.Add(new TweenActionEffect("Mask Reduce", "Mask")
             {
                 image = "mask_reduce_example.png",
-                durationToken = DurationToken.Medium2,
+                 timeEasePairs = TimeEasePairs.StandardAccelerate,
                 animationSteps = new List<TweenActionStep>
         {
             new TweenActionStep
@@ -252,7 +252,7 @@ namespace Cr7Sund.TweenTimeLine
             outAnimationCollection.animationCollections.Add(new TweenActionEffect("Mask Collapse", "Mask")
             {
                 image = "mask_collapse_example.png",
-                durationToken = DurationToken.Medium2,
+                 timeEasePairs = TimeEasePairs.StandardAccelerate,
                 animationSteps = new List<TweenActionStep>
         {
             new TweenActionStep

@@ -28,11 +28,11 @@ namespace Cr7Sund.TweenTimeLine
         {
             TweenTimelineManager.InitTimeline();
 
-            // var window = EditorWindow.GetWindow<TweenActionEditorWindow>(desiredDockNextTo: new[]
-            // {
-            // System.Type.GetType("UnityEditor.GameView,UnityEditor.dll")
-            // });
-            var window = EditorWindow.GetWindow<TweenActionEditorWindow>();
+            var window = EditorWindow.GetWindow<TweenActionEditorWindow>(desiredDockNextTo: new[]
+            {
+            System.Type.GetType("UnityEditor.InspectorWindow,UnityEditor.dll")
+            });
+            // var window = EditorWindow.GetWindow<TweenActionEditorWindow>();
             window.maxSize = TweenTimelineDefine.windowMaxSize;
             window.minSize = TweenTimelineDefine.windowMaxSize;
         }
@@ -338,11 +338,12 @@ namespace Cr7Sund.TweenTimeLine
         {
             var container = rootVisualElement.Q<VisualElement>("ConfigContainer");
 
-            var animSettingType = _animTokenPresets.GetAnimationSettingType(selectTweenAction.durationToken, selectTweenAction.easeToken);
             CreateSettingParisField(container);
-
+            RefreshEasePairs(container);
+            
             // Update Duration Field
             var durationField = container.Q<EnumField>("CustomDurationField");
+            durationField.Init(DurationToken.ExtraLong1);
             durationField.value = selectTweenAction.durationToken;
             durationField.RegisterValueChangedCallback(evt =>
             {
@@ -350,8 +351,8 @@ namespace Cr7Sund.TweenTimeLine
             });
 
             // Update Ease Field
-            var easeField = container.Q<EnumField>("CustomEasingField");
-
+            EnumField easeField = container.Q<EnumField>("CustomEasingField");
+            easeField.Init(MaterialEasingToken.Standard);
             easeField.value = selectTweenAction.easeToken;
             easeField.RegisterValueChangedCallback(evt =>
             {
@@ -371,7 +372,6 @@ namespace Cr7Sund.TweenTimeLine
                 UpdateTargetComponents();
             });
 
-            ToggleTweenAnimParis(durationField, easeField, animSettingType);
         }
 
         private void UpdateTargetComponents()
@@ -407,26 +407,36 @@ namespace Cr7Sund.TweenTimeLine
         private void CreateSettingParisField(VisualElement container)
         {
             var animationSettingField = container.Q<EnumField>("AnimTokenPreset");
-            var animSettingType = _animTokenPresets.GetAnimationSettingType(_selectTweenAction.durationToken, _selectTweenAction.easeToken);
+            var animSettingType = _selectTweenAction.timeEasePairs;
             animationSettingField.value = animSettingType;
             animationSettingField.RegisterValueChangedCallback(evt =>
             {
-                var selectedSettingType = (TimeEasePairs)evt.newValue;
+                _selectTweenAction.timeEasePairs =(TimeEasePairs) evt.newValue;
+
                 var easeField = container.Q<EnumField>("CustomEasingField");
                 var durationField = container.Q<EnumField>("CustomDurationField");
-                ToggleTweenAnimParis(durationField, easeField, selectedSettingType);
+                RefreshEasePairs(container);
 
-                if (selectedSettingType == TimeEasePairs.Custom)
-                {
-                    return;
-                }
-                var settings = _animTokenPresets.GetSettings(selectedSettingType);
-                _selectTweenAction.durationToken = settings.duration;
-                _selectTweenAction.easeToken = settings.easing;
-
-                easeField.value = settings.easing;
-                durationField.value = settings.duration;
+                easeField.value = _selectTweenAction.easeToken;
+                durationField.value = _selectTweenAction.durationToken;
             });
+        }
+
+        private void RefreshEasePairs(VisualElement container)
+        {
+            var selectedSettingType = _selectTweenAction.timeEasePairs;
+            var easeField = container.Q<EnumField>("CustomEasingField");
+            var durationField = container.Q<EnumField>("CustomDurationField");
+            ToggleTweenAnimParis(durationField, easeField, selectedSettingType);
+
+            if (selectedSettingType == TimeEasePairs.Custom)
+            {
+                return;
+            }
+            var settings = _animTokenPresets.GetSettings(selectedSettingType);
+
+            _selectTweenAction.durationToken = settings.duration;
+            _selectTweenAction.easeToken = settings.easing;
         }
 
         private static void ToggleTweenAnimParis(EnumField durationField, EnumField easeField, TimeEasePairs selectedSettingType)
@@ -703,7 +713,7 @@ namespace Cr7Sund.TweenTimeLine
                 }
             });
 
-            _updateSequenceID = EditorTweenCenter.RegisterSequence(_curSequence, animAction.target, 
+            _updateSequenceID = EditorTweenCenter.RegisterSequence(_curSequence, animAction.target,
             animAction.ConvertDuration() + delayResetTime);
         }
         private void CancelTween()

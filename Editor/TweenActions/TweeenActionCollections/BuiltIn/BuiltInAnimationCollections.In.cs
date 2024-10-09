@@ -20,6 +20,7 @@ namespace Cr7Sund.TweenTimeLine
             animationCollections.Add(new TweenActionEffect("Fade In", "Fade")
             {
                 image = "Assets/TweenTimeline/BuiltInConfigs/Editor Default Resources/Gifs/FadeIn.gif",
+                timeEasePairs = TimeEasePairs.StandardDecelerate,
                 animationSteps = new List<TweenActionStep>
             {
                 new TweenActionStep
@@ -165,7 +166,8 @@ namespace Cr7Sund.TweenTimeLine
             animationCollections.Add(new TweenActionEffect("Move & Scale In", "Scale")
             {
                 image = "move_and_scale_in_example.png",
-                durationToken = DurationToken.ExtraLong4,
+                timeEasePairs = TimeEasePairs.StandardDecelerate,
+                
                 animationSteps = new List<TweenActionStep>
         {
             new TweenActionStep
@@ -200,7 +202,7 @@ namespace Cr7Sund.TweenTimeLine
             animationCollections.Add(new TweenActionEffect("Mask Reveal", "Mask")
             {
                 image = "Assets/TweenTimeline/BuiltInConfigs/Editor Default Resources/Gifs/MaskReveal.gif",
-                durationToken = DurationToken.Medium2,
+                timeEasePairs = TimeEasePairs.StandardDecelerate,
                 animationSteps = new List<TweenActionStep>
         {
             new TweenActionStep
@@ -218,7 +220,7 @@ namespace Cr7Sund.TweenTimeLine
             animationCollections.Add(new TweenActionEffect("Mask Center", "Mask")
             {
                 image = "mask_center_example.png",
-                durationToken = DurationToken.Medium2,
+                timeEasePairs = TimeEasePairs.StandardDecelerate,
                 animationSteps = new List<TweenActionStep>
         {
             new TweenActionStep
@@ -236,7 +238,7 @@ namespace Cr7Sund.TweenTimeLine
             animationCollections.Add(new TweenActionEffect("Mask Resize", "Mask")
             {
                 image = "mask_resize_example.png",
-                durationToken = DurationToken.Medium2,
+                timeEasePairs = TimeEasePairs.StandardDecelerate,
                 animationSteps = new List<TweenActionStep>
         {
             new TweenActionStep
@@ -254,7 +256,7 @@ namespace Cr7Sund.TweenTimeLine
             animationCollections.Add(new TweenActionEffect("Mask Expand", "Mask")
             {
                 image = "mask_expand_example.png",
-                durationToken = DurationToken.Medium2,
+                timeEasePairs = TimeEasePairs.StandardDecelerate,
                 animationSteps = new List<TweenActionStep>
         {
             new TweenActionStep
