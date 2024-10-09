@@ -49,10 +49,10 @@ namespace Cr7Sund.TweenTimeLine
                     || component == null)
                     {
                         var target = TweenTimelineManager.FindTrackBindTarget(bindTarget.transform, trackAsset);
-                        IUniqueBehaviour uniqueBehaviour = TweenTimelineManager.GetBehaviourByTrackAsset(trackAsset);
-                        component = target.transform.GetNotNullComponent(uniqueBehaviour.BindType);
+                        TweenTimelineManager.GetTrackBindInfos(trackAsset, out var trackBindTarget, out var bindType);
+                        component = target.transform.GetNotNullComponent(bindType);
 
-                        Assert.IsNotNull(component, $"bind Component is null ,Target： {target} Type: {uniqueBehaviour.BindType}");
+                        Assert.IsNotNull(component, $"bind Component is null ,Target： {target} Type: {bindType}");
                     }
                     Assert.IsNotNull(component, $"bind Component is null {trackAsset.name}");
                     TimelineWindowExposer.Bind(director, trackAsset, component);

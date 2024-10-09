@@ -47,42 +47,6 @@ public static class GenerateTween
             ;
     }
 
-    public static Sequence MenuPanel_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
-    {
-        return Sequence.Create(cycles, cycleMode, sequenceEase)
-           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("Fade_RectTransform"), startValue: new Vector2(0.00f, -154.00f), endValue: new Vector2(5.00f, 161.70f), duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
-           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Fade_Image"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
-           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("BackBtn_RectTransform"), startValue: new Vector2(-1539.00f, 588.25f), endValue: new Vector2(-1019.96f, 588.25f), duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
-           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("BackBtn_Image"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
-           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("KingdomButtonsContainer_RectTransform"), startValue: new Vector2(0.00f, -147.00f), endValue: new Vector2(0.00f, 106.40f), duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
-           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("KingdomButtonsContainer_Image"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
-           .Group(Sequence.Create()
-                .InsertCallback(0.3f, binding.GetBindObj<UnityEngine.AudioSource>("MenuDoorSource_AudioSource"), (target) => target.Stop())
-                .InsertCallback(0f, binding.GetBindObj<UnityEngine.AudioSource>("MenuDoorSource_AudioSource"), (target) => { binding.PlayAudioClip(target, "door", 1.37f);})
-           )
-           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.CanvasGroup>("IndicatorComposite_CanvasGroup"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
-            ;
-    }
-
-    public static Sequence MenuPanel_OutTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
-    {
-        return Sequence.Create(cycles, cycleMode, sequenceEase)
-           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("Fade_RectTransform"), startValue: new Vector2(5.00f, 161.70f), endValue: new Vector2(0.00f, -154.00f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Fade_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("BackBtn_RectTransform"), startValue: new Vector2(-1019.96f, 588.25f), endValue: new Vector2(-1539.00f, 588.25f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("BackBtn_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("KingdomButtonsContainer_RectTransform"), startValue: new Vector2(0.00f, 106.40f), endValue: new Vector2(0.00f, -147.00f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("KingdomButtonsContainer_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("Fade_RectTransform"), startValue: new Vector2(5.00f, 161.70f), endValue: new Vector2(0.00f, -154.00f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Fade_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("BackBtn_RectTransform"), startValue: new Vector2(-1019.96f, 588.25f), endValue: new Vector2(-1539.00f, 588.25f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("BackBtn_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("KingdomButtonsContainer_RectTransform"), startValue: new Vector2(0.00f, 106.40f), endValue: new Vector2(0.00f, -147.00f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("KingdomButtonsContainer_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.CanvasGroup>("IndicatorComposite_CanvasGroup"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Standard")))
-            ;
-    }
-
     public static Sequence HomePanel_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
     {
         return Sequence.Create(cycles, cycleMode, sequenceEase)
@@ -103,43 +67,6 @@ public static class GenerateTween
             ;
     }
 
-    public static Sequence SettingsPanel_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
-    {
-        return Sequence.Create(cycles, cycleMode, sequenceEase)
-           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("NextBtn_RectTransform"), startValue: new Vector2(-1631.00f, 588.25f), endValue: new Vector2(-1020.00f, 586.40f), duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("StandardDecelerate")))
-           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("Title_RectTransform"), startValue: new Vector2(0.13f, 825.00f), endValue: new Vector2(0.00f, 263.00f), duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Standard")))
-           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("SettingsBackground_RectTransform"), startValue: new Vector2(-2171.00f, 0.00f), endValue: new Vector2(0.00f, 0.00f), duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Standard")))
-           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("SettingsBackground_Image"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Standard")))
-           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("SoundSlider_RectTransform"), startValue: new Vector3(0.00f, 0.00f, 0.00f), endValue: new Vector3(0.00f, 0.00f, 0.00f), duration: 0.2f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedAccelerate")))
-           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("MusicVolumeSlider_RectTransform"), startValue: new Vector3(0.00f, 0.00f, 0.00f), endValue: new Vector3(1.00f, 1.00f, 1.00f), duration: 0.2f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedAccelerate")))
-           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("MasterVolumeSlider_RectTransform"), startValue: new Vector3(0.00f, 0.00f, 0.00f), endValue: new Vector3(1.00f, 1.00f, 1.00f), duration: 0.2f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedAccelerate")))
-           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("MusicSwtich_RectTransform"), startValue: new Vector3(0.00f, 0.00f, 0.00f), endValue: new Vector3(1.00f, 1.00f, 1.00f), duration: 0.2f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedAccelerate")))
-           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("DialogueSwtich_RectTransform"), startValue: new Vector3(0.00f, 0.00f, 0.00f), endValue: new Vector3(1.00f, 1.00f, 1.00f), duration: 0.2f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedAccelerate")))
-            ;
-    }
-
-    public static Sequence TansitionHolderPanel_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
-    {
-        return Sequence.Create(cycles, cycleMode, sequenceEase)
-           .Group(Tween.Custom(binding.GetBindObj<Coffee.UIEffects.UITransitionEffect>("Bg_UITransitionEffect"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Standard"), onValueChange: (target, updateValue) => target.effectFactor = updateValue))
-            ;
-    }
-
-    public static Sequence SettingsPanel_OutTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
-    {
-        return Sequence.Create(cycles, cycleMode, sequenceEase)
-           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("NextBtn_RectTransform"), startValue: new Vector2(-1020.00f, 586.40f), endValue: new Vector2(-1631.00f, 588.25f), duration: 0.35f, startDelay: 0f, ease: binding.GetEasing("StandardAccelerate")))
-           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("Title_RectTransform"), startValue: new Vector2(0.00f, 263.00f), endValue: new Vector2(0.13f, 825.00f), duration: 0.4f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("SettingsBackground_RectTransform"), startValue: new Vector2(0.00f, 0.00f), endValue: new Vector2(-2171.00f, 0.00f), duration: 0.4f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("SettingsBackground_Image"), startValue: 1f, endValue: 0f, duration: 0.4f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
-           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("SoundSlider_RectTransform"), startValue: new Vector3(0.00f, 0.00f, 0.00f), endValue: new Vector3(0.00f, 0.00f, 0.00f), duration: 0.3f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedDecelerate")))
-           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("MusicVolumeSlider_RectTransform"), startValue: new Vector3(1.00f, 1.00f, 1.00f), endValue: new Vector3(0.00f, 0.00f, 0.00f), duration: 0.3f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedDecelerate")))
-           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("MasterVolumeSlider_RectTransform"), startValue: new Vector3(1.00f, 1.00f, 1.00f), endValue: new Vector3(0.00f, 0.00f, 0.00f), duration: 0.3f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedDecelerate")))
-           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("MusicSwtich_RectTransform"), startValue: new Vector3(1.00f, 1.00f, 1.00f), endValue: new Vector3(0.00f, 0.00f, 0.00f), duration: 0.3f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedDecelerate")))
-           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("DialogueSwtich_RectTransform"), startValue: new Vector3(1.00f, 1.00f, 1.00f), endValue: new Vector3(0.00f, 0.00f, 0.00f), duration: 0.3f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedDecelerate")))
-            ;
-    }
-
     public static Sequence HomePanel_OutTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
     {
         return Sequence.Create(cycles, cycleMode, sequenceEase)
@@ -157,13 +84,6 @@ public static class GenerateTween
            .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("leftMask_Image"), startValue: 1f, endValue: 0f, duration: 0.4f, startDelay: 0.1f, ease: binding.GetEasing("Emphasized")))
            .Group(Tween.UIAnchoredPositionX(binding.GetBindObj<UnityEngine.RectTransform>("rightMask_RectTransform"), startValue: 810f, endValue: 1842f, duration: 0.4f, startDelay: 0.1f, ease: binding.GetEasing("Emphasized")))
            .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("rightMask_Image"), startValue: 1f, endValue: 0f, duration: 0.4f, startDelay: 0.1f, ease: binding.GetEasing("Emphasized")))
-            ;
-    }
-
-    public static Sequence TansitionHolderPanel_OutTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
-    {
-        return Sequence.Create(cycles, cycleMode, sequenceEase)
-           .Group(Tween.Custom(binding.GetBindObj<Coffee.UIEffects.UITransitionEffect>("Bg_UITransitionEffect"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Emphasized"), onValueChange: (target, updateValue) => target.effectFactor = updateValue))
             ;
     }
 
@@ -214,6 +134,86 @@ public static class GenerateTween
     {
         return Sequence.Create(cycles, cycleMode, sequenceEase)
            .Group(Tween.Color(binding.GetBindObj<UnityEngine.UI.Image>("Rect_Image"), startValue: new Color(1.000f, 1.000f, 1.000f, 0.200f), endValue: new Color(0.000f, 0.000f, 0.000f, 0.200f), duration: 0.1f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
+            ;
+    }
+
+    public static Sequence MenuPanel_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
+    {
+        return Sequence.Create(cycles, cycleMode, sequenceEase)
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("Fade_RectTransform"), startValue: new Vector2(0.00f, -154.00f), endValue: new Vector2(5.00f, 161.70f), duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Fade_Image"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("BackBtn_RectTransform"), startValue: new Vector2(-1539.00f, 588.25f), endValue: new Vector2(-1019.96f, 588.25f), duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("BackBtn_Image"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("KingdomButtonsContainer_RectTransform"), startValue: new Vector2(0.00f, -147.00f), endValue: new Vector2(0.00f, 106.40f), duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("KingdomButtonsContainer_Image"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0.05f, ease: binding.GetEasing("Standard")))
+           .Group(Sequence.Create()
+                .InsertCallback(0.3f, binding.GetBindObj<UnityEngine.AudioSource>("MenuDoorSource_AudioSource"), (target) => target.Stop())
+                .InsertCallback(0f, binding.GetBindObj<UnityEngine.AudioSource>("MenuDoorSource_AudioSource"), (target) => { binding.PlayAudioClip(target, "door", 1.37f);})
+           )
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.CanvasGroup>("IndicatorComposite_CanvasGroup"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
+            ;
+    }
+
+    public static Sequence MenuPanel_OutTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
+    {
+        return Sequence.Create(cycles, cycleMode, sequenceEase)
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("Fade_RectTransform"), startValue: new Vector2(5.00f, 161.70f), endValue: new Vector2(0.00f, -154.00f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Fade_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("BackBtn_RectTransform"), startValue: new Vector2(-1019.96f, 588.25f), endValue: new Vector2(-1539.00f, 588.25f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("BackBtn_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("KingdomButtonsContainer_RectTransform"), startValue: new Vector2(0.00f, 106.40f), endValue: new Vector2(0.00f, -147.00f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("KingdomButtonsContainer_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("Fade_RectTransform"), startValue: new Vector2(5.00f, 161.70f), endValue: new Vector2(0.00f, -154.00f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Fade_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("BackBtn_RectTransform"), startValue: new Vector2(-1019.96f, 588.25f), endValue: new Vector2(-1539.00f, 588.25f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("BackBtn_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("KingdomButtonsContainer_RectTransform"), startValue: new Vector2(0.00f, 106.40f), endValue: new Vector2(0.00f, -147.00f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("KingdomButtonsContainer_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.CanvasGroup>("IndicatorComposite_CanvasGroup"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Standard")))
+            ;
+    }
+
+    public static Sequence SettingsPanel_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
+    {
+        return Sequence.Create(cycles, cycleMode, sequenceEase)
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("NextBtn_RectTransform"), startValue: new Vector2(-1631.00f, 588.25f), endValue: new Vector2(-1020.00f, 586.40f), duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("StandardDecelerate")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("Title_RectTransform"), startValue: new Vector2(0.13f, 825.00f), endValue: new Vector2(0.00f, 263.00f), duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("SettingsBackground_RectTransform"), startValue: new Vector2(-2171.00f, 0.00f), endValue: new Vector2(0.00f, 0.00f), duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("SettingsBackground_Image"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("SoundSlider_RectTransform"), startValue: new Vector3(0.00f, 0.00f, 0.00f), endValue: new Vector3(0.00f, 0.00f, 0.00f), duration: 0.2f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedAccelerate")))
+           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("MusicVolumeSlider_RectTransform"), startValue: new Vector3(0.00f, 0.00f, 0.00f), endValue: new Vector3(1.00f, 1.00f, 1.00f), duration: 0.2f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedAccelerate")))
+           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("MasterVolumeSlider_RectTransform"), startValue: new Vector3(0.00f, 0.00f, 0.00f), endValue: new Vector3(1.00f, 1.00f, 1.00f), duration: 0.2f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedAccelerate")))
+           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("MusicSwtich_RectTransform"), startValue: new Vector3(0.00f, 0.00f, 0.00f), endValue: new Vector3(1.00f, 1.00f, 1.00f), duration: 0.2f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedAccelerate")))
+           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("DialogueSwtich_RectTransform"), startValue: new Vector3(0.00f, 0.00f, 0.00f), endValue: new Vector3(1.00f, 1.00f, 1.00f), duration: 0.2f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedAccelerate")))
+            ;
+    }
+
+    public static Sequence SettingsPanel_OutTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
+    {
+        return Sequence.Create(cycles, cycleMode, sequenceEase)
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("NextBtn_RectTransform"), startValue: new Vector2(-1020.00f, 586.40f), endValue: new Vector2(-1631.00f, 588.25f), duration: 0.35f, startDelay: 0f, ease: binding.GetEasing("StandardAccelerate")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("Title_RectTransform"), startValue: new Vector2(0.00f, 263.00f), endValue: new Vector2(0.13f, 825.00f), duration: 0.4f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("SettingsBackground_RectTransform"), startValue: new Vector2(0.00f, 0.00f), endValue: new Vector2(-2171.00f, 0.00f), duration: 0.4f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("SettingsBackground_Image"), startValue: 1f, endValue: 0f, duration: 0.4f, startDelay: 0f, ease: binding.GetEasing("Emphasized")))
+           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("SoundSlider_RectTransform"), startValue: new Vector3(0.00f, 0.00f, 0.00f), endValue: new Vector3(0.00f, 0.00f, 0.00f), duration: 0.3f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedDecelerate")))
+           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("MusicVolumeSlider_RectTransform"), startValue: new Vector3(1.00f, 1.00f, 1.00f), endValue: new Vector3(0.00f, 0.00f, 0.00f), duration: 0.3f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedDecelerate")))
+           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("MasterVolumeSlider_RectTransform"), startValue: new Vector3(1.00f, 1.00f, 1.00f), endValue: new Vector3(0.00f, 0.00f, 0.00f), duration: 0.3f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedDecelerate")))
+           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("MusicSwtich_RectTransform"), startValue: new Vector3(1.00f, 1.00f, 1.00f), endValue: new Vector3(0.00f, 0.00f, 0.00f), duration: 0.3f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedDecelerate")))
+           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("DialogueSwtich_RectTransform"), startValue: new Vector3(1.00f, 1.00f, 1.00f), endValue: new Vector3(0.00f, 0.00f, 0.00f), duration: 0.3f, startDelay: 0.3f, ease: binding.GetEasing("EmphasizedDecelerate")))
+            ;
+    }
+
+    public static Sequence TansitionHolderPanel_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
+    {
+        return Sequence.Create(cycles, cycleMode, sequenceEase)
+           .Group(Tween.Custom(binding.GetBindObj<Coffee.UIEffects.UITransitionEffect>("Bg_UITransitionEffect"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Standard"), onValueChange: (target, updateValue) => target.effectFactor = updateValue))
+            ;
+    }
+
+    public static Sequence TansitionHolderPanel_OutTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
+    {
+        return Sequence.Create(cycles, cycleMode, sequenceEase)
+           .Group(Tween.Custom(binding.GetBindObj<Coffee.UIEffects.UITransitionEffect>("Bg_UITransitionEffect"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Emphasized"), onValueChange: (target, updateValue) => target.effectFactor = updateValue))
             ;
     }
 

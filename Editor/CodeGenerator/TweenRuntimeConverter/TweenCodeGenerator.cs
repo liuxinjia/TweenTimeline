@@ -412,16 +412,15 @@ namespace Cr7Sund.TweenTimeLine
             {
                 string parentTrackName = parent.name;
 
-                if (TweenTimelineManager.IsIgnoreTrack(parentTrackName))
-                {
-                    return string.Empty;
-                }
-
                 if (parentTrackName.EndsWith(TweenTimelineDefine.PanelTag)
                     || parentTrackName.EndsWith(TweenTimelineDefine.CompositeTag))
                 {
-                    sequenceName = parentTrackName;
-                    break;
+                    if (parent.parent.name == TweenTimelineDefine.InDefine
+                        || parent.parent.name == TweenTimelineDefine.OutDefine)
+                    {
+                        sequenceName = parentTrackName;
+                        break;
+                    }
                 }
 
                 bool contains = false;
@@ -429,9 +428,13 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     if (parentTrackName.EndsWith(item.Key))
                     {
-                        sequenceName = parentTrackName;
-                        contains = true;
-                        break;
+                        if (parent.parent.name == TweenTimelineDefine.InDefine
+                             || parent.parent.name == TweenTimelineDefine.OutDefine)
+                        {
+                            sequenceName = parentTrackName;
+                            contains = true;
+                            break;
+                        }
                     }
                 }
                 if (contains)
@@ -441,7 +444,11 @@ namespace Cr7Sund.TweenTimeLine
                 parent = parent.parent as GroupTrack;
             }
 
-            Assert.IsNotNull(sequenceName, $"{trackAsset.name} should be endWith suitable postFix");
+            if (string.IsNullOrEmpty(sequenceName))
+            {
+                return sequenceName;
+            }
+            // Assert.IsNotNull(sequenceName, $"{trackAsset.name} should be endWith suitable postFix");
 
             if (parent != null)
             {

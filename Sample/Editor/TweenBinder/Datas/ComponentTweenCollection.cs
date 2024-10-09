@@ -37,25 +37,26 @@ namespace Cr7Sund.TweenTimeLine
                 if (asset is TimelineAsset timelineAsset)
                 {
                     List<ComponentTween> collection = GetTweenTypes(timelineAsset);
-                    if (collection != null)
+                    if (collection == null)
                     {
-                        foreach (ComponentTween item in collection)
+                        continue;
+                    }
+                    foreach (ComponentTween item in collection)
+                    {
+                        var findIndex = tweenActions.FindIndex(tweenAction =>
+                        tweenAction.Equals(item));
+                        ComponentTween componentTween = null;
+                        if (findIndex < 0)
                         {
-                            var findIndex = tweenActions.FindIndex(tweenAction =>
-                            tweenAction.Equals(item));
-                            ComponentTween componentTween = null;
-                            if (findIndex < 0)
-                            {
-                                componentTween = new ComponentTween();
-                                componentTween.category = item.category;
-                                tweenActions.Add(componentTween);
-                            }
-                            else
-                            {
-                                componentTween = tweenActions[findIndex];
-                            }
-                            componentTween.tweenNames.AddRange(item.tweenNames);
+                            componentTween = new ComponentTween();
+                            componentTween.category = item.category;
+                            tweenActions.Add(componentTween);
                         }
+                        else
+                        {
+                            componentTween = tweenActions[findIndex];
+                        }
+                        componentTween.tweenNames.AddRange(item.tweenNames);
                     }
                 }
             }
@@ -77,19 +78,24 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     return;
                 }
-                if (trackAsset is not IBaseTrack)//Mark Track
+                if (trackAsset is not IBaseTrack
+                && trackAsset is not AudioTrack)//Mark Track
                 {
                     return;
                 }
 
-                var parentGroup = trackAsset.parent as GroupTrack;
-                TweenTimelineManager.GetTrackSecondRoot(trackAsset);
+                var parentGroup = TweenTimelineManager.GetTrackSecondRoot(trackAsset);
                 if (parentGroup.name == TweenTimelineDefine.InDefine) return;
                 if (parentGroup.name == TweenTimelineDefine.OutDefine) return;
                 var tweenCategory = GetTweenTypesCategory(parentGroup.name);
                 if (string.IsNullOrEmpty(tweenCategory))
                 {
-                    Debug.LogWarning($"Invalid groupTrackName  TrackAsset:{parentGroup.name} int TimeLineAsset: {timeLineAsset}  ");
+                    if (!timeLineAsset.name.EndsWith(TweenTimelineDefine.PanelTag))
+                    {
+                        Debug.LogWarning($"Invalid groupTrackName  TrackAsset:{parentGroup.name}  TimeLineAsset: {timeLineAsset}  ");
+                        return;
+                    }
+                    // e.g panelTimelineAsset, duplicate panels
                     return;
                 }
                 if (!resultTweens.TryGetValue(tweenCategory, out var tweenAction))
@@ -100,6 +106,9 @@ namespace Cr7Sund.TweenTimeLine
                 }
 
                 string tweenName = TweenCodeGenerator.GetGenSequenceName(trackAsset);
+                if(string.IsNullOrEmpty(tweenName)){
+                    return;
+                }
                 var findIndex = tweenAction.tweenNames.FindIndex(ts => ts.tweenName == tweenName);
 
                 ComponentBindTracks findTween = null;
@@ -116,22 +125,32 @@ namespace Cr7Sund.TweenTimeLine
                     findTween = tweenAction.tweenNames[findIndex];
                 }
 
-                var uniqueBehaviour = TweenTimelineManager.GetBehaviourByTrackAsset(trackAsset);
+                TweenTimelineManager.GetTrackBindInfos(trackAsset
+                  , out var bindTarget, out var bindType);
 
-                findTween.bindTargets.Add(uniqueBehaviour.BindTarget);
-                findTween.bindTypes.Add(uniqueBehaviour.BindType);
+                findTween.bindTargets.Add(bindTarget);
+                findTween.bindTypes.Add(bindType);
 
                 findTween.trackTypeNames.Add(trackAsset.GetType().FullName);
             });
 
+            if (resultTweens.Count <= 0)
+            {
+                return null;
+            }
             List<ComponentTween> componentTweens = resultTweens.Values.ToList();
             return componentTweens;
         }
 
         private static string GetTweenTypesCategory(string trackName)
         {
-            if(trackName.EndsWith(TweenTimelineDefine.CompositeTag)){
+            if (trackName.EndsWith(TweenTimelineDefine.CompositeTag))
+            {
                 return TweenTimelineDefine.CompositeTag;
+            }
+            if (trackName.EndsWith(TweenTimelineDefine.PanelTag))
+            {
+                return TweenTimelineDefine.PanelTag;
             }
             foreach (var item in TweenTimelineDefine.UIComponentTypeMatch)
             {
@@ -146,6 +165,14 @@ namespace Cr7Sund.TweenTimeLine
 
         private static bool IsValidTimelineAsset(string timelineAssetName)
         {
+            if (timelineAssetName.EndsWith(TweenTimelineDefine.CompositeTag))
+            {
+                return true;
+            }
+            if (timelineAssetName.EndsWith(TweenTimelineDefine.PanelTag))
+            {
+                return true;
+            }
             foreach (var item in TweenTimelineDefine.UIComponentTypeMatch)
             {
                 if (timelineAssetName.EndsWith(item.Key))

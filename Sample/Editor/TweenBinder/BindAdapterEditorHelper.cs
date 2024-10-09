@@ -7,6 +7,7 @@ using PrimeTween;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Timeline;
 using UnityEngine.UIElements;
 
@@ -205,69 +206,23 @@ namespace Cr7Sund.TweenTimeLine
             return $"{name}_{TypeConverter.GetSimplifyTypeName(fullTypeName)}";
         }
 
-        public static List<ComponentTween> GetTweenTypes(TimelineAsset timeLineAsset)
+        public static List<ComponentBindTracks> GetTweenTypes(
+            ComponentTweenCollection tweenActionCollection, string panelName)
         {
-            Dictionary<string, ComponentTween> resultTweens = new();
-            IterateTimeLineTrackAssets(timeLineAsset, (trackAsset) =>
+            string category = TweenTimelineDefine.PanelTag;
+            Assert.IsTrue(panelName.EndsWith(category));
+
+            var tweenComponents = tweenActionCollection.GetTweenActions(category);
+            var resultList = new List<ComponentBindTracks>();
+            foreach (ComponentBindTracks item in tweenComponents)
             {
-                if (trackAsset is GroupTrack)
+                if (item.tweenName.Contains(panelName))
                 {
-                    return;
+                    resultList.Add(item);
                 }
-                if (trackAsset is not IBaseTrack
-                && trackAsset is not AudioTrack)
-                {
-                    return;
-                }
+            }
 
-                var parentGroup = TweenTimelineManager.GetTrackSecondRoot(trackAsset);
-                if (parentGroup.name == TweenTimelineDefine.InDefine) return;
-                if (parentGroup.name == TweenTimelineDefine.OutDefine) return;
-                var tweenCategory = parentGroup.name;
-                if (!resultTweens.TryGetValue(tweenCategory, out var tweenAction))
-                {
-                    tweenAction = new ComponentTween();
-                    tweenAction.category = tweenCategory;
-                    resultTweens.Add(tweenCategory, tweenAction);
-                }
-
-                string sequenceName = TweenCodeGenerator.GetGenSequenceName(parentGroup);
-                if (string.IsNullOrEmpty(sequenceName))
-                {
-                    return;
-                }
-                var findIndex = tweenAction.tweenNames.FindIndex(ts => ts.tweenName == sequenceName);
-
-                ComponentBindTracks findTween = null;
-                if (findIndex < 0)
-                {
-                    findTween = new ComponentBindTracks();
-                    findTween.tweenName = sequenceName;
-                    findTween.bindTargets = new List<string>();
-                    findTween.bindTypes = new List<string>();
-                    tweenAction.tweenNames.Add(findTween);
-                }
-                else
-                {
-                    findTween = tweenAction.tweenNames[findIndex];
-                }
-
-                if (trackAsset is AudioTrack)
-                {
-                    findTween.bindTargets.Add(trackAsset.name);
-                    findTween.bindTypes.Add(typeof(AudioSource).FullName);
-                }
-                else
-                {
-                    var uniqueBehaviour = TweenTimelineManager.GetBehaviourByTrackAsset(trackAsset);
-                    findTween.bindTargets.Add(uniqueBehaviour.BindTarget);
-                    findTween.bindTypes.Add(uniqueBehaviour.BindType);
-                }
-
-                findTween.trackTypeNames.Add(trackAsset.GetType().FullName);
-            });
-
-            return resultTweens.Values.ToList();
+            return resultList;
         }
 
         public static void DrawLoopField(SerializedObject serializedObject, VisualElement container)

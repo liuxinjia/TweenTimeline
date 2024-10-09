@@ -931,12 +931,12 @@ namespace Cr7Sund.TweenTimeLine
         {
             bool isFullPath = TweenTimelinePreferencesProvider.GetBool(TweenGenSettings.UseFullPathName);
 
-            var uniqueBehaviour = GetBehaviourByTrackAsset(trackAsset);
+            GetTrackBindInfos(trackAsset, out var bindTarget, out var bindType);
             if (isFullPath)
             {
-                return root.Find(uniqueBehaviour.BindTarget);
+                return root.Find(bindTarget);
             }
-            return root.transform.FindChildByName(uniqueBehaviour.BindTarget);
+            return root.transform.FindChildByName(bindTarget);
         }
 
         public static IUniqueBehaviour GetBehaviourByTrackAsset(TrackAsset trackAsset)
@@ -953,6 +953,32 @@ namespace Cr7Sund.TweenTimeLine
             }
 
             return uniqueBehaviour;
+        }
+
+        public static void GetTrackBindInfos(TrackAsset trackAsset, out string bindTarget, out string bindType)
+        {
+            if (trackAsset is AudioTrack)
+            {
+                bindTarget = trackAsset.name;
+                bindType = typeof(AudioSource).FullName;
+                return;
+            }
+
+            foreach (var clip in trackAsset.GetClips())
+            {
+                if (!TimelineWindowExposer.GetBehaviourValue(clip.asset, out var value))
+                {
+                    throw new System.Exception($"BehaviourValue is null ");
+                }
+                var uniqueBehaviour = value as IUniqueBehaviour;
+                bindTarget = uniqueBehaviour.BindTarget;
+                bindType = uniqueBehaviour.BindType;
+                return;
+            }
+
+            // bindTarget = string.Empty;
+            // bindType = string.Empty;
+            throw new NotImplementedException($"{trackAsset.name} don't have bind target");
         }
 
         public static TrackAsset FindExistTrackAsset(Component component, Type trackAssetType)
@@ -1117,15 +1143,7 @@ namespace Cr7Sund.TweenTimeLine
             clipInfo.delayTime : clipInfo.delayTime + clipInfo.duration);
         }
 
-        public static bool IsIgnoreTrack(string parentTrackName)
-        {
-            if (parentTrackName.ToLower().Contains("ignore")
-        || parentTrackName.ToLower().Contains("duplicate"))
-            {
-                return true;
-            }
-            return false;
-        }
+
         #endregion
     }
 

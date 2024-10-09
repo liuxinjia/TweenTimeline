@@ -15,6 +15,7 @@ namespace Cr7Sund.TweenTimeLine
     [CustomEditor(typeof(PanelBinder))]
     public class PanelBinderEditor : UnityEditor.Editor
     {
+        private ComponentTweenCollection _tweenActionCollection;
         protected VisualElement _root;
         private Sequence _curSequence;
         private string _updateSequenceID;
@@ -36,6 +37,13 @@ namespace Cr7Sund.TweenTimeLine
             var binderAdapter = target as ComponentBinderAdapter;
             var cacheListProp = serializedObject.FindProperty("cacheList");
             var timelineAssetProp = serializedObject.FindProperty(timelineFieldName);
+
+            _tweenActionCollection = AssetDatabase.LoadAssetAtPath<ComponentTweenCollection>(TweenTimelineDefine.componentTweenCollectionPath);
+            if (_tweenActionCollection == null)
+            {
+                _tweenActionCollection = ScriptableObject.CreateInstance<ComponentTweenCollection>();
+                AssetDatabase.CreateAsset(_tweenActionCollection, TweenTimelineDefine.componentTweenCollectionPath);
+            }
             BindAdapterEditorHelper.Reset(binderAdapter);
 
             CreateTweenContains(tweenContainer);
@@ -45,47 +53,14 @@ namespace Cr7Sund.TweenTimeLine
             var rebindBtn = new Button(RebindComponents);
             rebindBtn.text = "Rebind";
 
-            ObjectField timeLineField = CreateTimeLineField(timelineAssetProp);
             BindAdapterEditorHelper.DrawLoopField(serializedObject, _root);
 
-            _root.Add(timeLineField);
             _root.Add(tweenContainer);
             _root.Add(cacheListPropField);
             _root.Add(rebindBtn);
         }
 
-        private ObjectField CreateTimeLineField(SerializedProperty timelineAssetProp)
-        {
-            var timeLineField = new ObjectField();
-            timeLineField.objectType = typeof(TimelineAsset);
-            timeLineField.value = GetTimelineAsset();
-            timeLineField.RegisterValueChangedCallback(evt =>
-            {
-                if (evt.previousValue == evt.newValue)
-                {
-                    return;
-                }
-                OnUpdateTimeLineField();
-                // RebindComponents();
-            });
-            timeLineField.BindProperty(timelineAssetProp); // if will trigger ValueChanged when switch each time
-            return timeLineField;
-        }
 
-        protected virtual TimelineAsset GetTimelineAsset()
-        {
-            var binderAdapter = target as PanelBinder;
-            return binderAdapter.timelineAsset;
-        }
-
-        protected virtual void OnUpdateTimeLineField()
-        {
-            var binderAdapter = target as PanelBinder;
-            var inTweenNameProp = serializedObject.FindProperty(nameof(binderAdapter.inTweenName));
-            var outTweenNameProp = serializedObject.FindProperty(nameof(binderAdapter.outTweenName));
-            UpdateMenu(inTweenNameProp, true);
-            UpdateMenu(outTweenNameProp);
-        }
 
         protected virtual void CreateTweenContains(VisualElement tweenContainer)
         {
@@ -142,13 +117,8 @@ namespace Cr7Sund.TweenTimeLine
         private void RebindComponents()
         {
             var binderAdapter = target as ComponentBinderAdapter;
-            var timelineAsset = GetTimelineAsset();
 
             binderAdapter.cacheList.Clear();
-            if (timelineAsset == null)
-            {
-                return;
-            }
 
             var propList = new List<SerializedProperty>();
             foreach (var tweenName in tweenPropNames)
@@ -156,27 +126,22 @@ namespace Cr7Sund.TweenTimeLine
                 propList.Add(serializedObject.FindProperty(tweenName));
             }
 
-            List<ComponentTween> tweenComponents = BindAdapterEditorHelper.GetTweenTypes(timelineAsset);
-            foreach (ComponentTween item in tweenComponents)
+            var tweenComponents = BindAdapterEditorHelper.GetTweenTypes(_tweenActionCollection, binderAdapter.gameObject.name);
+
+            foreach (ComponentBindTracks item in tweenComponents)
             {
                 foreach (var prop in propList)
                 {
                     RebindComponent(item, prop.stringValue);
                 }
+                break;
             }
         }
 
-        private bool RebindComponent(ComponentTween componentTween, string tweenName)
-        {
-            List<ComponentBindTracks> tweenNames = componentTween.tweenNames;
-            var componentBindTracks = tweenNames.Find((ts) =>
-              !string.IsNullOrEmpty(tweenName) &&
-                BindAdapterEditorHelper.GetTweenName(ts.tweenName) == tweenName);
 
-            if (componentBindTracks == null)
-            {
-                return false;
-            }
+
+        private bool RebindComponent(ComponentBindTracks componentBindTracks, string tweenName)
+        {
             List<string> bindTargets = componentBindTracks.bindTargets;
             ComponentBinderAdapter binderAdapter = target as ComponentBinderAdapter;
 
@@ -218,18 +183,8 @@ namespace Cr7Sund.TweenTimeLine
             choices = new List<string>();
             initialIndex = 0;
 
-            var timelineAsset = GetTimelineAsset();
-            if (timelineAsset == null)
-            {
-                return;
-            }
-
-            var tweenComponents = BindAdapterEditorHelper.GetTweenTypes(timelineAsset);
-            foreach (ComponentTween componentTween in tweenComponents)
-            {
-                List<ComponentBindTracks> tweenNames = componentTween.tweenNames;
-                choices.AddRange(tweenNames.Select((ts) => ts.tweenName).ToList());
-            }
+            var tweenComponents = BindAdapterEditorHelper.GetTweenTypes(_tweenActionCollection, binderAdapter.gameObject.name);
+            choices.AddRange(tweenComponents.Select((ts) => ts.tweenName).ToList());
 
             initialIndex = choices.FindIndex((ts) =>
             {
@@ -309,21 +264,14 @@ namespace Cr7Sund.TweenTimeLine
         {
             Assert.IsFalse(string.IsNullOrEmpty(nameProp.stringValue), $"{nameProp.displayName} is empty");
             var binderAdapter = target as ComponentBinderAdapter;
-            var timelineAsset = GetTimelineAsset();
-            string category = binderAdapter.transform.name;
-            if (timelineAsset == null)
-            {
-                return null;
-            }
 
-            var tweenComponents = BindAdapterEditorHelper.GetTweenTypes(timelineAsset);
+            var tweenComponents = BindAdapterEditorHelper.GetTweenTypes(_tweenActionCollection, binderAdapter.gameObject.name);
             foreach (var item in tweenComponents)
             {
-                var tweenNames = item.tweenNames;
-                var componentBindTracks = tweenNames.Find(t => BindAdapterEditorHelper.GetTweenName(t.tweenName) == nameProp.stringValue);
-                if (componentBindTracks != null)
+                if (BindAdapterEditorHelper.GetTweenName(item.tweenName)
+                    == nameProp.stringValue)
                 {
-                    return componentBindTracks;
+                    return item;
                 }
             }
 
