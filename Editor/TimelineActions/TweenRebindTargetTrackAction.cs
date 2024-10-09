@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using Cr7Sund.Timeline.Extension;
-using PrimeTween;
-using UnityEditor;
 using UnityEditor.Timeline;
 using UnityEditor.Timeline.Actions;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Timeline;
 
 namespace Cr7Sund.TweenTimeLine

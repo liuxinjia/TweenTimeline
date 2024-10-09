@@ -25,5 +25,16 @@ namespace Cr7Sund
         {
             targetComponent.alpha = targetValue ? 1 : 0;
         }
+
+        internal static Vector2 WithComponent(this Vector2 v, int index, float val)
+        {
+            v[index] = val;
+            return v;
+        }
+        internal static Color WithAlpha(this Color c, float alpha)
+        {
+            c.a = alpha;
+            return c;
+        }
     }
 }

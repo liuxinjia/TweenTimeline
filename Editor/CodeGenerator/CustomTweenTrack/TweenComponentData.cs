@@ -10,7 +10,7 @@ namespace Cr7Sund.TweenTimeLine
         public string ComponentType;
         public string ValueType;
         public string GetPropertyMethod;
-        [SerializeField] private string SetPropertyMethod;
+        [SerializeField] public string SetPropertyMethod;
         [SerializeField] public string PreTweenMethod;
 
 

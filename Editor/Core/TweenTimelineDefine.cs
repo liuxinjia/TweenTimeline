@@ -58,8 +58,7 @@ namespace Cr7Sund.TweenTimeLine
             $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.BuiltInLibraryPath)}BuiltInConfigs";
         public static string CustomConfigPath =>
             $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.BuiltInLibraryPath)}Customs";
-        public static string CurveWrapLibraryPath =>
-            $"{BuiltInConfigPath}/CurveLibrary.asset";
+
 
         // Assets/Plugins/TweenTimeline/Sample/Editor/CustomTracks
         public static string CustomControlTacksFolder =>

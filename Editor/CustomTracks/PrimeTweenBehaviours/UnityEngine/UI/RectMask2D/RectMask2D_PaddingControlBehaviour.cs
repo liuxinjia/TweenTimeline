@@ -11,8 +11,9 @@ namespace Cr7Sund.RectMask2DTween
     {
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.UI.RectMask2D target, double duration, Vector4 startValue)
         {
-            return PrimeTween.Tween.RectMaskPadding(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+            return PrimeTween.Tween.Custom(target, startValue: startValue,
+                  ease: PrimEase, endValue: _endPos, duration: (float)duration, 
+                  onValueChange: (target, updateValue) => target.padding = updateValue);
         }
 
         protected override object OnGet(UnityEngine.UI.RectMask2D target)

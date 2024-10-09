@@ -268,8 +268,8 @@ namespace Cr7Sund.TweenTimeLine
             var tweenComponents = BindAdapterEditorHelper.GetTweenTypes(_tweenActionCollection, binderAdapter.gameObject.name);
             foreach (var item in tweenComponents)
             {
-                if (BindAdapterEditorHelper.GetTweenName(item.tweenName)
-                    == nameProp.stringValue)
+                string tweenName = BindAdapterEditorHelper.GetTweenName(item.tweenName);
+                if (tweenName == nameProp.stringValue)
                 {
                     return item;
                 }

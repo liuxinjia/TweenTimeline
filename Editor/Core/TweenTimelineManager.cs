@@ -428,18 +428,7 @@ namespace Cr7Sund.TweenTimeLine
 
         public static void InitPreTween()
         {
-            TryGetTweenManager(out var manager);
-            Assert.IsNotNull(manager);
-
-            if (PrimeTweenManager.Instance == null)
-            {
-                var initMethod = typeof(PrimeTweenManager).GetMethod("init", BindingFlags.Instance | BindingFlags.NonPublic);
-                initMethod.Invoke(manager, new object[]
-                {
-                    200
-                });
-                PrimeTweenManager.Instance = manager;
-            }
+            PrimeTweenManagerExposer.Init();
         }
 
         private static void UpdateTimeCache()
@@ -469,27 +458,16 @@ namespace Cr7Sund.TweenTimeLine
             });
         }
 
-        private static void TryGetTweenManager(out PrimeTweenManager manager)
-        {
-            var curScene = SceneManager.GetActiveScene();
-            manager = GameObject.FindFirstObjectByType<PrimeTweenManager>();
-            if (manager != null)
-            {
-                return;
-            }
-            var go = new GameObject("PrimeTweenManager");
-            manager = go.AddComponent<PrimeTweenManager>();
-            SceneManager.MoveGameObjectToScene(go, curScene);
-        }
 
         public static void TryRemoveTweenManager()
         {
-            var manager = GameObject.FindFirstObjectByType<PrimeTweenManager>();
-            if (manager == null)
+            var go = GameObject.Find("PrimeTweenManager");
+            if (go == null)
             {
                 return;
             }
-            GameObject.DestroyImmediate(manager.gameObject);
+            GameObject.DestroyImmediate(go);
+            PrimeTweenManagerExposer.Destroy();
         }
 
         private static void Refresh()
@@ -606,9 +584,13 @@ namespace Cr7Sund.TweenTimeLine
 
         public static void ReusablePrimeTweens()
         {
-            if (PrimeTweenManager.Instance)
+            var primeTweenType = typeof(Tween).Assembly.GetType("PrimeTween.PrimeTweenManager");
+            var instanceField = primeTweenType.GetField("Instance", BindingFlags.Static | BindingFlags.NonPublic);
+            var instance = instanceField.GetValue(null);
+            if (instance != null)
             {
-                PrimeTweenManager.Instance.Update();
+                var updateMethodInfo = primeTweenType.GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic);
+                updateMethodInfo.Invoke(instance, null);
             }
         }
 
