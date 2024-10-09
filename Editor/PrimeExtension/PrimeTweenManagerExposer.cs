@@ -12,6 +12,10 @@ namespace Cr7Sund.TweenTimeLine
 
         public static void Init()
         {
+            if (Application.isPlaying)
+            {
+                return;
+            }
             if (PrimeTweenManager.Instance == null)
             {
                 var go = GameObject.Find("PrimeTweenManager");
@@ -37,6 +41,10 @@ namespace Cr7Sund.TweenTimeLine
 
         public static void Destroy()
         {
+            if (Application.isPlaying)
+            {
+                return;
+            }
             var go = GameObject.Find("PrimeTweenManager");
             if (go)
                 GameObject.DestroyImmediate(go);

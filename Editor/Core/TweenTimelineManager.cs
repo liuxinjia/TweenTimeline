@@ -6,7 +6,6 @@ using PrimeTween;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.SceneManagement;
 using UnityEngine.Timeline;
 using System.Linq;
 using Assert = UnityEngine.Assertions.Assert;
@@ -26,6 +25,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 return true;
             }
+
             InitPreTween();
 
             if (!isInit && TimelineWindowExposer.IsValidTimelineWindow())
@@ -127,9 +127,12 @@ namespace Cr7Sund.TweenTimeLine
         {
             // incase of the static don't change when domain reload disable
             isInit = false;
-
             if (change == PlayModeStateChange.ExitingEditMode)
             {
+                if (GetActionEditorWindow() != null)
+                {
+                    EditorWindow.GetWindow<TweenActionEditorWindow>().Close();
+                }
                 TryRemoveTweenManager();
             }
             else if (change == PlayModeStateChange.EnteredEditMode)
@@ -428,7 +431,7 @@ namespace Cr7Sund.TweenTimeLine
 
         public static void InitPreTween()
         {
-            PrimeTweenManagerExposer.Init();
+                PrimeTweenManagerExposer.Init();
         }
 
         private static void UpdateTimeCache()
@@ -461,12 +464,6 @@ namespace Cr7Sund.TweenTimeLine
 
         public static void TryRemoveTweenManager()
         {
-            var go = GameObject.Find("PrimeTweenManager");
-            if (go == null)
-            {
-                return;
-            }
-            GameObject.DestroyImmediate(go);
             PrimeTweenManagerExposer.Destroy();
         }
 
