@@ -162,10 +162,11 @@ namespace Cr7Sund.TweenTimeLine
                     trackInfo = new TrackInfoContext();
                     trackInfo.component = component;
                     trackInfo.trackType = trackType;
-                    trackInfo.trackAssetType = trackAssetType;
                     trackInfo.clipInfos = new List<ClipInfoContext>();
                     trackInfoDict.Add(animUnit.tweenMethod, trackInfo);
                 }
+                clipInfo.trackAssetType = trackAssetType;
+
                 trackInfo.clipInfos.Add(clipInfo);
 
                 // var behaviourName = $"Cr7Sund.TweenTimeLine.{animUnit.tweenMethod}ControlBehaviour";

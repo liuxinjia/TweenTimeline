@@ -87,23 +87,6 @@ public static class GenerateTween
             ;
     }
 
-    public static Sequence FadeSelectButton_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
-    {
-        return Sequence.Create(cycles, cycleMode, sequenceEase)
-           .Group(Tween.Color(binding.GetBindObj<UnityEngine.UI.Image>("Rect_Image"), startValue: new Color(0.000f, 0.000f, 0.000f, 0.000f), endValue: new Color(1.000f, 1.000f, 1.000f, 1.000f), duration: 0.1f, startDelay: 0f, ease: binding.GetEasing("Standard")))
-           .Group(Tween.Color(binding.GetBindObj<TMPro.TextMeshProUGUI>("Text (TMP)_TextMeshProUGUI"), startValue: new Color(1.000f, 1.000f, 1.000f, 1.000f), endValue: new Color(0.169f, 0.169f, 0.169f, 1.000f), duration: 0.1f, startDelay: 0f, ease: binding.GetEasing("Standard")))
-           .Group(Tween.Color(binding.GetBindObj<UnityEngine.UI.Image>("Circle_Image"), startValue: new Color(1.000f, 1.000f, 1.000f, 1.000f), endValue: new Color(1.000f, 0.000f, 0.000f, 1.000f), duration: 0.1f, startDelay: 0f, ease: binding.GetEasing("Standard")))
-           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("Rect_RectTransform"), startValue: new Vector3(1.00f, 1.00f, 1.00f), endValue: new Vector3(0.60f, 0.60f, 0.00f), duration: 0.2f, startDelay: 0.1f, ease: binding.GetEasing("Standard")))
-            ;
-    }
-
-    public static Sequence ColorPointerEnterButton_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
-    {
-        return Sequence.Create(cycles, cycleMode, sequenceEase)
-           .Group(Tween.Color(binding.GetBindObj<UnityEngine.UI.Image>("Rect_Image"), startValue: new Color(0.000f, 0.000f, 0.000f, 0.000f), endValue: new Color(1.000f, 1.000f, 1.000f, 0.200f), duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Standard")))
-            ;
-    }
-
     public static Sequence IndicatorComposite_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
     {
         return Sequence.Create(cycles, cycleMode, sequenceEase)
@@ -118,6 +101,23 @@ public static class GenerateTween
                 .Chain(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Circle_two_Image"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Standard")))
                 .Chain(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("Circle_two_Image"), startValue: 1f, endValue: 0f, duration: 0.25f, startDelay: 0.75f, ease: binding.GetEasing("Standard")))
             )
+            ;
+    }
+
+    public static Sequence FadeSelectButton_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
+    {
+        return Sequence.Create(cycles, cycleMode, sequenceEase)
+           .Group(Tween.Color(binding.GetBindObj<UnityEngine.UI.Image>("Rect_Image"), startValue: new Color(0.000f, 0.000f, 0.000f, 0.000f), endValue: new Color(1.000f, 1.000f, 1.000f, 1.000f), duration: 0.1f, startDelay: 0f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.Color(binding.GetBindObj<TMPro.TextMeshProUGUI>("Text (TMP)_TextMeshProUGUI"), startValue: new Color(1.000f, 1.000f, 1.000f, 1.000f), endValue: new Color(0.169f, 0.169f, 0.169f, 1.000f), duration: 0.1f, startDelay: 0f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.Color(binding.GetBindObj<UnityEngine.UI.Image>("Circle_Image"), startValue: new Color(1.000f, 1.000f, 1.000f, 1.000f), endValue: new Color(1.000f, 0.000f, 0.000f, 1.000f), duration: 0.1f, startDelay: 0f, ease: binding.GetEasing("Standard")))
+           .Group(Tween.Scale(binding.GetBindObj<UnityEngine.RectTransform>("Rect_RectTransform"), startValue: new Vector3(1.00f, 1.00f, 1.00f), endValue: new Vector3(0.60f, 0.60f, 0.00f), duration: 0.2f, startDelay: 0.1f, ease: binding.GetEasing("Standard")))
+            ;
+    }
+
+    public static Sequence ColorPointerEnterButton_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
+    {
+        return Sequence.Create(cycles, cycleMode, sequenceEase)
+           .Group(Tween.Color(binding.GetBindObj<UnityEngine.UI.Image>("Rect_Image"), startValue: new Color(0.000f, 0.000f, 0.000f, 0.000f), endValue: new Color(1.000f, 1.000f, 1.000f, 0.200f), duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Standard")))
             ;
     }
 
@@ -154,6 +154,16 @@ public static class GenerateTween
             ;
     }
 
+    public static Sequence TransitionHolderPanel_MenuPanel_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
+    {
+        return Sequence.Create(cycles, cycleMode, sequenceEase)
+           .Group(Tween.Custom(binding.GetBindObj<Coffee.UIEffects.UITransitionEffect>("Bg_UITransitionEffect"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Standard"), onValueChange: (target, updateValue) => target.effectFactor = updateValue))
+           .Group(Sequence.Create()
+                .InsertCallback(0f, binding.GetBindObj<UnityEngine.UI.Image>("BgColor_Image"), (target) => { target.Fade(true);})
+           )
+            ;
+    }
+
     public static Sequence MenuPanel_OutTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
     {
         return Sequence.Create(cycles, cycleMode, sequenceEase)
@@ -170,6 +180,16 @@ public static class GenerateTween
            .Group(Tween.UIAnchoredPosition(binding.GetBindObj<UnityEngine.RectTransform>("KingdomButtonsContainer_RectTransform"), startValue: new Vector2(0.00f, 106.40f), endValue: new Vector2(0.00f, -147.00f), duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
            .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.UI.Image>("KingdomButtonsContainer_Image"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0.05f, ease: binding.GetEasing("Emphasized")))
            .Group(Tween.Alpha(binding.GetBindObj<UnityEngine.CanvasGroup>("IndicatorComposite_CanvasGroup"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Standard")))
+            ;
+    }
+
+    public static Sequence TransitionHolderPanel_MenuPanel_OutTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
+    {
+        return Sequence.Create(cycles, cycleMode, sequenceEase)
+           .Group(Tween.Custom(binding.GetBindObj<Coffee.UIEffects.UITransitionEffect>("Bg_UITransitionEffect"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Emphasized"), onValueChange: (target, updateValue) => target.effectFactor = updateValue))
+           .Group(Sequence.Create()
+                .InsertCallback(0f, binding.GetBindObj<UnityEngine.UI.Image>("BgColor_Image"), (target) => { target.Fade(false);})
+           )
             ;
     }
 
@@ -203,14 +223,14 @@ public static class GenerateTween
             ;
     }
 
-    public static Sequence TansitionHolderPanel_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
+    public static Sequence TransitionHolderPanel_InTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
     {
         return Sequence.Create(cycles, cycleMode, sequenceEase)
            .Group(Tween.Custom(binding.GetBindObj<Coffee.UIEffects.UITransitionEffect>("Bg_UITransitionEffect"), startValue: 0f, endValue: 1f, duration: 0.3f, startDelay: 0f, ease: binding.GetEasing("Standard"), onValueChange: (target, updateValue) => target.effectFactor = updateValue))
             ;
     }
 
-    public static Sequence TansitionHolderPanel_OutTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
+    public static Sequence TransitionHolderPanel_OutTween(ITweenBinding binding, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)
     {
         return Sequence.Create(cycles, cycleMode, sequenceEase)
            .Group(Tween.Custom(binding.GetBindObj<Coffee.UIEffects.UITransitionEffect>("Bg_UITransitionEffect"), startValue: 1f, endValue: 0f, duration: 0.2f, startDelay: 0f, ease: binding.GetEasing("Emphasized"), onValueChange: (target, updateValue) => target.effectFactor = updateValue))

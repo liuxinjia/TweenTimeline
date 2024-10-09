@@ -8,7 +8,6 @@ using UnityEngine.UIElements;
 
 namespace Cr7Sund.TweenTimeLine
 {
-
     [CustomEditor(typeof(ControlAsset), true, isFallback = true)]
     [CanEditMultipleObjects]
     public class BaseControlTrackAssetInspector : UnityEditor.Editor
@@ -28,6 +27,11 @@ namespace Cr7Sund.TweenTimeLine
             var _behaviour = value as IUniqueBehaviour;
             if (!TweenTimeLineDataModel.ClipStateDict.ContainsKey(_behaviour))
             {
+                var t = value as ControlAsset;
+                if (TimelineWindowExposer.GetCurDirector() == null)
+                {
+                    return new HelpBox("Please select a playable director first", HelpBoxMessageType.Warning);
+                }
                 return new HelpBox("Please assign the target component first", HelpBoxMessageType.Warning);
             }
 
@@ -113,8 +117,8 @@ namespace Cr7Sund.TweenTimeLine
             var startPosProp = templateProp.FindPropertyRelative("_startPos");
             var isDynamicProp = templateProp.FindPropertyRelative("_isDynamicPos");
 
-                // var easeProp = DrawEasePresetField();
-                var easePropField = new PropertyField(easePresetProp);
+            // var easeProp = DrawEasePresetField();
+            var easePropField = new PropertyField(easePresetProp);
             var isDynamicPropField = new PropertyField(isDynamicProp);
             var endPosPropField = CreatePosField(endPosProp, false);
             var startPosPropField = CreatePosField(startPosProp, true);

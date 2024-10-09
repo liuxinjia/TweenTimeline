@@ -50,19 +50,12 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     Component component = TweenTimeLineDataModel.TrackObjectDict[childSourceTrack] as Component;
                     var trackType = childSourceTrack.GetType();
-                    // LayoutElement_FlexibleHeightControlTrack
-                    string trackName = trackType.Name.ToString();
-                    string animUnitTweenMethod = trackName.Replace("ControlTrack", "");
-                    string componentType = trackType.FullName.Split('.')[1];
-                    var assetName = $"Cr7Sund.{componentType}.{animUnitTweenMethod}ControlAsset";
-                    var trackAssetType = trackType.Assembly.GetType(assetName);
 
                     var trackInfo = GetReverseClipInfo(childSourceTrack, isIn);
                     if (trackInfo == null)
                     {
                         return;
                     }
-                    trackInfo.trackAssetType = trackAssetType;
                     trackInfo.trackType = trackType;
                     trackInfo.component = component;
 
@@ -121,16 +114,33 @@ namespace Cr7Sund.TweenTimeLine
             {
                 var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[clipBehaviour];
                 var clipInfoContext = new ClipInfoContext();
-                Assert.IsNotNull(clipBehaviour.EasePreset);
-                
+
+                Type trackAssetType = null;
+                if (clipBehaviour is EmptyBehaviour)
+                {
+                    trackAssetType = typeof(EmptyControlAsset);
+                }
+                else
+                {
+                    var trackType = trackAsset.GetType();
+                    string trackName = trackType.Name.ToString();
+                    string animUnitTweenMethod = trackName.Replace("ControlTrack", "");
+                    string componentType = trackType.FullName.Split('.')[1];
+                    var assetName = $"Cr7Sund.{componentType}.{animUnitTweenMethod}ControlAsset";
+                    trackAssetType = trackType.Assembly.GetType(assetName);
+                }
+
                 resultTrackInfo.clipInfos.Add(clipInfoContext);
 
                 clipInfoContext.start = clipInfo.delayTime;
-                clipInfoContext.duration = clipBehaviour.EasePreset.GetReverseDuration(clipInfo.duration, isIn);
-
-                clipInfoContext.startPos = clipBehaviour.EndPos;
-                clipInfoContext.endPos = clipBehaviour.StartPos;
-                clipInfoContext.easePreset = clipBehaviour.EasePreset.GetReverseEasing(_easingTokenPresetLibrary);
+                clipInfoContext.duration = clipBehaviour.EasePreset?.GetReverseDuration(clipInfo.duration, isIn) ?? clipInfo.duration;
+                clipInfoContext.trackAssetType = trackAssetType;
+                if (clipBehaviour.EasePreset != null)
+                {
+                    clipInfoContext.startPos = clipBehaviour.EndPos;
+                    clipInfoContext.endPos = clipBehaviour.StartPos;
+                    clipInfoContext.easePreset = clipBehaviour.EasePreset?.GetReverseEasing(_easingTokenPresetLibrary);
+                }
             }
 
             return resultTrackInfo;

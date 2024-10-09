@@ -216,7 +216,7 @@ namespace Cr7Sund.TweenTimeLine
             var resultList = new List<ComponentBindTracks>();
             foreach (ComponentBindTracks item in tweenComponents)
             {
-                if (item.tweenName.Contains(panelName))
+                if (item.tweenName.StartsWith(panelName))
                 {
                     resultList.Add(item);
                 }

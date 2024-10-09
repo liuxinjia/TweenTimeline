@@ -9,6 +9,7 @@ namespace Cr7Sund.TweenTimeLine
         public List<MarkInfoContext> markInfos = new();
         public double start;
         public double duration;
+        public Type trackAssetType;
 
         public BaseEasingTokenPreset easePreset;
         public object startPos;

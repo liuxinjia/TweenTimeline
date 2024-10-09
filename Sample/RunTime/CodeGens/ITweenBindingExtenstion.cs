@@ -30,6 +30,10 @@ public static class ITweenBindingExtenstion
     {
        return GenerateTween.HomePanel_OutTween(tweenBinding, cycles, cycleMode, sequenceEase);
     }
+    if (tweenBehaviour == nameof(GenerateTween. IndicatorComposite_InTween))
+    {
+       return GenerateTween.IndicatorComposite_InTween(tweenBinding, cycles, cycleMode, sequenceEase);
+    }
     if (tweenBehaviour == nameof(GenerateTween. FadeSelectButton_InTween))
     {
        return GenerateTween.FadeSelectButton_InTween(tweenBinding, cycles, cycleMode, sequenceEase);
@@ -37,10 +41,6 @@ public static class ITweenBindingExtenstion
     if (tweenBehaviour == nameof(GenerateTween. ColorPointerEnterButton_InTween))
     {
        return GenerateTween.ColorPointerEnterButton_InTween(tweenBinding, cycles, cycleMode, sequenceEase);
-    }
-    if (tweenBehaviour == nameof(GenerateTween. IndicatorComposite_InTween))
-    {
-       return GenerateTween.IndicatorComposite_InTween(tweenBinding, cycles, cycleMode, sequenceEase);
     }
     if (tweenBehaviour == nameof(GenerateTween. FadeSelectButton_OutTween))
     {
@@ -54,9 +54,17 @@ public static class ITweenBindingExtenstion
     {
        return GenerateTween.MenuPanel_InTween(tweenBinding, cycles, cycleMode, sequenceEase);
     }
+    if (tweenBehaviour == nameof(GenerateTween. TransitionHolderPanel_MenuPanel_InTween))
+    {
+       return GenerateTween.TransitionHolderPanel_MenuPanel_InTween(tweenBinding, cycles, cycleMode, sequenceEase);
+    }
     if (tweenBehaviour == nameof(GenerateTween. MenuPanel_OutTween))
     {
        return GenerateTween.MenuPanel_OutTween(tweenBinding, cycles, cycleMode, sequenceEase);
+    }
+    if (tweenBehaviour == nameof(GenerateTween. TransitionHolderPanel_MenuPanel_OutTween))
+    {
+       return GenerateTween.TransitionHolderPanel_MenuPanel_OutTween(tweenBinding, cycles, cycleMode, sequenceEase);
     }
     if (tweenBehaviour == nameof(GenerateTween. SettingsPanel_InTween))
     {
@@ -66,13 +74,13 @@ public static class ITweenBindingExtenstion
     {
        return GenerateTween.SettingsPanel_OutTween(tweenBinding, cycles, cycleMode, sequenceEase);
     }
-    if (tweenBehaviour == nameof(GenerateTween. TansitionHolderPanel_InTween))
+    if (tweenBehaviour == nameof(GenerateTween. TransitionHolderPanel_InTween))
     {
-       return GenerateTween.TansitionHolderPanel_InTween(tweenBinding, cycles, cycleMode, sequenceEase);
+       return GenerateTween.TransitionHolderPanel_InTween(tweenBinding, cycles, cycleMode, sequenceEase);
     }
-    if (tweenBehaviour == nameof(GenerateTween. TansitionHolderPanel_OutTween))
+    if (tweenBehaviour == nameof(GenerateTween. TransitionHolderPanel_OutTween))
     {
-       return GenerateTween.TansitionHolderPanel_OutTween(tweenBinding, cycles, cycleMode, sequenceEase);
+       return GenerateTween.TransitionHolderPanel_OutTween(tweenBinding, cycles, cycleMode, sequenceEase);
     }
             return Sequence.Create();
 }

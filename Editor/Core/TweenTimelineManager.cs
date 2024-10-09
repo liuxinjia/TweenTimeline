@@ -698,7 +698,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 TimelineClip clip = clipMethod.Invoke(trackAsset, new object[]
                 {
-                    trackInfo.trackAssetType
+                    clipInfo.trackAssetType
                 }) as TimelineClip;
                 AddClip(clipInfo, clip);
 
@@ -744,6 +744,10 @@ namespace Cr7Sund.TweenTimeLine
             }
 
             var behaviour = value as IUniqueBehaviour;
+            if (behaviour is EmptyBehaviour)
+            {
+                return;
+            }
             behaviour.EndPos = clipContextInfo.endPos;
             behaviour.StartPos = clipContextInfo.startPos;
             behaviour.EasePreset = clipContextInfo.easePreset;

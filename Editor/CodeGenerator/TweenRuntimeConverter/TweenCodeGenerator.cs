@@ -407,6 +407,7 @@ namespace Cr7Sund.TweenTimeLine
         {
             string sequenceName = null;
             TrackAsset parent = trackAsset;
+            var timelineAssetName = trackAsset.timelineAsset.name;
 
             while (parent != null)
             {
@@ -450,6 +451,17 @@ namespace Cr7Sund.TweenTimeLine
             }
             // Assert.IsNotNull(sequenceName, $"{trackAsset.name} should be endWith suitable postFix");
 
+            if (sequenceName != timelineAssetName)
+            {
+                if (sequenceName.EndsWith(TweenTimelineDefine.PanelTag)
+                               || sequenceName.EndsWith(TweenTimelineDefine.CompositeTag))
+                {
+                    Assert.IsTrue(timelineAssetName.EndsWith(TweenTimelineDefine.PanelTag)
+                                                       || timelineAssetName.EndsWith(TweenTimelineDefine.CompositeTag)
+                    ,$"{sequenceName} _ {timelineAssetName}");
+                    sequenceName = $"{sequenceName}_{timelineAssetName}";
+                }
+            }
             if (parent != null)
             {
                 var root = parent.parent as GroupTrack;

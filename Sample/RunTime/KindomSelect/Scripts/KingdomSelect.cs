@@ -30,17 +30,17 @@ namespace Cr7Sund.TweenTimeLine
 
         public void Show()
         {
-            var sequence = Sequence.Create();
-            foreach (Kingdom k in kingdoms)
+            for (int i = 0; i < kingdoms.Count; i++)
             {
-                sequence.Chain(SpawnKingdomPoint(k));
-            }
+                Kingdom k = kingdoms[i];
+                SpawnKingdomPoint(k);
 
+            }
             if (kingdoms.Count > 0)
             {
                 LookAtKingdom(kingdoms[0]);
                 UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(kingdomButtonsContainer.GetChild(0).gameObject);
-            }
+            };
         }
 
         public void Hide()
@@ -81,15 +81,13 @@ namespace Cr7Sund.TweenTimeLine
             });
         }
 
-        private Tween SpawnKingdomPoint(Kingdom k)
+        private void SpawnKingdomPoint(Kingdom k)
         {
             GameObject kingdom = Instantiate(kingdomPointPrefab, modelTransform);
             kingdom.transform.localEulerAngles = new Vector3(k.y + visualOffset.y, -k.x - visualOffset.x, 0);
             k.visualPoint = kingdom.transform.GetChild(0);
 
             SpawnKingdomButton(k);
-
-            return Tween.LocalPositionY(kingdom.transform, kingdom.transform.position.y - 20f, kingdom.transform.position.y, 0.2f);
         }
 
         private void SpawnKingdomButton(Kingdom k)

@@ -9,7 +9,6 @@ namespace Cr7Sund.TweenTimeLine
     {
         public Component component;
         public Type trackType;
-        public Type trackAssetType;
 
         public Type BindType;
         public string BindTargetName;

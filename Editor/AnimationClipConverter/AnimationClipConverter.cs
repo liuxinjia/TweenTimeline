@@ -413,12 +413,12 @@ namespace Cr7Sund.TweenTimeLine
             trackInfo.BindTargetName = animTargetInfo.GetObjectName();
             trackInfo.tweenIdentifier = tweenIdentifier;
             trackInfo.trackType = trackType;
-            trackInfo.trackAssetType = trackAssetType;
 
             ClipInfoContext clipInfoContext = new ClipInfoContext
             {
                 start = startTime,
                 duration = clip.length,
+                trackAssetType = trackAssetType,
                 easePreset = _easingTokenPresetLibrary.GetEasePreset(curveName),
                 startPos = frameProperty.Keyframes[0].Value,
                 endPos = frameProperty.Keyframes[^1].Value
@@ -453,7 +453,6 @@ namespace Cr7Sund.TweenTimeLine
             }
 
             trackInfo.trackType = typeof(EmptyTrack);
-            trackInfo.trackAssetType = typeof(EmptyControlAsset);
             trackInfo.BindType = animTargetInfo.ObjectType;
             trackInfo.BindTargetName = animTargetInfo.GetObjectName();
 
@@ -461,6 +460,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 start = startTime,
                 duration = clip.length,
+                trackAssetType = typeof(EmptyControlAsset),
                 easePreset = null,
                 startPos = null,
                 endPos = null,

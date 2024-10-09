@@ -10,7 +10,8 @@ using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
 
-namespace PrimeTween {
+namespace PrimeTween
+{
     /// <summary>An ordered group of tweens and callbacks. Tweens in a sequence can run in parallel to one another with <see cref="Group"/> and sequentially with <see cref="Chain"/>.<br/>
     /// To make tweens in a Sequence overlap each other, use <see cref="TweenSettings.startDelay"/> and <see cref="TweenSettings.endDelay"/>.</summary>
     /// <example><code>
@@ -20,19 +21,20 @@ namespace PrimeTween {
     ///     .Chain(Tween.Rotation(transform, endValue: new Vector3(0f, 0f, 45f), duration: 1f)) // rotation tween is 'chained' so it will start when both previous tweens are finished (after 1.5 seconds)
     ///     .ChainCallback(() =&gt; Debug.Log("Sequence completed"));
     /// </code></example>
-    #if ENABLE_SERIALIZATION
+#if ENABLE_SERIALIZATION
     [Serializable]
-    #endif
+#endif
     public
-        #if !ENABLE_SERIALIZATION && UNITY_2020_3_OR_NEWER
+#if !ENABLE_SERIALIZATION && UNITY_2020_3_OR_NEWER
         readonly // duration setter produces error in Unity <= 2019.4.40: error CS1604: Cannot assign to 'this' because it is read-only
-        #endif
-        partial struct Sequence {
+#endif
+        partial struct Sequence
+    {
         const int emptySequenceTag = -43;
         internal
-            #if !ENABLE_SERIALIZATION && UNITY_2020_3_OR_NEWER
+#if !ENABLE_SERIALIZATION && UNITY_2020_3_OR_NEWER
             readonly
-            #endif
+#endif
             Tween root;
         internal bool IsCreated => root.IsCreated;
         long id => root.id;
@@ -41,7 +43,8 @@ namespace PrimeTween {
         public bool isAlive => root.isAlive;
 
         /// Elapsed time of the current cycle.
-        public float elapsedTime {
+        public float elapsedTime
+        {
             get => root.elapsedTime;
             set => root.elapsedTime = value;
         }
@@ -50,9 +53,11 @@ namespace PrimeTween {
         public int cyclesTotal => root.cyclesTotal;
         public int cyclesDone => root.cyclesDone;
         /// The duration of one cycle.
-        public float duration {
+        public float duration
+        {
             get => root.duration;
-            private set {
+            private set
+            {
                 Assert.IsTrue(isAlive);
                 Assert.IsTrue(root.tween.isMainSequenceRoot());
                 var rootTween = root.tween;
@@ -67,7 +72,8 @@ namespace PrimeTween {
         }
 
         /// Elapsed time of all cycles.
-        public float elapsedTimeTotal {
+        public float elapsedTimeTotal
+        {
             get => root.elapsedTimeTotal;
             set => root.elapsedTimeTotal = value;
         }
@@ -76,67 +82,80 @@ namespace PrimeTween {
         public float durationTotal => root.durationTotal;
 
         /// Normalized progress of the current cycle expressed in 0..1 range.
-        public float progress {
+        public float progress
+        {
             get => root.progress;
             set => root.progress = value;
         }
 
         /// Normalized progress of all cycles expressed in 0..1 range.
-        public float progressTotal {
+        public float progressTotal
+        {
             get => root.progressTotal;
             set => root.progressTotal = value;
         }
 
         bool tryManipulate() => root.tryManipulate();
 
-        bool ValidateCanManipulateSequence() {
-            if (!tryManipulate()) {
+        bool ValidateCanManipulateSequence()
+        {
+            if (!tryManipulate())
+            {
                 return false;
             }
-            if (root.elapsedTimeTotal != 0f) {
+            if (root.elapsedTimeTotal != 0f)
+            {
                 Debug.LogError(Constants.animationAlreadyStarted);
                 return false;
             }
             return true;
         }
 
-        public static Sequence Create(int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear, bool useUnscaledTime = false, bool useFixedUpdate = false) {
-            #if UNITY_EDITOR
-            if (Constants.warnNoInstance) {
+        public static Sequence Create(int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear, bool useUnscaledTime = false, bool useFixedUpdate = false)
+        {
+#if UNITY_EDITOR
+            if (Constants.warnNoInstance)
+            {
                 return default;
             }
-            #endif
+#endif
             var tween = PrimeTweenManager.fetchTween();
             tween.setPropType(PropType.Float);
-            if (cycleMode == CycleMode.Incremental) {
+            if (cycleMode == CycleMode.Incremental)
+            {
                 Debug.LogError($"Sequence doesn't support CycleMode.Incremental. Parameter {nameof(sequenceEase)} is applied to the sequence's 'timeline', and incrementing the 'timeline' doesn't make sense. For the same reason, {nameof(sequenceEase)} is clamped to [0:1] range.");
                 cycleMode = CycleMode.Restart;
             }
-            if (sequenceEase == Ease.Custom) {
+            if (sequenceEase == Ease.Custom)
+            {
                 Debug.LogError("Sequence doesn't support Ease.Custom.");
                 sequenceEase = Ease.Linear;
             }
-            if (sequenceEase == Ease.Default) {
+            if (sequenceEase == Ease.Default)
+            {
                 sequenceEase = Ease.Linear;
             }
             var settings = new TweenSettings(0f, sequenceEase, cycles, cycleMode, 0f, 0f, useUnscaledTime, useFixedUpdate);
-            tween.Setup(PrimeTweenManager.dummyTarget, ref settings, _ => {}, null, false, TweenType.MainSequence);
+            tween.Setup(PrimeTweenManager.dummyTarget, ref settings, _ => { }, null, false, TweenType.MainSequence);
             tween.intParam = emptySequenceTag;
             var root = PrimeTweenManager.addTween(tween);
             Assert.IsTrue(root.isAlive);
             return new Sequence(root);
         }
 
-        public static Sequence Create(Tween firstTween) {
-            #if UNITY_EDITOR
-            if (Constants.warnNoInstance) {
+        public static Sequence Create(Tween firstTween)
+        {
+#if UNITY_EDITOR
+            if (Constants.warnNoInstance)
+            {
                 return default;
             }
-            #endif
+#endif
             return Create().Group(firstTween);
         }
 
-        Sequence(Tween rootTween) {
+        Sequence(Tween rootTween)
+        {
             root = rootTween;
             setSequence(rootTween);
             Assert.IsTrue(isAlive);
@@ -147,16 +166,20 @@ namespace PrimeTween {
         /// <summary>Groups <paramref name="tween"/> with the 'previous' animation in this Sequence.<br/>
         /// The 'previous' animation is the animation used in the preceding Group/Chain/Insert() method call.<br/>
         /// Grouped animations start at the same time and run in parallel.</summary>
-        public Sequence Group(Tween tween) {
-            if (tryManipulate()) {
+        public Sequence Group(Tween tween)
+        {
+            if (tryManipulate())
+            {
                 Insert(getLastInSelfOrRoot().tween.waitDelay, tween);
             }
             return this;
         }
 
-        void addLinkedReference(Tween tween) {
+        void addLinkedReference(Tween tween)
+        {
             Tween last;
-            if (root.tween.next.IsCreated) {
+            if (root.tween.next.IsCreated)
+            {
                 last = getLast();
                 var lastInSelf = getLastInSelfOrRoot();
                 Assert.AreNotEqual(root.id, lastInSelf.id);
@@ -164,7 +187,9 @@ namespace PrimeTween {
                 lastInSelf.tween.nextSibling = tween;
                 Assert.IsFalse(tween.tween.prevSibling.IsCreated);
                 tween.tween.prevSibling = lastInSelf;
-            } else {
+            }
+            else
+            {
                 last = root;
             }
 
@@ -175,9 +200,11 @@ namespace PrimeTween {
             root.tween.intParam = 0;
         }
 
-        Tween getLast() {
+        Tween getLast()
+        {
             Tween result = default;
-            foreach (var current in getAllTweens()) {
+            foreach (var current in getAllTweens())
+            {
                 result = current;
             }
             Assert.IsTrue(result.IsCreated);
@@ -186,8 +213,10 @@ namespace PrimeTween {
         }
 
         /// <summary>Places <paramref name="tween"/> after all previously added animations in this sequence. Chained animations run sequentially after one another.</summary>
-        public Sequence Chain(Tween tween) {
-            if (tryManipulate()) {
+        public Sequence Chain(Tween tween)
+        {
+            if (tryManipulate())
+            {
                 Insert(duration, tween);
             }
             return this;
@@ -195,11 +224,14 @@ namespace PrimeTween {
 
         /// <summary>Places <paramref name="tween"/> inside this Sequence at time <paramref name="atTime"/>, overlapping with other animations.<br/>
         /// The total sequence duration is increased if the inserted <paramref name="tween"/> doesn't fit inside the current sequence duration.</summary>
-        public Sequence Insert(float atTime, Tween tween) {
-            if (!ValidateCanAdd(tween)) {
+        public Sequence Insert(float atTime, Tween tween)
+        {
+            if (!ValidateCanAdd(tween))
+            {
                 return this;
             }
-            if (tween.tween.sequence.IsCreated) {
+            if (tween.tween.sequence.IsCreated)
+            {
                 Debug.LogError($"{Constants.nestTweenTwiceError} Tween: {tween.tween.GetDescription()}");
                 return this;
             }
@@ -208,7 +240,8 @@ namespace PrimeTween {
             return this;
         }
 
-        void Insert_internal(float atTime, Tween other) {
+        void Insert_internal(float atTime, Tween other)
+        {
             Assert.AreEqual(0f, other.tween.waitDelay);
             other.tween.waitDelay = atTime;
             duration = Mathf.Max(duration, other.durationWithWaitDelay);
@@ -217,15 +250,19 @@ namespace PrimeTween {
 
         /// <summary>Schedules <see cref="callback"/> after all previously added tweens.</summary>
         /// <param name="warnIfTargetDestroyed">https://github.com/KyryloKuzyk/PrimeTween/discussions/4</param>
-        public Sequence ChainCallback([NotNull] Action callback, bool warnIfTargetDestroyed = true) {
-            if (tryManipulate()) {
+        public Sequence ChainCallback([NotNull] Action callback, bool warnIfTargetDestroyed = true)
+        {
+            if (tryManipulate())
+            {
                 InsertCallback(duration, callback, warnIfTargetDestroyed);
             }
             return this;
         }
 
-        public Sequence InsertCallback(float atTime, Action callback, bool warnIfTargetDestroyed = true) {
-            if (!tryManipulate()) {
+        public Sequence InsertCallback(float atTime, Action callback, bool warnIfTargetDestroyed = true)
+        {
+            if (!tryManipulate())
+            {
                 return this;
             }
             var maybeDelay = PrimeTweenManager.delayWithoutDurationCheck(PrimeTweenManager.dummyTarget, atTime, false);
@@ -237,19 +274,24 @@ namespace PrimeTween {
 
         /// <summary>Schedules <see cref="callback"/> after all previously added tweens. Passing 'target' allows to write a non-allocating callback.</summary>
         /// <param name="warnIfTargetDestroyed">https://github.com/KyryloKuzyk/PrimeTween/discussions/4</param>
-        public Sequence ChainCallback<T>([NotNull] T target, [NotNull] Action<T> callback, bool warnIfTargetDestroyed = true) where T: class {
-            if (tryManipulate()) {
+        public Sequence ChainCallback<T>([NotNull] T target, [NotNull] Action<T> callback, bool warnIfTargetDestroyed = true) where T : class
+        {
+            if (tryManipulate())
+            {
                 InsertCallback(duration, target, callback, warnIfTargetDestroyed);
             }
             return this;
         }
 
-        public Sequence InsertCallback<T>(float atTime, [NotNull] T target, Action<T> callback, bool warnIfTargetDestroyed = true) where T: class {
-            if (!tryManipulate()) {
+        public Sequence InsertCallback<T>(float atTime, [NotNull] T target, Action<T> callback, bool warnIfTargetDestroyed = true) where T : class
+        {
+            if (!tryManipulate())
+            {
                 return this;
             }
             var maybeDelay = PrimeTweenManager.delayWithoutDurationCheck(target, atTime, false);
-            if (!maybeDelay.HasValue) {
+            if (!maybeDelay.HasValue)
+            {
                 return this;
             }
             var delay = maybeDelay.Value;
@@ -258,14 +300,17 @@ namespace PrimeTween {
         }
 
         /// <summary>Schedules delay after all previously added tweens.</summary>
-        public Sequence ChainDelay(float duration) {
+        public Sequence ChainDelay(float duration)
+        {
             return Chain(Tween.Delay(duration));
         }
 
-        Tween getLastInSelfOrRoot() {
+        Tween getLastInSelfOrRoot()
+        {
             Assert.IsTrue(isAlive);
             var result = root;
-            foreach (var current in getSelfChildren()) {
+            foreach (var current in getSelfChildren())
+            {
                 result = current;
             }
             Assert.IsTrue(result.IsCreated);
@@ -273,7 +318,8 @@ namespace PrimeTween {
             return result;
         }
 
-        void setSequence(Tween handle) {
+        void setSequence(Tween handle)
+        {
             Assert.IsTrue(IsCreated);
             Assert.IsTrue(handle.isAlive);
             var tween = handle.tween;
@@ -282,33 +328,42 @@ namespace PrimeTween {
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
-        bool ValidateCanAdd(Tween other) {
-            if (!ValidateCanManipulateSequence()) {
+        bool ValidateCanAdd(Tween other)
+        {
+            if (!ValidateCanManipulateSequence())
+            {
                 return false;
             }
-            if (!other.isAlive) {
+            if (!other.isAlive)
+            {
                 Debug.LogError(Constants.addDeadTweenToSequenceError);
                 return false;
             }
             var tween = other.tween;
-            if (tween.settings.cycles == -1) {
+            if (tween.settings.cycles == -1)
+            {
                 Debug.LogError(Constants.infiniteTweenInSequenceError);
                 return false;
             }
             var rootTween = root.tween;
-            if (tween._isPaused && tween._isPaused != rootTween._isPaused) {
+            if (tween._isPaused && tween._isPaused != rootTween._isPaused)
+            {
                 warnIgnoredChildrenSetting(nameof(isPaused));
             }
-            if (tween.timeScale != 1f && tween.timeScale != rootTween.timeScale) {
+            if (tween.timeScale != 1f && tween.timeScale != rootTween.timeScale)
+            {
                 warnIgnoredChildrenSetting(nameof(timeScale));
             }
-            if (tween.settings.useUnscaledTime && tween.settings.useUnscaledTime != rootTween.settings.useUnscaledTime) {
+            if (tween.settings.useUnscaledTime && tween.settings.useUnscaledTime != rootTween.settings.useUnscaledTime)
+            {
                 warnIgnoredChildrenSetting(nameof(TweenSettings.useUnscaledTime));
             }
-            if (tween.settings.useFixedUpdate && tween.settings.useFixedUpdate != rootTween.settings.useFixedUpdate) {
+            if (tween.settings.useFixedUpdate && tween.settings.useFixedUpdate != rootTween.settings.useFixedUpdate)
+            {
                 warnIgnoredChildrenSetting(nameof(TweenSettings.useFixedUpdate));
             }
-            void warnIgnoredChildrenSetting(string settingName) {
+            void warnIgnoredChildrenSetting(string settingName)
+            {
                 Debug.LogError($"'{settingName}' was ignored after adding child animation to the Sequence. Parent Sequence controls '{settingName}' of all its children animations.\n" +
                                "To prevent this error:\n" +
                                $"- Use the default value of '{settingName}' in child animation.\n" +
@@ -318,8 +373,10 @@ namespace PrimeTween {
         }
 
         /// Stops all tweens in the Sequence, ignoring callbacks.
-        public void Stop() {
-            if (isAlive && tryManipulate()) {
+        public void Stop()
+        {
+            if (isAlive && tryManipulate())
+            {
                 Assert.IsTrue(root.tween.isMainSequenceRoot());
                 releaseTweens();
                 Assert.IsFalse(isAlive);
@@ -328,11 +385,16 @@ namespace PrimeTween {
 
         /// <summary>Immediately completes the sequence.<br/>
         /// If the sequence has infinite cycles (cycles == -1), completes only the current cycle. To choose where the sequence should stop (at the 'start' or at the 'end') in the case of infinite cycles, use <see cref="SetRemainingCycles(bool stopAtEndValue)"/> before calling Complete().</summary>
-        public void Complete() {
-            if (isAlive && tryManipulate()) {
-                if (cyclesTotal == -1 || root.tween.settings.cycleMode == CycleMode.Restart) {
+        public void Complete()
+        {
+            if (isAlive && tryManipulate())
+            {
+                if (cyclesTotal == -1 || root.tween.settings.cycleMode == CycleMode.Restart)
+                {
                     SetRemainingCycles(1);
-                } else {
+                }
+                else
+                {
                     int cyclesLeft = cyclesTotal - cyclesDone;
                     SetRemainingCycles(cyclesLeft % 2 == 1 ? 1 : 2);
                 }
@@ -343,18 +405,21 @@ namespace PrimeTween {
             }
         }
 
-        internal void emergencyStop() {
+        internal void emergencyStop()
+        {
             Assert.IsTrue(isAlive);
             Assert.IsTrue(root.tween.isMainSequenceRoot());
             releaseTweens(t => t.warnOnCompleteIgnored(false));
         }
 
-        internal void releaseTweens([CanBeNull] Action<ReusableTween> beforeKill = null) {
+        internal void releaseTweens([CanBeNull] Action<ReusableTween> beforeKill = null)
+        {
             var enumerator = getAllTweens();
             enumerator.MoveNext();
             var current = enumerator.Current;
             Assert.IsTrue(current.isAlive);
-            while (true) {
+            while (true)
+            {
                 // ReSharper disable once RedundantCast
                 Tween? next = enumerator.MoveNext() ? enumerator.Current : (Tween?)null;
                 var tween = current.tween;
@@ -363,7 +428,8 @@ namespace PrimeTween {
                 tween.kill();
                 Assert.IsFalse(tween._isAlive);
                 releaseTween(tween);
-                if (!next.HasValue) {
+                if (!next.HasValue)
+                {
                     break;
                 }
                 current = next.Value;
@@ -371,7 +437,8 @@ namespace PrimeTween {
             Assert.IsFalse(isAlive); // not IsCreated because this may be a local variable in the user's codebase
         }
 
-        static void releaseTween([NotNull] ReusableTween tween) {
+        static void releaseTween([NotNull] ReusableTween tween)
+        {
             // Debug.Log($"[{Time.frameCount}] releaseTween {tween.id}");
             Assert.AreNotEqual(0, tween.sequence.root.id);
             tween.next = default;
@@ -379,13 +446,15 @@ namespace PrimeTween {
             tween.prevSibling = default;
             tween.nextSibling = default;
             tween.sequence = default;
-            if (tween.isSequenceRoot()) {
+            if (tween.isSequenceRoot())
+            {
                 tween.tweenType = TweenType.None;
                 Assert.IsFalse(tween.isSequenceRoot());
             }
         }
 
-        internal SequenceChildrenEnumerator getAllChildren() {
+        internal SequenceChildrenEnumerator getAllChildren()
+        {
             var enumerator = getAllTweens();
             var movedNext = enumerator.MoveNext(); // skip self
             Assert.IsTrue(movedNext);
@@ -396,7 +465,8 @@ namespace PrimeTween {
         /// <summary>Stops the sequence when it reaches the 'end' or returns to the 'start' for the next time.<br/>
         /// For example, if you have an infinite sequence (cycles == -1) with CycleMode.Yoyo/Rewind, and you wish to stop it when it reaches the 'end', then set <see cref="stopAtEndValue"/> to true.
         /// To stop the animation at the 'beginning', set <see cref="stopAtEndValue"/> to false.</summary>
-        public void SetRemainingCycles(bool stopAtEndValue) {
+        public void SetRemainingCycles(bool stopAtEndValue)
+        {
             root.SetRemainingCycles(stopAtEndValue);
         }
 
@@ -405,11 +475,13 @@ namespace PrimeTween {
         /// To set the initial number of cycles, use Sequence.Create(cycles: numCycles) instead.<br/><br/>
         /// Setting cycles to -1 will repeat the sequence indefinitely.<br/>
         /// </summary>
-        public void SetRemainingCycles(int cycles) {
+        public void SetRemainingCycles(int cycles)
+        {
             root.SetRemainingCycles(cycles);
         }
 
-        public bool isPaused {
+        public bool isPaused
+        {
             get => root.isPaused;
             set => root.isPaused = value;
         }
@@ -419,29 +491,35 @@ namespace PrimeTween {
 
         public override string ToString() => root.ToString();
 
-        internal struct SequenceDirectEnumerator {
+        internal struct SequenceDirectEnumerator
+        {
             readonly Sequence sequence;
             Tween current;
             readonly bool isEmpty;
             readonly bool isForward;
             bool isStarted;
 
-            internal SequenceDirectEnumerator(Sequence s, bool isForward) {
+            internal SequenceDirectEnumerator(Sequence s, bool isForward)
+            {
                 Assert.IsTrue(s.isAlive, s.id);
                 sequence = s;
                 this.isForward = isForward;
                 isStarted = false;
                 isEmpty = isSequenceEmpty(s);
-                if (isEmpty) {
+                if (isEmpty)
+                {
                     current = default;
                     return;
                 }
                 current = sequence.root.tween.next;
                 Assert.IsTrue(current.IsCreated && current.id != sequence.root.tween.nextSibling.id);
-                if (!isForward) {
-                    while (true) {
+                if (!isForward)
+                {
+                    while (true)
+                    {
                         var next = current.tween.nextSibling;
-                        if (!next.IsCreated) {
+                        if (!next.IsCreated)
+                        {
                             break;
                         }
                         current = next;
@@ -450,26 +528,30 @@ namespace PrimeTween {
                 Assert.IsTrue(current.IsCreated);
             }
 
-            static bool isSequenceEmpty(Sequence s) {
+            static bool isSequenceEmpty(Sequence s)
+            {
                 // tests: SequenceNestingDifferentSettings(), TestSequenceEnumeratorWithEmptySequences()
                 return s.root.tween.intParam == emptySequenceTag;
             }
 
             public
-                #if UNITY_2020_2_OR_NEWER
+#if UNITY_2020_2_OR_NEWER
                 readonly
-                #endif
-                SequenceDirectEnumerator GetEnumerator() {
+#endif
+                SequenceDirectEnumerator GetEnumerator()
+            {
                 Assert.IsTrue(sequence.isAlive);
                 return this;
             }
 
             public
-                #if UNITY_2020_2_OR_NEWER
+#if UNITY_2020_2_OR_NEWER
                 readonly
-                #endif
-                Tween Current {
-                get {
+#endif
+                Tween Current
+            {
+                get
+                {
                     Assert.IsTrue(sequence.isAlive);
                     Assert.IsTrue(current.IsCreated);
                     Assert.IsNotNull(current.tween);
@@ -479,12 +561,15 @@ namespace PrimeTween {
                 }
             }
 
-            public bool MoveNext() {
-                if (isEmpty) {
+            public bool MoveNext()
+            {
+                if (isEmpty)
+                {
                     return false;
                 }
                 Assert.IsTrue(current.isAlive);
-                if (!isStarted) {
+                if (!isStarted)
+                {
                     isStarted = true;
                     return true;
                 }
@@ -493,12 +578,14 @@ namespace PrimeTween {
             }
         }
 
-        internal struct SequenceChildrenEnumerator {
+        internal struct SequenceChildrenEnumerator
+        {
             readonly Sequence sequence;
             Tween current;
             bool isStarted;
 
-            internal SequenceChildrenEnumerator(Sequence s) {
+            internal SequenceChildrenEnumerator(Sequence s)
+            {
                 Assert.IsTrue(s.isAlive);
                 Assert.IsTrue(s.root.tween.isMainSequenceRoot());
                 sequence = s;
@@ -507,20 +594,23 @@ namespace PrimeTween {
             }
 
             public
-                #if UNITY_2020_2_OR_NEWER
+#if UNITY_2020_2_OR_NEWER
                 readonly
-                #endif
-                SequenceChildrenEnumerator GetEnumerator() {
+#endif
+                SequenceChildrenEnumerator GetEnumerator()
+            {
                 Assert.IsTrue(sequence.isAlive);
                 return this;
             }
 
             public
-                #if UNITY_2020_2_OR_NEWER
+#if UNITY_2020_2_OR_NEWER
                 readonly
-                #endif
-                Tween Current {
-                get {
+#endif
+                Tween Current
+            {
+                get
+                {
                     Assert.IsTrue(current.IsCreated);
                     Assert.IsNotNull(current.tween);
                     Assert.AreEqual(current.id, current.tween.id);
@@ -529,8 +619,10 @@ namespace PrimeTween {
                 }
             }
 
-            public bool MoveNext() {
-                if (!isStarted) {
+            public bool MoveNext()
+            {
+                if (!isStarted)
+                {
                     Assert.IsFalse(current.IsCreated);
                     current = sequence.root;
                     isStarted = true;
@@ -543,8 +635,10 @@ namespace PrimeTween {
         }
 
         /// <summary>Places <paramref name="sequence"/> after all previously added animations in this sequence. Chained animations run sequentially after one another.</summary>
-        public Sequence Chain(Sequence sequence) {
-            if (tryManipulate()) {
+        public Sequence Chain(Sequence sequence)
+        {
+            if (tryManipulate())
+            {
                 Insert(duration, sequence);
             }
             return this;
@@ -553,8 +647,10 @@ namespace PrimeTween {
         /// <summary>Groups <paramref name="sequence"/> with the 'previous' animation in this Sequence.<br/>
         /// The 'previous' animation is the animation used in the preceding Group/Chain/Insert() method call.<br/>
         /// Grouped animations start at the same time and run in parallel.</summary>
-        public Sequence Group(Sequence sequence) {
-            if (tryManipulate()) {
+        public Sequence Group(Sequence sequence)
+        {
+            if (tryManipulate())
+            {
                 Insert(getLastInSelfOrRoot().tween.waitDelay, sequence);
             }
             return this;
@@ -562,13 +658,16 @@ namespace PrimeTween {
 
         /// <summary>Places <paramref name="sequence"/> inside this Sequence at time <paramref name="atTime"/>, overlapping with other animations.<br/>
         /// The total sequence duration is increased if the inserted <paramref name="sequence"/> doesn't fit inside the current sequence duration.</summary>
-        public Sequence Insert(float atTime, Sequence sequence) {
-            if (!ValidateCanAdd(sequence.root)) {
+        public Sequence Insert(float atTime, Sequence sequence)
+        {
+            if (!ValidateCanAdd(sequence.root))
+            {
                 return this;
             }
 
             ref var otherTweenType = ref sequence.root.tween.tweenType;
-            if (otherTweenType != TweenType.MainSequence) {
+            if (otherTweenType != TweenType.MainSequence)
+            {
                 Debug.LogError(Constants.nestSequenceTwiceError);
                 return this;
             }
@@ -580,36 +679,44 @@ namespace PrimeTween {
         }
 
         /// <summary>Custom timeScale. To smoothly animate timeScale over time, use <see cref="Tween.TweenTimeScale"/> method.</summary>
-        public float timeScale {
+        public float timeScale
+        {
             get => root.timeScale;
             set => root.timeScale = value;
         }
 
         [System.Diagnostics.Conditional("SAFETY_CHECKS")]
-        void validateSequenceEnumerator() {
+        void validateSequenceEnumerator()
+        {
             var buffer = new List<ReusableTween> {
                 root.tween
             };
-            foreach (var t in getAllTweens()) {
+            foreach (var t in getAllTweens())
+            {
                 // Debug.Log($"----- {t}");
-                if (t.tween.isSequenceRoot()) {
-                    foreach (var ch in t.tween.sequence.getSelfChildren()) {
+                if (t.tween.isSequenceRoot())
+                {
+                    foreach (var ch in t.tween.sequence.getSelfChildren())
+                    {
                         // Debug.Log(ch);
                         buffer.Add(ch.tween);
                     }
                 }
             }
-            if (buffer.Count != buffer.Select(_ => _.id).Distinct().Count()) {
+            if (buffer.Count != buffer.Select(_ => _.id).Distinct().Count())
+            {
                 Debug.LogError($"{root.id}, duplicates in validateSequenceEnumerator():\n{string.Join("\n", buffer)}");
             }
         }
 
-        public Sequence OnComplete(Action onComplete, bool warnIfTargetDestroyed = true) {
+        public Sequence OnComplete(Action onComplete, bool warnIfTargetDestroyed = true)
+        {
             root.OnComplete(onComplete, warnIfTargetDestroyed);
             return this;
         }
 
-        public Sequence OnComplete<T>(T target, Action<T> onComplete, bool warnIfTargetDestroyed = true) where T : class {
+        public Sequence OnComplete<T>(T target, Action<T> onComplete, bool warnIfTargetDestroyed = true) where T : class
+        {
             root.OnComplete(target, onComplete, warnIfTargetDestroyed);
             return this;
         }
