@@ -57,11 +57,12 @@ namespace Cr7Sund.TweenTimeLine
             string identifier = TweenCustomTrackCodeGenerator.GetTweenBehaviourIdentifier(method);
             string tweenMethod = $"{identifier}ControlBehaviour";
             var tweenOperationType = method.GetTweenOperationType(tweenMethod);
-            return new TweenActionEffect(method.GetPropertyMethod, typeName)
-            {
-                image = $"{typeName}.png",
-                collectionCategory = "Custom",
-                animationSteps = new List<TweenActionStep>
+            TweenActionEffect tweenActionEffect = new TweenActionEffect();
+            tweenActionEffect.image = $"{typeName}.png";
+            tweenActionEffect.collectionCategory = "Custom";
+            tweenActionEffect.label = method.GetPropertyMethod;
+            tweenActionEffect.effectCategory = typeName;
+            tweenActionEffect.animationSteps = new List<TweenActionStep>
                 {
                     new TweenActionStep
                     {
@@ -70,8 +71,8 @@ namespace Cr7Sund.TweenTimeLine
                         tweenMethod =$"{tweenMethod}",
                         label = method.GetPropertyMethod,
                     }
-                }
-            };
+                };
+            return tweenActionEffect;
         }
     }
 

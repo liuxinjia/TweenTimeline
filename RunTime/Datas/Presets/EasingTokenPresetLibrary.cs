@@ -53,12 +53,10 @@ namespace Cr7Sund.TweenTimeLine
             var findIndex = easingTokenPresets
                .FindIndex(token =>
                 token.Name == easingTokenPreset.Name
+                && token.GetType() == easingTokenPreset.GetType()
                 );
 
-            bool isLinear = easingTokenPreset.Name == "Linear";
-
-            if (findIndex >= 0
-               && !isLinear)
+            if (findIndex >= 0)
             {
                 // Debug.LogWarning($"A ease preset with the name '{easingTokenPreset.Name}' already exists.");
                 easingTokenPresets[findIndex] = easingTokenPreset;
@@ -69,7 +67,22 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
 
+        public void RemovePreset(BaseEasingTokenPreset easingTokenPreset)
+        {
+            var findIndex = easingTokenPresets
+               .FindIndex(token =>
+                token.Name == easingTokenPreset.Name
+                && token.GetType() == easingTokenPreset.GetType()
+                );
 
+
+            if (findIndex >= 0)
+            {
+                // Debug.LogWarning($"A ease preset with the name '{easingTokenPreset.Name}' already exists.");
+                easingTokenPresets.RemoveAt(findIndex);
+            }
+
+        }
 
 #if UNITY_EDITOR
 

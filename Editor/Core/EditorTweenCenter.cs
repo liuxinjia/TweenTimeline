@@ -181,15 +181,5 @@ namespace Cr7Sund
 
         }
 
-        internal static void RegisterDelayCallback(object onUpdateGIF)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static void RegisterDelayCallback(GameObject gameObject, int v, object onUpdateGIF)
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }

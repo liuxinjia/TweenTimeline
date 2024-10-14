@@ -17,7 +17,16 @@ namespace Cr7Sund.TweenTimeLine
     {
         public static bool isPlay;
         public static double timeLineTime;
-        public static bool isInit = false;
+        private static bool isInit = false;
+
+        public static bool IsInit
+        {
+            get
+            {
+                return isInit;
+            }
+            set => isInit = value;
+        }
 
         public static bool InitTimeline()
         {
@@ -28,7 +37,7 @@ namespace Cr7Sund.TweenTimeLine
 
             InitPreTween();
 
-            if (!isInit && TimelineWindowExposer.IsValidTimelineWindow())
+            if (!IsInit && TimelineWindowExposer.IsValidTimelineWindow())
             {
                 bool hasTimelineWindow = TryRegisterTimelineEvents();
 
@@ -36,7 +45,7 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     Refresh();
 
-                    isInit = true;
+                    IsInit = true;
                     return true;
                 }
             }
@@ -44,6 +53,11 @@ namespace Cr7Sund.TweenTimeLine
             return false;
         }
 
+        public static void DestroyTimeline()
+        {
+            IsInit = false;
+            isPlay = false;
+        }
         public static void LogProfile(string message)
         {
             // Debug.Log("<color=green>" + message + "</color>");
@@ -63,7 +77,18 @@ namespace Cr7Sund.TweenTimeLine
         #region Events
         private static bool TryRegisterTimelineEvents()
         {
-            return TimelineWindowExposer.Init(OnPlayStateChange, OnRebuildGraphChange, OnTimeChange);
+            return TimelineWindowExposer.Init(OnPlayStateChange, OnRebuildGraphChange, OnTimeChange, onTimelineWindowGUIStart);
+        }
+
+        private static void onTimelineWindowGUIStart()
+        {
+            // in case when change selection since we need to select timeline first
+            if (TweenTimeLineDataModel.SelectTimelineClip != null
+                && TimelineWindowExposer.IsValidTimelineWindow())
+            {
+                TimelineWindowExposer.SelectTimelineClip(TweenTimeLineDataModel.SelectTimelineClip);
+                TweenTimeLineDataModel.SelectTimelineClip = null;
+            }
         }
 
         private static void OnTimeChange()
@@ -81,13 +106,16 @@ namespace Cr7Sund.TweenTimeLine
         private static void OnRebuildGraphChange()
         {
             if (TimelineWindowExposer.IsFocusTimeLineWindow())
+            {
                 Refresh();
+            }
         }
 
         private static void OnPlayStateChange(bool isPlay)
         {
             SetPlay(isPlay);
             // Debug.Log("IsPlay " + isPlay);
+
             if (isPlay)
             {
                 TweenTimelineManager.PlayAllClip();
@@ -95,6 +123,7 @@ namespace Cr7Sund.TweenTimeLine
             else
             {
                 ResetDefaultAllClipWhenStop();
+                IsInit = false;
             }
         }
 
@@ -117,7 +146,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 return;
             }
-            if (isInit)
+            if (IsInit)
             {
                 ResetDefaultAllClip();
             }
@@ -126,7 +155,7 @@ namespace Cr7Sund.TweenTimeLine
         public static void OnPlayModeChanged(PlayModeStateChange change)
         {
             // incase of the static don't change when domain reload disable
-            isInit = false;
+            IsInit = false;
             if (change == PlayModeStateChange.ExitingEditMode)
             {
                 if (GetActionEditorWindow() != null)
@@ -431,7 +460,7 @@ namespace Cr7Sund.TweenTimeLine
 
         public static void InitPreTween()
         {
-                PrimeTweenManagerExposer.Init();
+            PrimeTweenManagerExposer.Init();
         }
 
         private static void UpdateTimeCache()
@@ -987,7 +1016,7 @@ namespace Cr7Sund.TweenTimeLine
             if (!InitTimeline())
             {
                 // Debug.Log("Please open the timeLine window first");
-                if (!isInit)
+                if (!IsInit)
                 {
                     Debug.LogError("Fail to Init Timeline");
                 }

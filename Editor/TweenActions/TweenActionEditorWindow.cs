@@ -17,7 +17,7 @@ namespace Cr7Sund.TweenTimeLine
         private AnimTokenPresets _animTokenPresets;
         private TweenActionLibrary _tweenActionContainer;
         private EasingTokenPresetLibrary _easingTokenPresetLibrary;
-        private TweenActionEffect _selectTweenAction = new();
+        private TweenActionEffect _selectTweenAction;
         private Sequence _curSequence;
         private string _updateSequenceID;
         private VisualElement _selecGridItem;
@@ -49,6 +49,10 @@ namespace Cr7Sund.TweenTimeLine
         #region LifeTime
         public void OnEnable()
         {
+            if (_selectTweenAction == null)
+            {
+                _selectTweenAction = new TweenActionEffect();
+            }
             this.maxSize = TweenTimelineDefine.windowMaxSize;
             this.minSize = TweenTimelineDefine.windowMaxSize;
             TweenTimeLineDataModel.RefreshViewAction = this.RefreshBtns;
@@ -185,7 +189,7 @@ namespace Cr7Sund.TweenTimeLine
                 TweenTimelineManager.AddTrack(
                     trackRoot,
                     trackInfo,
-                    rooTabView.selectedTabIndex == 0,
+                    rooTabView.selectedTabIndex != 1,
                     createNewTrack
                 );
             }
@@ -340,11 +344,10 @@ namespace Cr7Sund.TweenTimeLine
 
             CreateSettingParisField(container);
             RefreshEasePairs(container);
-            
+
             // Update Duration Field
             var durationField = container.Q<EnumField>("CustomDurationField");
             durationField.Init(DurationToken.ExtraLong1);
-            durationField.value = selectTweenAction.durationToken;
             durationField.RegisterValueChangedCallback(evt =>
             {
                 selectTweenAction.durationToken = (DurationToken)evt.newValue;
@@ -353,7 +356,6 @@ namespace Cr7Sund.TweenTimeLine
             // Update Ease Field
             EnumField easeField = container.Q<EnumField>("CustomEasingField");
             easeField.Init(MaterialEasingToken.Standard);
-            easeField.value = selectTweenAction.easeToken;
             easeField.RegisterValueChangedCallback(evt =>
             {
                 selectTweenAction.easeToken = (MaterialEasingToken)evt.newValue;
@@ -408,10 +410,10 @@ namespace Cr7Sund.TweenTimeLine
         {
             var animationSettingField = container.Q<EnumField>("AnimTokenPreset");
             var animSettingType = _selectTweenAction.timeEasePairs;
-            animationSettingField.value = animSettingType;
+            animationSettingField.Init(animSettingType);
             animationSettingField.RegisterValueChangedCallback(evt =>
             {
-                _selectTweenAction.timeEasePairs =(TimeEasePairs) evt.newValue;
+                _selectTweenAction.timeEasePairs = (TimeEasePairs)evt.newValue;
 
                 var easeField = container.Q<EnumField>("CustomEasingField");
                 var durationField = container.Q<EnumField>("CustomDurationField");
@@ -480,12 +482,14 @@ namespace Cr7Sund.TweenTimeLine
                 animActionUnit.EndPos = newValue;
             });
             endPosField.name = "EndPosField";
+            endPosField.Q<Label>().text = animActionUnit.tweenOperationType == TweenActionStep.TweenOperationType.Additive
+            ? "Delta": "EndValue";
             var startPosField = AniActionEditToolHelper.CreateValueField("StartValue", componentValueType, animActionUnit.StartPos, (newValue) =>
             {
                 animActionUnit.StartPos = newValue;
             });
             startPosField.name = "StartPosField";
-            startPosField.style.display = (animActionUnit.tweenOperationType != TweenActionStep.TweenOperationType.Default)
+            startPosField.style.display = animActionUnit.tweenOperationType != TweenActionStep.TweenOperationType.Default
             ? DisplayStyle.None : DisplayStyle.Flex;
             var paramsPart = animUnit.Q<VisualElement>("paramsPart");
 
@@ -648,6 +652,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 Debug.LogError("Please select a game object first");
             }
+
             _selectTweenAction.CopyFrom(animAction);
             UpdateConfigUI(_selectTweenAction);
             CreateAnimUnits(_selectTweenAction);

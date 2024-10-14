@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEditor;
 using UnityEditor.Timeline;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -293,6 +294,12 @@ namespace Cr7Sund.Timeline.Extension
         public static void Bind(PlayableDirector director, TrackAsset bindTo, UnityEngine.Object objectToBind)
         {
             BindingUtility.Bind(director, bindTo, objectToBind);
+        }
+
+        public static void SelectTimelineClip(TimelineClip timelineClip)
+        {
+            // EditorWindow.GetWindow<TimelineWindow>();
+            TimelineEditor.selectedClip = timelineClip;
         }
 
     }

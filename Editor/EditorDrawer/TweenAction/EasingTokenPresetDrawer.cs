@@ -18,13 +18,14 @@ namespace Cr7Sund.TweenTimeLine
             return DrawEasePresetField(property);
         }
 
-        private VisualElement DrawEasePresetField(SerializedProperty _easePresetProp)
+        private VisualElement DrawEasePresetField(SerializedProperty easePresetProp)
         {
-            if(_easePresetProp.managedReferenceValue == null){
+            if (easePresetProp.managedReferenceValue == null)
+            {
                 var easePropInstance = Activator.CreateInstance<MaterialEasingTokenPreset>() as BaseEasingTokenPreset;
-                _easePresetProp.managedReferenceValue = easePropInstance;
+                easePresetProp.managedReferenceValue = easePropInstance;
             }
-            Type currentType = _easePresetProp.managedReferenceValue?.GetType();
+            Type currentType = easePresetProp.managedReferenceValue?.GetType();
 
             var derivedTypes = TweenTimelineDefine.DerivedEaseTokenTypes;
             string[] typeNames = derivedTypes.Select(t => t.Name).ToArray();
@@ -43,23 +44,23 @@ namespace Cr7Sund.TweenTimeLine
                     // we don't use reference 
                     // 2. we need to store it and don'want to chane the unique instance at library
                     var easePropInstance = Activator.CreateInstance(selectedType) as BaseEasingTokenPreset;
-                    _easePresetProp.managedReferenceValue = easePropInstance;
+                    easePresetProp.managedReferenceValue = easePropInstance;
 
-                    var cureProperty = _easePresetProp.FindPropertyRelative(curvePropertyPath);
-                    var tokenProperty = _easePresetProp.FindPropertyRelative(tokenKeyPropertyPath);
+                    var cureProperty = easePresetProp.FindPropertyRelative(curvePropertyPath);
+                    // var tokenProperty = _easePresetProp.FindPropertyRelative(tokenKeyPropertyPath);
                     if (cureProperty != null)
                     {
                         cureProperty.animationCurveValue = GetEaseAnimationCurve(easePropInstance.Name);
                     }
                     // tokenProperty.enumValueIndex = enumValues.IndexOf();
 
-                    _easePresetProp.serializedObject.ApplyModifiedProperties();
-                    _easePresetProp.serializedObject.Update();
+                    easePresetProp.serializedObject.ApplyModifiedProperties();
+                    easePresetProp.serializedObject.Update();
                 }
             });
 
             // PropertyField easePresetField = new PropertyField(_easePresetProp, "Ease Preset");
-            var easePresetField = CreateEasePresetField(_easePresetProp, currentType);
+            var easePresetField = CreateEasePresetField(easePresetProp, currentType);
 
             var container = new VisualElement();
             container.Add(popupField);
@@ -67,39 +68,29 @@ namespace Cr7Sund.TweenTimeLine
             return container;
         }
 
-        private VisualElement CreateEasePresetField(SerializedProperty _easePresetProp, Type presetType)
+        private VisualElement CreateEasePresetField(SerializedProperty easePresetProp, Type presetType)
         {
             var container = new VisualElement();
 
-            var cureProperty = _easePresetProp.FindPropertyRelative(curvePropertyPath);
-            var tokenProperty = _easePresetProp.FindPropertyRelative(tokenKeyPropertyPath);
-            if (tokenProperty == null)
-            {
-                return new PropertyField(_easePresetProp);
-            }
+            var curveProperty = easePresetProp.FindPropertyRelative(curvePropertyPath);
+            var tokenProperty = easePresetProp.FindPropertyRelative(tokenKeyPropertyPath);
 
             var curveField = new CurveField();
             curveField.name = "EasingCurve";
             curveField.style.minHeight = 200;
-            if (cureProperty != null)
+
+            string presetName = string.Empty;
+            if (tokenProperty.propertyType == SerializedPropertyType.Enum)
             {
-                curveField.BindProperty(cureProperty);
+                presetName = tokenProperty.enumNames[tokenProperty.enumValueIndex];
             }
             else
             {
-                string presetName = string.Empty;
-                if (tokenProperty.propertyType == SerializedPropertyType.Enum)
-                {
-                    presetName = tokenProperty.enumNames[tokenProperty.enumValueIndex];
-                }
-                else
-                {
-                    presetName = tokenProperty.stringValue;
-                }
-                presetName = GetCurveName(presetName);
-
-                curveField.value = GetEaseAnimationCurve(presetName);
+                presetName = tokenProperty.stringValue;
             }
+            presetName = GetCurveName(presetName);
+
+            curveField.value = GetEaseAnimationCurve(presetName);
             // curveField.SetEnabled(false);
 
             if (tokenProperty.propertyType == SerializedPropertyType.Enum)
@@ -112,15 +103,72 @@ namespace Cr7Sund.TweenTimeLine
                     string curveName = GetCurveName(evt.newValue);
                     curveField.value = GetEaseAnimationCurve(curveName);
                     tokenProperty.enumValueIndex = enumValues.IndexOf(evt.newValue);
-                    _easePresetProp.serializedObject.ApplyModifiedProperties();
-                    _easePresetProp.serializedObject.Update();
+                    easePresetProp.serializedObject.ApplyModifiedProperties();
+                    easePresetProp.serializedObject.Update();
                 });
 
                 container.Add(popField);
             }
+            else if (tokenProperty.propertyType == SerializedPropertyType.String)
+            {
+                var customCurveContainer = new VisualElement();
+                customCurveContainer.style.flexDirection = FlexDirection.Row;
+                var customCurveNameField = new TextField("Curve Name");
+                // customCurveNameField.BindProperty(tokenProperty);
+                string curveName = tokenProperty.stringValue;
+                if (string.IsNullOrEmpty(curveName))
+                {
+                    curveName = $"New Curve";
+                }
+                customCurveNameField.value = curveName;
+
+                var saveBtn = new Button(() =>
+                {
+                    if (easePresetProp.managedReferenceValue is CustomCurveEasingTokenPreset customCurveEasingTokenPreset)
+                    {
+                        SaveCustomCurve(customCurveEasingTokenPreset, curveField.value, customCurveNameField.value);
+                    }
+                }
+                );
+                saveBtn.text = "Save";
+                customCurveContainer.Add(customCurveNameField);
+                customCurveContainer.Add(saveBtn);
+                container.Add(customCurveContainer);
+            }
+
             container.Add(curveField);
             return container;
         }
+
+        private void SaveCustomCurve(CustomCurveEasingTokenPreset easingTokenPreset,
+         AnimationCurve curve, string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                Debug.LogError("try to add a empty name curve Preset");
+                return;
+            }
+            if (EasingTokenPresetLibraryEditor.CurveDictionary.ContainsKey(name)
+            && easingTokenPreset.tokenKey != name)
+            {
+                Debug.LogError("try to add a same name curve Preset");
+                return;
+            }
+
+            var easingTokenPresetLibrary = AssetDatabase.LoadAssetAtPath<EasingTokenPresetLibrary>(TweenTimelineDefine.easingTokenPresetsPath);
+            if (easingTokenPreset.tokenKey != name)
+            {
+                easingTokenPresetLibrary.RemovePreset(easingTokenPreset);
+                EasingTokenPresetLibraryEditor.CurveDictionary.Remove(easingTokenPreset.tokenKey);
+            }
+
+            easingTokenPreset.animationCurve = curve;
+            easingTokenPreset.tokenKey = name;
+            easingTokenPresetLibrary.AddPreset(easingTokenPreset);
+            EasingTokenPresetLibraryEditor.CurveDictionary.Add(easingTokenPreset.tokenKey, easingTokenPreset.Curve);
+        }
+
+
         private static string GetCurveName(string curveName)
         {
             string evtNewValue = curveName.Replace(" ", "");
@@ -129,19 +177,32 @@ namespace Cr7Sund.TweenTimeLine
 
         private AnimationCurve GetEaseAnimationCurve(string curveName)
         {
+            if (!string.IsNullOrEmpty(curveName))
+            {
+                if (EasingTokenPresetsFactory.easeToEquationsMap.ContainsKey(curveName))
+                {
+                    curveName = EasingTokenPresetsFactory.easeToEquationsMap[curveName];
+                }
+
+                if (EasingTokenPresetLibraryEditor.CurveDictionary.ContainsKey(curveName))
+                {
+                    var animationCurve = EasingTokenPresetLibraryEditor.CurveDictionary[curveName];
+                    // var copyCurve = new AnimationCurve();
+                    // copyCurve.CopyFrom(animationCurve);
+                    return animationCurve;
+                }
+            }
+            return AnimationCurve.Linear(0, 0, 1, 1);
+        }
+
+        private bool ContainsCurveSource(string curveName)
+        {
             if (EasingTokenPresetsFactory.easeToEquationsMap.ContainsKey(curveName))
             {
                 curveName = EasingTokenPresetsFactory.easeToEquationsMap[curveName];
             }
 
-            if (EasingTokenPresetLibraryEditor.CurveDictionary.ContainsKey(curveName))
-            {
-                return EasingTokenPresetLibraryEditor.CurveDictionary[curveName];
-            }
-            else
-            {
-                return AnimationCurve.Constant(0, 1, 1);
-            }
+            return EasingTokenPresetLibraryEditor.CurveDictionary.ContainsKey(curveName);
         }
     }
 }

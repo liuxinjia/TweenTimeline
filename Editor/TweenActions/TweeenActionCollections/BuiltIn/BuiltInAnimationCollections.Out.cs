@@ -9,265 +9,285 @@ namespace Cr7Sund.TweenTimeLine
 {
     public partial class TweenActionContainerBuilder
     {
-
         private TweenCollection CreateOutAnimationCollection()
         {
             var outAnimationCollection = new TweenCollection(TweenTimelineDefine.OutDefine);
 
             // Fade Out
-            outAnimationCollection.animationCollections.Add(new TweenActionEffect("Fade Out", "Fade")
+            var fadeOutEffect = new TweenActionEffect();
+            fadeOutEffect.label = "Fade Out";
+            fadeOutEffect.effectCategory = "Fade";
+            fadeOutEffect.image = "crate_with_heart.png";
+            fadeOutEffect.timeEasePairs = TimeEasePairs.StandardAccelerate;
+            fadeOutEffect.animationSteps = new List<TweenActionStep>
             {
-                image = "crate_with_heart.png",
-                animationSteps = new List<TweenActionStep>
-        {
-            new TweenActionStep
-            {
-                EndPos = "0.0f",
-                StartPos = "1.0f",
-                tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
-            }
-        }
-            });
+                new TweenActionStep
+                {
+                    EndPos = "0.0f",
+                    StartPos = "1.0f",
+                    tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
+                }
+            };
+            outAnimationCollection.animationCollections.Add(fadeOutEffect);
 
             // Slide Out
-            outAnimationCollection.animationCollections.Add(new TweenActionEffect("Slide Out", "Fade")
+            var slideOutEffect = new TweenActionEffect();
+            slideOutEffect.label = "Slide Out";
+            slideOutEffect.effectCategory = "Fade";
+            slideOutEffect.image = "crate_with_heart.png";
+            slideOutEffect.timeEasePairs = TimeEasePairs.StandardAccelerate;
+            slideOutEffect.animationSteps = new List<TweenActionStep>
             {
-                image = "crate_with_heart.png",
-                animationSteps = new List<TweenActionStep>
-        {
-            new TweenActionStep
-            {
-                EndPos = new Vector2(-250, 0).ToString(),
-                StartPos = string.Empty,
-             tweenOperationType=   TweenActionStep.TweenOperationType.Default,
-                tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionControlBehaviour>(),
-                label = "MoveX",
-            },
-            new TweenActionStep
-            {
-                EndPos = "0.0f",
-                StartPos = "1.0f",
-                tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
-                label = "Alpha",
-            }
-        }
-            });
+                new TweenActionStep
+                {
+                    EndPos = new Vector2(-250, 0).ToString(),
+                    StartPos = string.Empty,
+                    tweenOperationType = TweenActionStep.TweenOperationType.Default,
+                    tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionControlBehaviour>(),
+                    label = "MoveX",
+                },
+                new TweenActionStep
+                {
+                    EndPos = "0.0f",
+                    StartPos = "1.0f",
+                    tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
+                    label = "Alpha",
+                }
+            };
+            outAnimationCollection.animationCollections.Add(slideOutEffect);
 
             // Grow Out
-            outAnimationCollection.animationCollections.Add(new TweenActionEffect("Grow Out", "Scale")
+            var growOutEffect = new TweenActionEffect();
+            growOutEffect.label = "Grow Out";
+            growOutEffect.effectCategory = "Scale";
+            growOutEffect.image = "Assets/TweenTimeline/BuiltInConfigs/Editor Default Resources/Gifs/GrowOut.gif";
+            growOutEffect.timeEasePairs = TimeEasePairs.StandardAccelerate;
+            growOutEffect.animationSteps = new List<TweenActionStep>
             {
-                image = "Assets/TweenTimeline/BuiltInConfigs/Editor Default Resources/Gifs/GrowOut.gif",
-                animationSteps = new List<TweenActionStep>
-        {
-            new TweenActionStep
-            {
-                EndPos = new Vector3(2.0f, 2.0f, 2.0f).ToString(),
-                StartPos = Vector3.one.ToString(),
-                label = "Scale",
-                tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
-            },
-            new TweenActionStep
-            {
-                EndPos = "0.0f",
-                StartPos = "1.0f",
-                label = "Fade",
-                tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
-            }
-        }
-            });
+                new TweenActionStep
+                {
+                    EndPos = new Vector3(2.0f, 2.0f, 2.0f).ToString(),
+                    StartPos = Vector3.one.ToString(),
+                    label = "Scale",
+                    tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
+                },
+                new TweenActionStep
+                {
+                    EndPos = "0.0f",
+                    StartPos = "1.0f",
+                    label = "Fade",
+                    tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
+                }
+            };
+            outAnimationCollection.animationCollections.Add(growOutEffect);
 
             // Shrink Out
-            outAnimationCollection.animationCollections.Add(new TweenActionEffect("Shrink Out", "Scale")
+            var shrinkOutEffect = new TweenActionEffect();
+            shrinkOutEffect.label = "Shrink Out";
+            shrinkOutEffect.effectCategory = "Scale";
+            shrinkOutEffect.image = "shrink_out_example.png";
+            shrinkOutEffect.timeEasePairs = TimeEasePairs.StandardAccelerate;
+            shrinkOutEffect.animationSteps = new List<TweenActionStep>
             {
-                image = "shrink_out_example.png",
-                animationSteps = new List<TweenActionStep>
-        {
-            new TweenActionStep
-            {
-                EndPos = Vector3.zero.ToString(),
-                StartPos = Vector3.one.ToString(),
-                label = "Scale",
-                tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
-            },
-            new TweenActionStep
-            {
-                EndPos = "0.0f",
-                StartPos = "1.0f",
-                label = "Fade",
-                tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
-            }
-        }
-            });
+                new TweenActionStep
+                {
+                    EndPos = Vector3.zero.ToString(),
+                    StartPos = Vector3.one.ToString(),
+                    label = "Scale",
+                    tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
+                },
+                new TweenActionStep
+                {
+                    EndPos = "0.0f",
+                    StartPos = "1.0f",
+                    label = "Fade",
+                    tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
+                }
+            };
+            outAnimationCollection.animationCollections.Add(shrinkOutEffect);
 
             // Spin Out
-            outAnimationCollection.animationCollections.Add(new TweenActionEffect("Spin Out", "Scale")
+            var spinOutEffect = new TweenActionEffect();
+            spinOutEffect.label = "Spin Out";
+            spinOutEffect.effectCategory = "Scale";
+            spinOutEffect.image = "spin_out_example.png";
+            spinOutEffect.timeEasePairs = TimeEasePairs.StandardAccelerate;
+            spinOutEffect.animationSteps = new List<TweenActionStep>
             {
-                image = "spin_out_example.png",
-                animationSteps = new List<TweenActionStep>
-        {
-            new TweenActionStep
-            {
-                EndPos = new Vector3(0.5f, 0.5f, 0.5f).ToString(),
-                StartPos = Vector3.one.ToString(),
-                label = "Scale",
-                tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
-            },
-            new TweenActionStep
-            {
-                EndPos = new Vector3(0, 0, -360).ToString(),
-                StartPos = Vector3.zero.ToString(),
-                label = "Rotate",
-                tweenMethod = GetTweenMethodName<Transform_LocalEulerAnglesControlBehaviour>(),
-            },
-            new TweenActionStep
-            {
-                EndPos = "0.0f",
-                StartPos = "1.0f",
-                label = "Fade",
-                tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
-            }
-        }
-            });
+                new TweenActionStep
+                {
+                    EndPos = new Vector3(0.5f, 0.5f, 0.5f).ToString(),
+                    StartPos = Vector3.one.ToString(),
+                    label = "Scale",
+                    tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
+                },
+                new TweenActionStep
+                {
+                    EndPos = new Vector3(0, 0, -360).ToString(),
+                    StartPos = Vector3.zero.ToString(),
+                    label = "Rotate",
+                    tweenMethod = GetTweenMethodName<Transform_LocalEulerAnglesControlBehaviour>(),
+                },
+                new TweenActionStep
+                {
+                    EndPos = "0.0f",
+                    StartPos = "1.0f",
+                    label = "Fade",
+                    tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
+                }
+            };
+            outAnimationCollection.animationCollections.Add(spinOutEffect);
 
             // Twist Out
-            outAnimationCollection.animationCollections.Add(new TweenActionEffect("Twist Out", "Scale")
+            var twistOutEffect = new TweenActionEffect();
+            twistOutEffect.label = "Twist Out";
+            twistOutEffect.effectCategory = "Scale";
+            twistOutEffect.image = "twist_out_example.png";
+            twistOutEffect.timeEasePairs = TimeEasePairs.StandardAccelerate;
+            twistOutEffect.animationSteps = new List<TweenActionStep>
             {
-                image = "twist_out_example.png",
-                animationSteps = new List<TweenActionStep>
-        {
-            new TweenActionStep
-            {
-                EndPos = new Vector3(0.5f, 0.5f, 0.5f).ToString(),
-                StartPos = Vector3.one.ToString(),
-                label = "Scale",
-                tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
-            },
-            new TweenActionStep
-            {
-                EndPos = new Vector3(0, 0, -720).ToString(),
-                StartPos = Vector3.zero.ToString(),
-                label = "Rotate",
-                tweenMethod = GetTweenMethodName<Transform_LocalEulerAnglesControlBehaviour>(),
-            },
-            new TweenActionStep
-            {
-                EndPos = "0.0f",
-                StartPos = "1.0f",
-                label = "Fade",
-                tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
-            }
-        }
-            });
+                new TweenActionStep
+                {
+                    EndPos = new Vector3(0.5f, 0.5f, 0.5f).ToString(),
+                    StartPos = Vector3.one.ToString(),
+                    label = "Scale",
+                    tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
+                },
+                new TweenActionStep
+                {
+                    EndPos = new Vector3(0, 0, -720).ToString(),
+                    StartPos = Vector3.zero.ToString(),
+                    label = "Rotate",
+                    tweenMethod = GetTweenMethodName<Transform_LocalEulerAnglesControlBehaviour>(),
+                },
+                new TweenActionStep
+                {
+                    EndPos = "0.0f",
+                    StartPos = "1.0f",
+                    label = "Fade",
+                    tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
+                }
+            };
+            outAnimationCollection.animationCollections.Add(twistOutEffect);
 
             // Move & Scale Out
-            outAnimationCollection.animationCollections.Add(new TweenActionEffect("Move & Scale Out", "Scale")
+            var moveAndScaleOutEffect = new TweenActionEffect();
+            moveAndScaleOutEffect.label = "Move & Scale Out";
+            moveAndScaleOutEffect.effectCategory = "Scale";
+            moveAndScaleOutEffect.image = "move_and_scale_out_example.png";
+            moveAndScaleOutEffect.durationToken = DurationToken.ExtraLong4;
+            moveAndScaleOutEffect.timeEasePairs = TimeEasePairs.StandardAccelerate;
+            moveAndScaleOutEffect.animationSteps = new List<TweenActionStep>
             {
-                image = "move_and_scale_out_example.png",
-                timeEasePairs = TimeEasePairs.StandardAccelerate,
-                animationSteps = new List<TweenActionStep>
-        {
-            new TweenActionStep
-            {
-                EndPos = new Vector3(200, 0, 0).ToString(),
-                StartPos = string.Empty,
-                tweenOperationType=    TweenActionStep.TweenOperationType.Additive,
-                tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionControlBehaviour>(), // 更新控制行为
-                label = "MoveX",
-                startTimeOffset = 400f,
-            },
-            new TweenActionStep
-            {
-                EndPos = "0.0f",
-                StartPos = "1.0f",
-                label = "Fade",
-                tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
-                startTimeOffset = 400f,
-            },
-            new TweenActionStep
-            {
-                EndPos = Vector3.one.ToString(),
-                StartPos = new Vector3(0.8f, 0.8f, 0.8f).ToString(),
-                tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
-                label = "Scale",
-                startTimeOffset = -400f,
-            },
-        }
-            });
+                new TweenActionStep
+                {
+                    EndPos = new Vector3(200, 0, 0).ToString(),
+                    StartPos = string.Empty,
+                    tweenOperationType = TweenActionStep.TweenOperationType.Additive,
+                    tweenMethod = GetTweenMethodName<RectTransform_AnchoredPositionControlBehaviour>(),
+                    label = "MoveX",
+                    startTimeOffset = 400f,
+                },
+                new TweenActionStep
+                {
+                    EndPos = "0.0f",
+                    StartPos = "1.0f",
+                    label = "Fade",
+                    tweenMethod = GetTweenMethodName<Graphic_ColorAControlBehaviour>(),
+                    startTimeOffset = 400f,
+                },
+                new TweenActionStep
+                {
+                    EndPos = Vector3.one.ToString(),
+                    StartPos = new Vector3(0.8f, 0.8f, 0.8f).ToString(),
+                    tweenMethod = GetTweenMethodName<Transform_LocalScaleControlBehaviour>(),
+                    label = "Scale",
+                    startTimeOffset = -400f,
+                },
+            };
+            outAnimationCollection.animationCollections.Add(moveAndScaleOutEffect);
 
             // Mask Unveil
-            outAnimationCollection.animationCollections.Add(new TweenActionEffect("Mask Unveil", "Mask")
+            var maskUnveilEffect = new TweenActionEffect();
+            maskUnveilEffect.label = "Mask Unveil";
+            maskUnveilEffect.effectCategory = "Mask";
+            maskUnveilEffect.image = "mask_unveil_example.png";
+            maskUnveilEffect.durationToken = DurationToken.Medium2;
+            maskUnveilEffect.timeEasePairs = TimeEasePairs.StandardAccelerate;
+            maskUnveilEffect.animationSteps = new List<TweenActionStep>
             {
-                image = "mask_unveil_example.png",
-                 timeEasePairs = TimeEasePairs.StandardAccelerate,
-                animationSteps = new List<TweenActionStep>
-        {
-            new TweenActionStep
-            {
-                EndPos = new Vector4(100f, 0, 0, 0).ToString(),
-                StartPos = Vector4.zero.ToString(),
-                tweenMethod = GetTweenMethodName<RectMask2D_PaddingControlBehaviour>(),
-                label = "Padding",
-                startTimeOffset = 500f,
-            }
-        }
-            });
+                new TweenActionStep
+                {
+                    EndPos = new Vector4(100f, 0, 0, 0).ToString(),
+                    StartPos = Vector4.zero.ToString(),
+                    tweenMethod = GetTweenMethodName<RectMask2D_PaddingControlBehaviour>(),
+                    label = "Padding",
+                    startTimeOffset = 500f,
+                }
+            };
+            outAnimationCollection.animationCollections.Add(maskUnveilEffect);
 
             // Mask Contract
-            outAnimationCollection.animationCollections.Add(new TweenActionEffect("Mask Contract", "Mask")
+            var maskContractEffect = new TweenActionEffect();
+            maskContractEffect.label = "Mask Contract";
+            maskContractEffect.effectCategory = "Mask";
+            maskContractEffect.image = "mask_contract_example.png";
+            maskContractEffect.durationToken = DurationToken.Medium2;
+            maskContractEffect.timeEasePairs = TimeEasePairs.StandardAccelerate;
+            maskContractEffect.animationSteps = new List<TweenActionStep>
             {
-                image = "mask_contract_example.png",
-                 timeEasePairs = TimeEasePairs.StandardAccelerate,
-                animationSteps = new List<TweenActionStep>
-        {
-            new TweenActionStep
-            {
-                EndPos = new Vector4(0f, 50f, 0f, 50f).ToString(),
-                StartPos = Vector4.zero.ToString(),
-                tweenMethod = GetTweenMethodName<RectMask2D_PaddingControlBehaviour>(),
-                label = "PaddingCenter",
-                startTimeOffset = 500f,
-            }
-        }
-            });
+                new TweenActionStep
+                {
+                    EndPos = new Vector4(0f, 50f, 0f, 50f).ToString(),
+                    StartPos = Vector4.zero.ToString(),
+                    tweenMethod = GetTweenMethodName<RectMask2D_PaddingControlBehaviour>(),
+                    label = "PaddingCenter",
+                    startTimeOffset = 500f,
+                }
+            };
+            outAnimationCollection.animationCollections.Add(maskContractEffect);
 
             // Mask Reduce
-            outAnimationCollection.animationCollections.Add(new TweenActionEffect("Mask Reduce", "Mask")
+            var maskReduceEffect = new TweenActionEffect();
+            maskReduceEffect.label = "Mask Reduce";
+            maskReduceEffect.effectCategory = "Mask";
+            maskReduceEffect.image = "mask_reduce_example.png";
+            maskReduceEffect.durationToken = DurationToken.Medium2;
+            maskReduceEffect.timeEasePairs = TimeEasePairs.StandardAccelerate;
+            maskReduceEffect.animationSteps = new List<TweenActionStep>
             {
-                image = "mask_reduce_example.png",
-                 timeEasePairs = TimeEasePairs.StandardAccelerate,
-                animationSteps = new List<TweenActionStep>
-        {
-            new TweenActionStep
-            {
-                EndPos = new Vector4(50f, 50f, 50f, 50f).ToString(),
-                StartPos = Vector4.zero.ToString(),
-                tweenMethod = GetTweenMethodName<RectMask2D_PaddingControlBehaviour>(),
-                label = "PaddingResize",
-                startTimeOffset = 500f,
-            }
-        }
-            });
+                new TweenActionStep
+                {
+                    EndPos = new Vector4(50f, 50f, 50f, 50f).ToString(),
+                    StartPos = Vector4.zero.ToString(),
+                    tweenMethod = GetTweenMethodName<RectMask2D_PaddingControlBehaviour>(),
+                    label = "PaddingResize",
+                    startTimeOffset = 500f,
+                }
+            };
+            outAnimationCollection.animationCollections.Add(maskReduceEffect);
 
             // Mask Collapse
-            outAnimationCollection.animationCollections.Add(new TweenActionEffect("Mask Collapse", "Mask")
+            var maskCollapseEffect = new TweenActionEffect();
+            maskCollapseEffect.label = "Mask Collapse";
+            maskCollapseEffect.effectCategory = "Mask";
+            maskCollapseEffect.image = "mask_collapse_example.png";
+            maskCollapseEffect.durationToken = DurationToken.Medium2;
+            maskCollapseEffect.timeEasePairs = TimeEasePairs.StandardAccelerate;
+            maskCollapseEffect.animationSteps = new List<TweenActionStep>
             {
-                image = "mask_collapse_example.png",
-                 timeEasePairs = TimeEasePairs.StandardAccelerate,
-                animationSteps = new List<TweenActionStep>
-        {
-            new TweenActionStep
-            {
-                EndPos = new Vector2Int(50, 50).ToString(),
-                StartPos = Vector2Int.zero.ToString(),
-                tweenMethod = GetTweenMethodName<RectMask2D_SoftnessControlBehaviour>(),
-                label = "Softness",
-                startTimeOffset = 500f,
-            }
-        }
-            });
+                new TweenActionStep
+                {
+                    EndPos = new Vector2Int(50, 50).ToString(),
+                    StartPos = Vector2Int.zero.ToString(),
+                    tweenMethod = GetTweenMethodName<RectMask2D_SoftnessControlBehaviour>(),
+                    label = "Softness",
+                    startTimeOffset = 500f,
+                }
+            };
+            outAnimationCollection.animationCollections.Add(maskCollapseEffect);
 
             return outAnimationCollection;
         }
-
     }
 }

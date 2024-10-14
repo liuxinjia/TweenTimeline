@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Cr7Sund.Editor.CurvePreset;
 using UnityEditor;
@@ -19,13 +20,7 @@ namespace Cr7Sund.TweenTimeLine
             {
                 if (curveDictionary == null)
                 {
-                    curveDictionary = new();
-                    Dictionary<string, string> paths = EasingTokenPresetLibraryEditor.GetCurvePresetLibrary();
-                    foreach (var item in paths)
-                    {
-                        var easingLibrary = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(item.Value);
-                        CurvePresetEditTools.GenerateCurveDict(easingLibrary, in curveDictionary);
-                    }
+                    ResetFromCurvePreset();
                 }
                 return curveDictionary;
             }
@@ -37,7 +32,7 @@ namespace Cr7Sund.TweenTimeLine
             var listProp = serializedObject.FindProperty("easingTokenPresets");
             var property = new PropertyField(listProp);
 
-            var resetBtn = new Button(Rebuild);
+            var resetBtn = new Button(ResetFromCurvePreset);
             resetBtn.text = "Rebuild";
 
             container.Add(resetBtn);
@@ -46,25 +41,54 @@ namespace Cr7Sund.TweenTimeLine
             return container;
         }
 
-        public void Rebuild()
+
+        private static void ResetFromCurvePreset()
         {
-            var easingTokenPresetLibrary = target as EasingTokenPresetLibrary;
+            curveDictionary = new();
+            Dictionary<string, string> paths = GetCurvePresetLibrary();
+            foreach (var item in paths)
+            {
+                var easingLibrary = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(item.Value);
+                AnimationCurveExtensions.GenerateCurveDict(easingLibrary, in curveDictionary);
+            }
+
+            var easingTokenPresetLibrary = AssetDatabase.LoadAssetAtPath<EasingTokenPresetLibrary>(TweenTimelineDefine.easingTokenPresetsPath);
+            if (easingTokenPresetLibrary.easingTokenPresets == null ||
+                  easingTokenPresetLibrary.easingTokenPresets.Count <= 0)
+            {
+                RebuildCurvePreset(easingTokenPresetLibrary);
+            }
+
+            foreach (var item in easingTokenPresetLibrary.easingTokenPresets)
+            {
+                var name = item.Name;
+                var curve = item.Curve;
+                
+                if (curve != null && name != null && !curveDictionary.ContainsKey(name))
+                {
+                    curveDictionary.Add(name, curve);
+                }
+            }
+
+        }
+
+        public static void RebuildCurvePreset(EasingTokenPresetLibrary easingTokenPresetLibrary)
+        {
             easingTokenPresetLibrary.easingTokenPresets = new();
 
             var derivedTypes = TweenTimelineDefine.DerivedEaseTokenTypes;
 
             foreach (var presetType in derivedTypes)
             {
-
                 EasingTokenPresetsFactory.GenerateEasingTokenPresets(
                     easingTokenPresetLibrary,
                     presetType,
                     CurveDictionary);
             }
 
-            serializedObject.ApplyModifiedProperties();
-            AssetDatabase.SaveAssetIfDirty(target);
-            AssetDatabase.Refresh();
+            // serializedObject.ApplyModifiedProperties();
+            // AssetDatabase.SaveAssetIfDirty(target);
+            // AssetDatabase.Refresh();
         }
 
         public static Dictionary<string, string> GetCurvePresetLibrary()
@@ -73,16 +97,16 @@ namespace Cr7Sund.TweenTimeLine
             {
                 TweenTimelineDefine.BuiltInCurvePresetFolder, TweenTimelineDefine.CustomCurvePresetFolder
             });
-            var curvePreseDict = new Dictionary<string, string>();
+            var curvePresetDict = new Dictionary<string, string>();
             foreach (var presetGuid in presetGUIDs)
             {
                 var presetPath = AssetDatabase.GUIDToAssetPath(presetGuid);
                 //MaterialEaseEquations
                 string name = Path.GetFileNameWithoutExtension(presetPath).ToString().Replace("EaseEquations", "");
-                curvePreseDict.Add(name, presetPath);
+                curvePresetDict.Add(name, presetPath);
             }
 
-            return curvePreseDict;
+            return curvePresetDict;
         }
     }
 }

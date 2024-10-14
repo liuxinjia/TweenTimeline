@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Cr7Sund.TweenTimeLine
 {
@@ -10,10 +12,10 @@ namespace Cr7Sund.TweenTimeLine
         public string effectCategory;
         public string collectionCategory;
 
-        public UnityEngine.GameObject target;
+        [NonSerialized] public UnityEngine.GameObject target;
         public DurationToken durationToken;
         public MaterialEasingToken easeToken;
-        public TimeEasePairs timeEasePairs = TimeEasePairs.Standard;
+        public TimeEasePairs timeEasePairs = TimeEasePairs.Custom;
 
         public List<TweenActionStep> animationSteps;
 
@@ -23,6 +25,7 @@ namespace Cr7Sund.TweenTimeLine
             animationSteps = new();
             durationToken = DurationToken.Short1;
             easeToken = MaterialEasingToken.Emphasized;
+            timeEasePairs = TimeEasePairs.Custom;
         }
 
         public TweenActionEffect(string name, string category)
@@ -35,6 +38,7 @@ namespace Cr7Sund.TweenTimeLine
             collectionCategory = string.Empty;
             target = null;
             animationSteps = new List<TweenActionStep>();
+            timeEasePairs = TimeEasePairs.Custom;
         }
 
         public void CopyFrom(TweenActionEffect animAction)

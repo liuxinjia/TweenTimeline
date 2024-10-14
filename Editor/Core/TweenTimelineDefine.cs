@@ -10,6 +10,9 @@ namespace Cr7Sund.TweenTimeLine
     {
         public static string tweenLibraryPath => $"{BuiltInConfigEditorFolder}/TweenActionLibrary.asset";
         public static string easingTokenPresetsPath => $"{BuiltInConfigRuntimeFolder}/EasingTokenPresets.asset";
+
+
+
         public static string animTokenPresetsPath => $"{BuiltInConfigEditorFolder}/AnimTokenPresets.asset";
         public static string componentTweenCollectionPath => $"{BuiltInConfigEditorFolder}/ComponentTweenCollection.asset";
 
@@ -81,7 +84,19 @@ namespace Cr7Sund.TweenTimeLine
         public static string BuiltInConfigEditorFolder => $"{BuiltInConfigPath}/Editor Default Resources";
         public static string BuiltInConfigRuntimeFolder => $"{BuiltInConfigPath}/Resources";
 
-        public static string BuiltInCurvePresetFolder => $"{BuiltInConfigEditorFolder}/CurvePresets/Editor";
+        // Assets/Plugins/TweenTimeline/Editor/CurvePresets
+        public static string BuiltInCurvePresetFolder
+        {
+            get
+            {
+                var builtInCustomFolder = FolderLocationChecker.GetFolderPath("Assets/Plugins/TweenTimeline/Editor/CurvePresets");
+                if (string.IsNullOrEmpty(builtInCustomFolder))
+                {
+                    builtInCustomFolder = FolderLocationChecker.GetFolderPath("Editor/CurvePresets");
+                }
+                return PathUtility.ConvertToRelativePath(builtInCustomFolder);
+            }
+        }
         public static string CustomCurvePresetFolder => $"{CustomConfigEditorFolder}/CurvePresets/Editor";
 
         public static string BuiltInGIFPresetFolder => $"{BuiltInConfigEditorFolder}/Gifs";

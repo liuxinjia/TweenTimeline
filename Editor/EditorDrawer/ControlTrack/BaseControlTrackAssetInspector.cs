@@ -2,6 +2,7 @@
 using System.Linq;
 using Cr7Sund.Timeline.Extension;
 using UnityEditor;
+using UnityEditor.Timeline;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -18,8 +19,8 @@ namespace Cr7Sund.TweenTimeLine
             {
                 return new Label("Empty Control Asset");
             }
-
             TweenTimelineManager.EnsureCanPreview();
+
             if (!TimelineWindowExposer.GetBehaviourValue(target, out var value))
             {
                 return base.CreateInspectorGUI();
@@ -129,14 +130,16 @@ namespace Cr7Sund.TweenTimeLine
         {
             var posContainer = new VisualElement();
             posContainer.style.flexDirection = FlexDirection.Row;
-            var endPosProp = SerializedPropertyValueExtension.CreateField(prop);
+            var propField = SerializedPropertyValueExtension.CreateField(prop);
+            // don't change the init pos 
+            // since we should consider design one track which should not change the init pos
             Button resetBtn = new Button(() => ResetPos(isStart));
-            Button recordBtn = new Button(() => Record(isStart, prop, endPosProp));
+            Button recordBtn = new Button(() => Record(isStart, prop.name, propField));
             resetBtn.text = "Reset";
             recordBtn.text = "Record";
             recordBtn.name = isStart ? recordBtnStartDefine : recordBtnEndDefine;
-            endPosProp.style.flexGrow = 1;
-            posContainer.Add(endPosProp);
+            propField.style.flexGrow = 1;
+            posContainer.Add(propField);
             posContainer.Add(recordBtn);
             posContainer.Add(resetBtn);
             return posContainer;
@@ -205,7 +208,7 @@ namespace Cr7Sund.TweenTimeLine
              });
         }
 
-        private void Record(bool isStart, SerializedProperty serializedProperty, VisualElement endPosProp)
+        private void Record(bool isStart, string propName, VisualElement propField)
         {
             var stateInfo = TweenTimeLineDataModel.ClipStateDict[_behaviour];
             var trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[_behaviour];
@@ -214,14 +217,41 @@ namespace Cr7Sund.TweenTimeLine
 
             TweenTimelineManager.SelectBeforeToggle(_behaviour);
             TweenTimelineManager.ToggleRecordClip(_behaviour);
+
             if (stateInfo.BehaviourState == ClipBehaviourStateEnum.Recording)
             {
-                ControlTrackWindow.Open(serializedProperty.serializedObject, _behaviour);
-                Selection.activeObject = trackTarget;
+                if (TimelineEditor.selectedClip != null)
+                {
+                    TweenTimeLineDataModel.SelectTimelineClip = TimelineEditor.selectedClip;
+                }
+                var playableDirector = TimelineWindowExposer.GetCurDirector();
+                if (playableDirector != null)
+                {
+                    TweenTimeLineDataModel.SelectDirector = playableDirector.gameObject;
+                }
+
+                var serializedObject = new SerializedObject(TweenTimeLineDataModel.SelectTimelineClip.asset);
+
+                ControlTrackWindow.Open(serializedObject, _behaviour);
+                SceneView.GetWindow<SceneView>();
+                if (trackTarget is Component trackComponent)
+                {
+                    Selection.activeGameObject = trackComponent.gameObject;
+                }
+                else
+                {
+                    Selection.activeObject = trackTarget;
+                }
+                SceneView.lastActiveSceneView.FrameSelected();
             }
             else
             {
-                SerializedPropertyValueExtension.UpdateField(endPosProp, serializedProperty,
+                var serializedObject = new SerializedObject(TweenTimeLineDataModel.SelectTimelineClip.asset);
+
+                var templateProp = serializedObject.FindProperty("template");
+                SerializedProperty serialProp = templateProp.FindPropertyRelative(propName);
+
+                SerializedPropertyValueExtension.UpdateField(propField, serialProp,
                 stateInfo.IsRecordStart ? _behaviour.StartPos : _behaviour.EndPos);
             }
             stateInfo.IsRecordStart = false;
