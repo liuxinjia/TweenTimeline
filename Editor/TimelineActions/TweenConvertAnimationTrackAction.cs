@@ -36,6 +36,11 @@ namespace Cr7Sund.TweenTimeLine
                 TweenTimelineManager.AddTrack(trackInfo.parent, trackInfo, true, true);
             }
 
+            if (newTracks.Count <= 0)
+            {
+                Debug.LogError("Check the select animation track is valid ");
+                return false;
+            }
             DeleteOriginalTracks(tracks);
             TimelineEditor.Refresh(RefreshReason.ContentsAddedOrRemoved);
             return true;
@@ -49,6 +54,7 @@ namespace Cr7Sund.TweenTimeLine
                 if (!TweenTimeLineDataModel.TrackObjectDict.ContainsKey(track)) continue;
 
                 var targetComponent = TweenTimeLineDataModel.TrackObjectDict[track] as Component;
+                GameObject targetGo = targetComponent.gameObject;
 
                 if (track is AnimationTrack animationTrack)
                 {
@@ -58,12 +64,12 @@ namespace Cr7Sund.TweenTimeLine
                         var clip = timelineClip.animationClip;
                         var keyframeDatas = AnimationClipConverter.GenerateKeyFrameDatas(clip);
                         newTracks.AddRange(
-                           AnimationClipConverter.CreateTrackContexts(targetComponent.gameObject, clip
+                           AnimationClipConverter.CreateTrackContexts(targetGo, clip
                              , _easingTokenPresetLibrary, keyframeDatas, timelineClip.start));
 
                         keyframeDatas = AnimationClipConverter.GenerateObjectKeyFrameDatas(clip);
                         newTracks.AddRange(
-                              AnimationClipConverter.CreateTrackContexts(targetComponent.gameObject, clip, _easingTokenPresetLibrary,
+                              AnimationClipConverter.CreateTrackContexts(targetGo, clip, _easingTokenPresetLibrary,
                               keyframeDatas, timelineClip.start));
                     }
                 }
@@ -75,7 +81,7 @@ namespace Cr7Sund.TweenTimeLine
         {
             foreach (TrackAsset track in tracks)
             {
-                if (track is AnimationTrack )
+                if (track is AnimationTrack)
                     track.timelineAsset.DeleteTrack(track);
             }
         }

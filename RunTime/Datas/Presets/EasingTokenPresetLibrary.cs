@@ -40,14 +40,6 @@ namespace Cr7Sund.TweenTimeLine
         }
 
 
-        public void AddPresets(IEnumerable<BaseEasingTokenPreset> easingTokenPresetsToAdd)
-        {
-            foreach (var preset in easingTokenPresetsToAdd)
-            {
-                AddPreset(preset); // Reuse AddPreset to handle duplicates
-            }
-        }
-
         public void AddPreset(BaseEasingTokenPreset easingTokenPreset)
         {
             var findIndex = easingTokenPresets

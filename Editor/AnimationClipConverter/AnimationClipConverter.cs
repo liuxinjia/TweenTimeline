@@ -263,13 +263,13 @@ namespace Cr7Sund.TweenTimeLine
         #region  TrackContext
 
         public static List<GenTrackInfo> ConstructGenTracks(AnimationClip clip,
-                EasingTokenPresetLibrary _easingTokenPresetLibrary,
+                EasingTokenPresetLibrary easingTokenPresetLibrary,
                    KeyframeDataWrapper keyWrapper, double startTime, int instanceID,
                    in Dictionary<string, Tuple<string, string>> contentDict
                    )
         {
             var trackInfos = CreateTrackContexts(null, clip
-                             , _easingTokenPresetLibrary, keyWrapper, startTime);
+                             , easingTokenPresetLibrary, keyWrapper, startTime);
 
             var genTrackInfos = new List<GenTrackInfo>(trackInfos.Count);
             foreach (var trackInfoContext in trackInfos)
@@ -328,7 +328,7 @@ namespace Cr7Sund.TweenTimeLine
 
 
         public static List<TrackInfoContext> CreateTrackContexts(UnityEngine.GameObject target, AnimationClip clip,
-          EasingTokenPresetLibrary _easingTokenPresetLibrary,
+          EasingTokenPresetLibrary easingTokenPresetLibrary,
              KeyframeDataWrapper keyWrapper, double startTime)
         {
             var trackInfos = new List<TrackInfoContext>();
@@ -340,7 +340,7 @@ namespace Cr7Sund.TweenTimeLine
                     continue;
                 }
 
-                ProcessAnimationTarget(target, animTargetInfo, clip, _easingTokenPresetLibrary,
+                ProcessAnimationTarget(target, animTargetInfo, clip, easingTokenPresetLibrary,
                  startTime, trackInfos);
             }
 
@@ -348,7 +348,7 @@ namespace Cr7Sund.TweenTimeLine
         }
 
         private static void ProcessAnimationTarget(UnityEngine.GameObject target,
-        ObjectKeyframes animTargetInfo, AnimationClip clip, EasingTokenPresetLibrary _easingTokenPresetLibrary,
+        ObjectKeyframes animTargetInfo, AnimationClip clip, EasingTokenPresetLibrary easingTokenPresetLibrary,
              double startTime, in List<TrackInfoContext> trackInfoContexts)
         {
             foreach (TypeKeyframes typeKeyFrames in animTargetInfo.Types)
@@ -372,10 +372,10 @@ namespace Cr7Sund.TweenTimeLine
                         out targetTypeName, out string tweenIdentifier, out curveName);
 
                     TrackInfoContext trackInfo = null;
-                    int findIndex = _easingTokenPresetLibrary.FindEasePreset(curveName);
+                    int findIndex = easingTokenPresetLibrary.FindEasePreset(curveName);
                     if (findIndex >= 0)
                     {
-                        trackInfo = AddValueTrack(animTargetInfo, clip, startTime, _easingTokenPresetLibrary, frameProperty,
+                        trackInfo = AddValueTrack(animTargetInfo, clip, startTime, easingTokenPresetLibrary, frameProperty,
                          targetTrans, targetTypeName, tweenIdentifier, curveName);
                     }
                     else
@@ -393,7 +393,7 @@ namespace Cr7Sund.TweenTimeLine
         }
 
         private static TrackInfoContext AddValueTrack(ObjectKeyframes animTargetInfo, AnimationClip clip
-         , double startTime, EasingTokenPresetLibrary _easingTokenPresetLibrary,
+         , double startTime, EasingTokenPresetLibrary easingTokenPresetLibrary,
          PropertyKeyframes frameProperty, Transform transform,
          string targetTypeName, string tweenIdentifier, string curveName)
         {
@@ -419,7 +419,7 @@ namespace Cr7Sund.TweenTimeLine
                 start = startTime,
                 duration = clip.length,
                 trackAssetType = trackAssetType,
-                easePreset = _easingTokenPresetLibrary.GetEasePreset(curveName),
+                easePreset = easingTokenPresetLibrary.GetEasePreset(curveName),
                 startPos = frameProperty.Keyframes[0].Value,
                 endPos = frameProperty.Keyframes[^1].Value
             };
@@ -504,7 +504,7 @@ namespace Cr7Sund.TweenTimeLine
 
         #region  Curve 
 
-        public static void CreateCurves(IEnumerable<TrackAsset> tracks, EasingTokenPresetLibrary _easingTokenPresetLibrary)
+        public static void CreateCurves(IEnumerable<TrackAsset> tracks, EasingTokenPresetLibrary easingTokenPresetLibrary)
         {
             foreach (TrackAsset track in tracks)
             {
@@ -514,20 +514,20 @@ namespace Cr7Sund.TweenTimeLine
                     foreach (var timelineClip in clips)
                     {
                         var clip = timelineClip.animationClip;
-                        _easingTokenPresetLibrary.AddPresets(AnimationClipConverter.CreateCurvePresets(clip));
+                        AddPresets(easingTokenPresetLibrary, AnimationClipConverter.CreateCurvePresets(clip));
                     }
                 }
             }
 
-            AssetDatabase.SaveAssetIfDirty(_easingTokenPresetLibrary);
+            AssetDatabase.SaveAssetIfDirty(easingTokenPresetLibrary);
             AssetDatabase.Refresh();
         }
 
-        public static void CreateCurve(AnimationClip clip, EasingTokenPresetLibrary _easingTokenPresetLibrary)
+        public static void CreateCurve(AnimationClip clip, EasingTokenPresetLibrary easingTokenPresetLibrary)
         {
             List<CustomCurveEasingTokenPreset> easingTokenPresetsToAdd = AnimationClipConverter.CreateCurvePresets(clip);
-            _easingTokenPresetLibrary.AddPresets(easingTokenPresetsToAdd);
-            AssetDatabase.SaveAssetIfDirty(_easingTokenPresetLibrary);
+            AddPresets(easingTokenPresetLibrary, easingTokenPresetsToAdd);
+            AssetDatabase.SaveAssetIfDirty(easingTokenPresetLibrary);
             AssetDatabase.Refresh();
         }
 
@@ -539,7 +539,9 @@ namespace Cr7Sund.TweenTimeLine
             foreach (EditorCurveBinding binding in curveBindings)
             {
                 AnimationCurve editorCurve = AnimationUtility.GetEditorCurve(clip, binding);
-                editorCurve = NormalizeCurve(editorCurve, binding.propertyName);
+                editorCurve = NormalizeCurveClamp(editorCurve, binding.propertyName);
+                // editorCurve = NormalizeCurve(editorCurve, binding.propertyName);
+
                 Keyframe[] keys = editorCurve.keys;
                 Array.Sort(keys, (t1, t2) => t1.time.CompareTo(t2.time));
                 bool constant = true;
@@ -584,6 +586,21 @@ namespace Cr7Sund.TweenTimeLine
             return curves;
         }
 
+        public static void AddPresets(EasingTokenPresetLibrary easingTokenPresetLibrary, IEnumerable<BaseEasingTokenPreset> easingTokenPresetsToAdd)
+        {
+            foreach (var preset in easingTokenPresetsToAdd)
+            {
+                easingTokenPresetLibrary.AddPreset(preset); // Reuse AddPreset to handle duplicates
+                if (!EasingTokenPresetLibraryEditor.CurveDictionary.ContainsKey(preset.Name))
+                {
+                    EasingTokenPresetLibraryEditor.CurveDictionary.Add(preset.Name, preset.Curve);
+                }
+                else
+                {
+                    EasingTokenPresetLibraryEditor.CurveDictionary[preset.Name] = preset.Curve;
+                }
+            }
+        }
         private static AnimationCurve NormalizeCurve(AnimationCurve curve, string propertyName)
         {
             if (curve.length == 0)
@@ -647,6 +664,72 @@ namespace Cr7Sund.TweenTimeLine
             return normalizedCurve;
         }
 
+        // Normal time[0-1], value[0-1]
+        private static AnimationCurve NormalizeCurveClamp(AnimationCurve curve, string propertyName)
+        {
+            if (curve.length < 2)
+            {
+                Debug.LogWarning($"Curve has less than 2 keyframes, cannot be normalized. {propertyName}");
+                return curve;
+            }
+
+            var start = curve[0];
+            var end = curve[curve.length - 1];
+
+            // Calculate the ratio needed to adjust the end value to 0 or 1
+            float ratio;
+            if (Mathf.Abs(end.value) < Mathf.Epsilon)
+            {
+                ratio = 1f; // Avoid division by zero
+            }
+            else if (Mathf.Abs(end.value - 1f) < Mathf.Abs(end.value))
+            {
+                ratio = 1f / end.value; // Adjust to make end value 1
+            }
+            else
+            {
+                ratio = 1f / Mathf.Abs(end.value); // Adjust to make end value -1 or 1
+            }
+
+            AnimationCurve normalizedCurve = new AnimationCurve();
+
+            foreach (var key in curve.keys)
+            {
+                float normalizedTime = Mathf.InverseLerp(start.time, end.time, key.time);
+                float normalizedValue = key.value * ratio;
+
+                // Adjust tangents
+                float normalizedInTangent = key.inTangent * ratio;
+                float normalizedOutTangent = key.outTangent * ratio;
+
+                Keyframe normalizedKey = new Keyframe(
+                    normalizedTime,
+                    normalizedValue,
+                    normalizedInTangent,
+                    normalizedOutTangent
+                )
+                {
+                    weightedMode = key.weightedMode,
+                    inWeight = key.inWeight,
+                    outWeight = key.outWeight
+                };
+
+                normalizedCurve.AddKey(normalizedKey);
+            }
+
+            // Ensure start and end values are exactly 0 or 1
+            normalizedCurve.MoveKey(0, new Keyframe(0f, Mathf.Round(normalizedCurve[0].value)));
+            normalizedCurve.MoveKey(normalizedCurve.length - 1, new Keyframe(1f, Mathf.Round(normalizedCurve[normalizedCurve.length - 1].value)));
+
+            // Keep the tangent mode consistent
+            for (int i = 0; i < normalizedCurve.length; i++)
+            {
+                AnimationUtility.SetKeyLeftTangentMode(normalizedCurve, i, AnimationUtility.GetKeyLeftTangentMode(curve, i));
+                AnimationUtility.SetKeyRightTangentMode(normalizedCurve, i, AnimationUtility.GetKeyRightTangentMode(curve, i));
+            }
+
+            return normalizedCurve;
+        }
         #endregion
     }
 }
