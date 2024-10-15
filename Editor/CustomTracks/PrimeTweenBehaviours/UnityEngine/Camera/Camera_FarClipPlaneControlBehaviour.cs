@@ -12,7 +12,7 @@ namespace Cr7Sund.CameraTween
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.Camera target, double duration, float startValue)
         {
             return PrimeTween.Tween.CameraFarClipPlane(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (float)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(UnityEngine.Camera target)

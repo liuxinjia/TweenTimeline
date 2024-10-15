@@ -12,7 +12,7 @@ namespace Cr7Sund.ScrollRectTween
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.UI.ScrollRect target, double duration, Vector2 startValue)
         {
             return PrimeTween.Tween.UINormalizedPosition(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (Vector2)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(UnityEngine.UI.ScrollRect target)

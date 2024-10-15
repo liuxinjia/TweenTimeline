@@ -12,7 +12,7 @@ namespace Cr7Sund.TMP_TextTween
         protected override PrimeTween.Tween OnCreateTween(TMPro.TMP_Text target, double duration, int startValue)
         {
             return PrimeTween.Tween.TextMaxVisibleCharacters(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (int)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(TMPro.TMP_Text target)

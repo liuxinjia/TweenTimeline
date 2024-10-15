@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Cr7Sund.TweenTimeline
 {
+
     [MenuEntry("Custom Actions/Sample Timeline Action")]
     public class TweenTimelineAction : TimelineAction
     {

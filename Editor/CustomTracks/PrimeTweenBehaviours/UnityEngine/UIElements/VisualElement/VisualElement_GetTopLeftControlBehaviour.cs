@@ -12,7 +12,7 @@ namespace Cr7Sund.VisualElementTween
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.UIElements.VisualElement target, double duration, Vector2 startValue)
         {
             return PrimeTween.Tween.VisualElementTopLeft(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (Vector2)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(UnityEngine.UIElements.VisualElement target)

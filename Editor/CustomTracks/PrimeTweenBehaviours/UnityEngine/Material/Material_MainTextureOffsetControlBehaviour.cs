@@ -12,7 +12,7 @@ namespace Cr7Sund.MaterialTween
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.Material target, double duration, Vector2 startValue)
         {
             return PrimeTween.Tween.MaterialMainTextureOffset(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (Vector2)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(UnityEngine.Material target)

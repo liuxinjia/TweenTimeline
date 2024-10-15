@@ -12,7 +12,7 @@ namespace Cr7Sund.LightTween
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.Light target, double duration, float startValue)
         {
             return PrimeTween.Tween.LightShadowStrength(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (float)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(UnityEngine.Light target)

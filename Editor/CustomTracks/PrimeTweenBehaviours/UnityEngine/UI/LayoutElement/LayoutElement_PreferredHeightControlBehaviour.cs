@@ -12,7 +12,7 @@ namespace Cr7Sund.LayoutElementTween
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.UI.LayoutElement target, double duration, float startValue)
         {
             return PrimeTween.Tween.UIPreferredHeight(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (float)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(UnityEngine.UI.LayoutElement target)

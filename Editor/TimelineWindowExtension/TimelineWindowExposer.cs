@@ -5,6 +5,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEditor.Timeline;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
@@ -305,6 +306,37 @@ namespace Cr7Sund.Timeline.Extension
         {
             return TimelineWindow.instance.state.editSequence.director;
         }
+
+
+        public static void GetSelectCurveBindings(TrackAsset selectTrackAsset)
+        {
+            TimelineTreeViewGUI treeView = TimelineWindow.instance.treeView;
+            TimelineDataSource m_DataSource = treeView.data as TimelineDataSource;
+            foreach (TimelineTrackBaseGUI item in m_DataSource.allTrackGuis)
+            {
+                if (item is TimelineTrackGUI timelineTrackGUI)
+                {
+                    var clipCurveEditor = timelineTrackGUI.clipCurveEditor;
+                    if (clipCurveEditor == null)
+                    {
+                        continue;
+                    }
+                    var curveEditor = clipCurveEditor.curveEditor;
+
+                    if (((IClipCurveEditorOwner)timelineTrackGUI).owner != selectTrackAsset)
+                    {
+                        continue;
+                    }
+
+                    // var method = curveEditor.GetType().GetMethod("CreateKeyFromClick",
+                    // BindingFlags.Instance | BindingFlags.NonPublic, null,
+                    // new Type[] { typeof(System.Object) }, null);
+                    // method.Invoke(curveEditor, new object[] { (Vector2)curveEditor.rect.position });
+
+                }
+            }
+        }
+
         public static bool GetBehaviourValue(object clipAsset, out System.Object behaviour)
         {
             behaviour = null;

@@ -12,7 +12,7 @@ namespace Cr7Sund.TransformTween
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.Transform target, double duration, float startValue)
         {
             return PrimeTween.Tween.PositionY(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (float)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(UnityEngine.Transform target)

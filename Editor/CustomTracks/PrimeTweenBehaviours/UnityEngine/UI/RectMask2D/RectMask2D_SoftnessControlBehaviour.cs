@@ -12,7 +12,7 @@ namespace Cr7Sund.RectMask2DTween
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.UI.RectMask2D target, double duration, Vector2 startValue)
         {
             return PrimeTween.Tween.Custom(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration, 
+                  ease: PrimEase, endValue: (Vector2)EndPos, duration: (float)duration, 
                   onValueChange: (target, updateValue) => target.softness = new Vector2Int((int)updateValue.x, (int)updateValue.y));
         }
 

@@ -41,7 +41,6 @@ namespace Cr7Sund.TweenTimeLine
             return container;
         }
 
-
         private static void ResetFromCurvePreset()
         {
             curveDictionary = new();
@@ -107,6 +106,18 @@ namespace Cr7Sund.TweenTimeLine
             }
 
             return curvePresetDict;
+        }
+
+        public static void UpdatePresetLibrary(BaseEasingTokenPreset preset)
+        {
+            if (!EasingTokenPresetLibraryEditor.CurveDictionary.ContainsKey(preset.Name))
+            {
+                EasingTokenPresetLibraryEditor.CurveDictionary.Add(preset.Name, preset.Curve);
+            }
+            else
+            {
+                EasingTokenPresetLibraryEditor.CurveDictionary[preset.Name] = preset.Curve;
+            }
         }
     }
 }

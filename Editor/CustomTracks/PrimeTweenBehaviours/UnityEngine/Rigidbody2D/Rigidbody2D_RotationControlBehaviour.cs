@@ -12,7 +12,7 @@ namespace Cr7Sund.Rigidbody2DTween
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.Rigidbody2D target, double duration, float startValue)
         {
             return PrimeTween.Tween.RigidbodyMoveRotation(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (float)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(UnityEngine.Rigidbody2D target)

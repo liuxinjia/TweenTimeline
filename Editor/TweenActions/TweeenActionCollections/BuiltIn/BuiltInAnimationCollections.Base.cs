@@ -1107,7 +1107,7 @@ namespace Cr7Sund.TweenTimeLine
                     new TweenActionStep
                     {
                         EndPos = "0", 
-                        tweenOperationType=TweenActionStep.TweenOperationType.Additive,
+                        tweenOperationType=TweenActionStep.TweenOperationType.Relative,
                         tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<Image_FillAmountControlBehaviour>(),
                         label = "fillAmount",
                     }
@@ -1436,7 +1436,7 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     new TweenActionStep
                     {
-                        EndPos = "(0, 0)", 
+                        EndPos = "(0.00, 0.00)", 
                         tweenOperationType=TweenActionStep.TweenOperationType.Additive,
                         tweenMethod = TweenActionContainerBuilder.GetTweenMethodName<RectMask2D_SoftnessControlBehaviour>(),
                         label = "softness",

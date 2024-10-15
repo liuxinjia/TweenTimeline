@@ -12,7 +12,7 @@ namespace Cr7Sund.MaterialTween
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.Material target, double duration, Color startValue)
         {
             return PrimeTween.Tween.MaterialColor(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (Color)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(UnityEngine.Material target)

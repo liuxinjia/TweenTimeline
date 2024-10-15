@@ -12,7 +12,7 @@ namespace Cr7Sund.TweenTween
         protected override PrimeTween.Tween OnCreateTween(PrimeTween.Tween target, double duration, float startValue)
         {
             return PrimeTween.Tween.TweenTimeScale(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (float)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(PrimeTween.Tween target)

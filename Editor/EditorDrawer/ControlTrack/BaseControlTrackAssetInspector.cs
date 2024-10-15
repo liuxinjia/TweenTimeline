@@ -40,6 +40,7 @@ namespace Cr7Sund.TweenTimeLine
             var trackUIBuilder = new ControlTrackUIBuilder();
             VisualElement container = trackUIBuilder.CreateContainer(serializedObject, _behaviour);
             root.Add(container);
+
             return root;
         }
     }

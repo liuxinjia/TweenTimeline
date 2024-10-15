@@ -12,7 +12,7 @@ namespace Cr7Sund.SliderTween
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.UI.Slider target, double duration, float startValue)
         {
             return PrimeTween.Tween.UISliderValue(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (float)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(UnityEngine.UI.Slider target)

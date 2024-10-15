@@ -12,7 +12,7 @@ namespace Cr7Sund.ShadowTween
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.UI.Shadow target, double duration, Color startValue)
         {
             return PrimeTween.Tween.Color(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (Color)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(UnityEngine.UI.Shadow target)

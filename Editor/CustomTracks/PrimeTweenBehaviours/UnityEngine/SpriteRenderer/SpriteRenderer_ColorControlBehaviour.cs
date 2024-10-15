@@ -12,7 +12,7 @@ namespace Cr7Sund.SpriteRendererTween
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.SpriteRenderer target, double duration, Color startValue)
         {
             return PrimeTween.Tween.Color(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (Color)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(UnityEngine.SpriteRenderer target)

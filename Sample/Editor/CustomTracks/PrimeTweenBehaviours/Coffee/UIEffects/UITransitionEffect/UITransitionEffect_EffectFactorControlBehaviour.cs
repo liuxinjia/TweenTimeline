@@ -12,7 +12,7 @@ namespace Cr7Sund.UITransitionEffectTween
         protected override PrimeTween.Tween OnCreateTween(Coffee.UIEffects.UITransitionEffect target, double duration, float startValue)
         {
             return PrimeTween.Tween.Custom(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration, 
+                  ease: PrimEase, endValue: (float)EndPos, duration: (float)duration, 
                   onValueChange: (target, updateValue) => target.effectFactor = updateValue);
         }
 

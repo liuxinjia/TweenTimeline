@@ -957,14 +957,21 @@ namespace Cr7Sund.TweenTimeLine
             IUniqueBehaviour uniqueBehaviour = null;
             foreach (var clip in trackAsset.GetClips())
             {
-                if (!TimelineWindowExposer.GetBehaviourValue(clip.asset, out var value))
-                {
-                    throw new System.Exception($"BehaviourValue is null ");
-                }
-                uniqueBehaviour = value as IUniqueBehaviour;
+                uniqueBehaviour = GetBehaviourByTimelineClip(clip);
                 break;
             }
 
+            return uniqueBehaviour;
+        }
+
+        public static IUniqueBehaviour GetBehaviourByTimelineClip(TimelineClip clip)
+        {
+            IUniqueBehaviour uniqueBehaviour;
+            if (!TimelineWindowExposer.GetBehaviourValue(clip.asset, out var value))
+            {
+                throw new System.Exception($"BehaviourValue is null ");
+            }
+            uniqueBehaviour = value as IUniqueBehaviour;
             return uniqueBehaviour;
         }
 

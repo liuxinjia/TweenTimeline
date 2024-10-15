@@ -12,7 +12,7 @@ namespace Cr7Sund.CanvasGroupTween
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.CanvasGroup target, double duration, float startValue)
         {
             return PrimeTween.Tween.Alpha(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (float)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(UnityEngine.CanvasGroup target)

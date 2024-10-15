@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UIElements;
 
 namespace Cr7Sund.TweenTimeLine
@@ -165,7 +166,7 @@ namespace Cr7Sund.TweenTimeLine
             easingTokenPreset.animationCurve = curve;
             easingTokenPreset.tokenKey = name;
             easingTokenPresetLibrary.AddPreset(easingTokenPreset);
-            EasingTokenPresetLibraryEditor.CurveDictionary.Add(easingTokenPreset.tokenKey, easingTokenPreset.Curve);
+            EasingTokenPresetLibraryEditor.UpdatePresetLibrary(easingTokenPreset);
         }
 
 
@@ -184,6 +185,7 @@ namespace Cr7Sund.TweenTimeLine
                     curveName = EasingTokenPresetsFactory.easeToEquationsMap[curveName];
                 }
 
+                // Assert.IsFalse(curveName.Any(char.IsWhiteSpace), $"{curveName} contains white space");
                 if (EasingTokenPresetLibraryEditor.CurveDictionary.ContainsKey(curveName))
                 {
                     var animationCurve = EasingTokenPresetLibraryEditor.CurveDictionary[curveName];

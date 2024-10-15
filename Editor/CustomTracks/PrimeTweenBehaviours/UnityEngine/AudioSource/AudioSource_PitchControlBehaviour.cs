@@ -12,7 +12,7 @@ namespace Cr7Sund.AudioSourceTween
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.AudioSource target, double duration, float startValue)
         {
             return PrimeTween.Tween.AudioPitch(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (float)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(UnityEngine.AudioSource target)

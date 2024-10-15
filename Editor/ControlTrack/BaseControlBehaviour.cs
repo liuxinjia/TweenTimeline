@@ -20,8 +20,9 @@ namespace Cr7Sund.TweenTimeLine
     public abstract class BaseControlBehaviour<TTarget, TValue> : UnityEngine.Playables.PlayableBehaviour, IUniqueBehaviour
     {
         [SerializeReference][SerializeField] private BaseEasingTokenPreset _easePreset;
-        [SerializeField] protected TValue _endPos;
-        [SerializeField] private TValue _startPos;
+        [SerializeField] private TValue _endPos;
+        [SerializeField] protected TValue _startPos;
+
         [HideInInspector]
         [SerializeField] private string _bindTargetName;
         [HideInInspector]
@@ -137,7 +138,7 @@ namespace Cr7Sund.TweenTimeLine
                     return;
                 }
                 if (_startPos != null &&
-                 _startPos.Equals(_endPos))
+                 _startPos.Equals(EndPos))
                 {
                     return;
                 }

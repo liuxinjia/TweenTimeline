@@ -88,7 +88,7 @@ namespace {namespaceName}
         protected override PrimeTween.Tween OnCreateTween({componentType} target, double duration, {valueType} startValue)
         {{
             return PrimeTween.Tween.{tweenMethod}(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: ({valueType})EndPos, duration: (float)duration);
         }}
 
         protected override object OnGet({componentType} target)
@@ -128,7 +128,7 @@ namespace {namespaceName}
         protected override PrimeTween.Tween OnCreateTween({componentType} target, double duration, {valueType} startValue)
         {{
             return PrimeTween.Tween.{tweenMethod}(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration, 
+                  ease: PrimEase, endValue: ({valueType})EndPos, duration: (float)duration, 
                   onValueChange: (target, updateValue) => {customTweenMethod});
         }}
 

@@ -12,7 +12,7 @@ namespace Cr7Sund.ImageTween
         protected override PrimeTween.Tween OnCreateTween(UnityEngine.UI.Image target, double duration, float startValue)
         {
             return PrimeTween.Tween.UIFillAmount(target, startValue: startValue,
-                  ease: PrimEase, endValue: _endPos, duration: (float)duration);
+                  ease: PrimEase, endValue: (float)EndPos, duration: (float)duration);
         }
 
         protected override object OnGet(UnityEngine.UI.Image target)

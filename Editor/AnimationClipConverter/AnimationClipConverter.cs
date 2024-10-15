@@ -523,15 +523,17 @@ namespace Cr7Sund.TweenTimeLine
             AssetDatabase.Refresh();
         }
 
-        public static void CreateCurve(AnimationClip clip, EasingTokenPresetLibrary easingTokenPresetLibrary)
+        public static List<CustomCurveEasingTokenPreset> CreateCurve(AnimationClip clip, EasingTokenPresetLibrary easingTokenPresetLibrary)
         {
             List<CustomCurveEasingTokenPreset> easingTokenPresetsToAdd = AnimationClipConverter.CreateCurvePresets(clip);
             AddPresets(easingTokenPresetLibrary, easingTokenPresetsToAdd);
             AssetDatabase.SaveAssetIfDirty(easingTokenPresetLibrary);
             AssetDatabase.Refresh();
+
+            return easingTokenPresetsToAdd;
         }
 
-        private static List<CustomCurveEasingTokenPreset> CreateCurvePresets(AnimationClip clip)
+        public static List<CustomCurveEasingTokenPreset> CreateCurvePresets(AnimationClip clip, string curveName = "")
         {
             List<CustomCurveEasingTokenPreset> curves = new();
 
@@ -562,14 +564,17 @@ namespace Cr7Sund.TweenTimeLine
                     continue;
                 }
 
-                string clipName = clip.name;
-                string propertyName = binding.propertyName;
-                AnimationClipConverter.MapProperty(binding.type, ref propertyName);
-                string targetTypeName, curveName;
-                var target = binding.path.Split('/').Last();
+                if (string.IsNullOrEmpty(curveName))
+                {
+                    string clipName = clip.name;
+                    string propertyName = binding.propertyName;
+                    AnimationClipConverter.MapProperty(binding.type, ref propertyName);
+                    string targetTypeName;
+                    var target = binding.path.Split('/').Last();
 
-                AnimationClipConverter.GetClipInfoName(clipName, binding.type, propertyName, target,
-                 out targetTypeName, out var tweenIdentifier, out curveName);
+                    AnimationClipConverter.GetClipInfoName(clipName, binding.type, propertyName, target,
+                     out targetTypeName, out var tweenIdentifier, out curveName);
+                }
                 if (string.IsNullOrEmpty(curveName))
                 {
                     continue;
@@ -591,16 +596,12 @@ namespace Cr7Sund.TweenTimeLine
             foreach (var preset in easingTokenPresetsToAdd)
             {
                 easingTokenPresetLibrary.AddPreset(preset); // Reuse AddPreset to handle duplicates
-                if (!EasingTokenPresetLibraryEditor.CurveDictionary.ContainsKey(preset.Name))
-                {
-                    EasingTokenPresetLibraryEditor.CurveDictionary.Add(preset.Name, preset.Curve);
-                }
-                else
-                {
-                    EasingTokenPresetLibraryEditor.CurveDictionary[preset.Name] = preset.Curve;
-                }
+                EasingTokenPresetLibraryEditor.UpdatePresetLibrary(preset);
             }
         }
+
+
+
         private static AnimationCurve NormalizeCurve(AnimationCurve curve, string propertyName)
         {
             if (curve.length == 0)
