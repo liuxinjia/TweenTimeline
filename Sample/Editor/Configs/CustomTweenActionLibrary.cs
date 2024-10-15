@@ -16,12 +16,12 @@ namespace Cr7Sund.TweenTimeLine
             animationCollections = new();
         }
 
-        [ContextMenu(nameof(AddCustomTracks))]
-        public void AddCustomTracks()
-        {
-            var newAnimations = CustomTweenActionContainerBuilder.CreateCustomAnimationCollection();
-            newAnimations.ForEach((effect)=>AddEffect(effect));
-        }
+        // [ContextMenu(nameof(AddCustomTracks))]
+        // public void AddCustomTracks()
+        // {
+        //     var newAnimations = CustomTweenActionContainerBuilder.CreateCustomAnimationCollection();
+        //     newAnimations.ForEach((effect)=>AddEffect(effect));
+        // }
 
         public void AddEffect(TweenActionEffect effect, string category = "Custom")
         {

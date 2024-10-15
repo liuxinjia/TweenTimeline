@@ -32,7 +32,7 @@ namespace Cr7Sund.TweenTimeLine
                 Directory.CreateDirectory(outPutPath);
             }
             TweenCustomTrackCodeGenerator.GenerateCode(outPutPath, componentDatas);
-            AnimationCollectionGenerator.CreateBuildInAnimation(this);
+            // AnimationCollectionGenerator.CreateBuildInAnimation(this);
             CreateAnimEffects();
 
             AssetDatabase.Refresh();

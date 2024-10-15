@@ -18,9 +18,9 @@ namespace Cr7Sund.TweenTimeLine
             outCollection.animationCollections.ForEach(animation => animation.collectionCategory = outCollection.category);
             animationContainers.Add(outCollection);
 
-            TweenCollection baseCollection = CreateBaseAnimationCollection();
-            baseCollection.animationCollections.ForEach(animation => animation.collectionCategory = baseCollection.category);
-            animationContainers.Add(baseCollection);
+            // TweenCollection baseCollection = CreateBaseAnimationCollection();
+            // baseCollection.animationCollections.ForEach(animation => animation.collectionCategory = baseCollection.category);
+            // animationContainers.Add(baseCollection);
 
             foreach (var tweenCollection in animationContainers)
             {

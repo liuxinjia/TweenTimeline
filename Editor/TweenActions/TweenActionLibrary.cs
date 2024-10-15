@@ -9,10 +9,10 @@ namespace Cr7Sund.TweenTimeLine
     {
         public List<TweenCollection> animationContainers; // In, Out, Custom
 
-        public void Reset()
-        {
-            OnReset();
-        }
+        // public void Reset()
+        // {
+        //     OnReset();
+        // }
 
         protected virtual void OnReset()
         {
