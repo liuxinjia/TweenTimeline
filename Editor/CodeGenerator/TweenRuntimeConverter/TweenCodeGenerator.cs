@@ -22,7 +22,6 @@ namespace Cr7Sund.TweenTimeLine
         private static readonly Regex _onValueChangeRegex = new Regex(@"onValueChange:\s*\(\s*[^)]*\s*\)\s*=>\s*(.*)", RegexOptions.Singleline);
         private static EasingTokenPresetLibrary _easingTokenPresetLibrary;
 
-        [MenuItem("Tools/GenerateRunTimeCode")]
         public static void GenerateRunTimeCode()
         {
             var instance = new TweenCodeGenerator();
@@ -59,7 +58,7 @@ namespace Cr7Sund.TweenTimeLine
 
         public async Task CreateTweenExtensionFile(Dictionary<string, GenTweenSequence> sequences)
         {
-            string file = Path.Combine(TweenTimelineDefine.GenRuntimePath, "ITweenBindingExtenstion.cs");
+            string file = Path.Combine(TweenTimelineDefine.GenRuntimePath, "ITweenBindingExtension.cs");
 
             await using var writeStream = new StreamWriter(file);
             await GenerateTweenExtensionCodeAsync(sequences.Values.ToList(), writeStream);
@@ -378,7 +377,7 @@ namespace Cr7Sund.TweenTimeLine
             await writer.WriteLineAsync("using PrimeTween;");
             await writer.WriteLineAsync("using UnityEngine;");
             await writer.WriteLineAsync();
-            await writer.WriteLineAsync("public static class ITweenBindingExtenstion");
+            await writer.WriteLineAsync("public static class ITweenBindingExtension");
             await writer.WriteLineAsync("{");
 
             await writer.WriteLineAsync("        public static Sequence Play(this ITweenBinding tweenBinding, string tweenBehaviour, int cycles = 1, CycleMode cycleMode = CycleMode.Restart, Ease sequenceEase = Ease.Linear)");

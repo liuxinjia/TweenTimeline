@@ -20,12 +20,22 @@ namespace Cr7Sund.TweenTimeLine
         public string tweenMethod;
         public string EndPos;
         public string StartPos;
-        public TweenOperationType tweenOperationType;
+        public TweenOperationType tweenOperationType = TweenOperationType.Default;
         public float startTimeOffset; // 动画结束时间点（正数为时间点，0为整个duration, 负数表示提前开始）
 
 
         public TweenActionStep()
         {
+        }
+
+        public TweenActionStep(TweenActionStep tweenActionStep)
+        {
+            label = tweenActionStep.label;
+            tweenMethod = tweenActionStep.tweenMethod;
+            EndPos = tweenActionStep.EndPos;
+            StartPos = tweenActionStep.StartPos;
+            tweenOperationType = tweenActionStep.tweenOperationType;
+            startTimeOffset = tweenActionStep.startTimeOffset;
         }
 
         // public TweenActionStep(string endPos, string startPos, string methodName)

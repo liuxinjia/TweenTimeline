@@ -128,7 +128,8 @@ namespace Cr7Sund.TweenTimeLine
                 }
             }
         }
-        public static VisualElement CreateValueField(string label, Type type, string value, Action<string> onValueChange)
+        public static VisualElement CreateValueField(string label, Type type,
+         string value, Action<string> onValueChange)
         {
             // Convert the value back to the original type
             var objectValue = TypeConverter.ConvertToOriginalType(value, type);

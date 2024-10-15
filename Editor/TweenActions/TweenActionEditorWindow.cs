@@ -20,21 +20,32 @@ namespace Cr7Sund.TweenTimeLine
         private TweenActionEffect _selectTweenAction;
         private Sequence _curSequence;
         private string _updateSequenceID;
-        private VisualElement _selecGridItem;
+        private VisualElement _selectGridItem;
+
         private string _curRestID;
 
         [MenuItem("GameObject/TweenAction Editor %T", priority = 1)]
         public static void ShowWindow()
         {
             TweenTimelineManager.InitTimeline();
+            Type windowType = System.Type.GetType("UnityEditor.InspectorWindow,UnityEditor.dll");
+            EditorWindow inspectorWindow = EditorWindow.GetWindow(windowType);
 
-            var window = EditorWindow.GetWindow<TweenActionEditorWindow>(desiredDockNextTo: new[]
-            {
-            System.Type.GetType("UnityEditor.InspectorWindow,UnityEditor.dll")
-            });
-            // var window = EditorWindow.GetWindow<TweenActionEditorWindow>();
+            var window = EditorWindow.GetWindow<TweenActionEditorWindow>(
+                title: "TweenActionEditor"
+            //  nameof(TweenActionEditorWindow)
+            //     , desiredDockNextTo: new[]
+            // {
+            // System.Type.GetType("UnityEditor.InspectorWindow,UnityEditor.dll")
+            // }
+            );
             window.maxSize = TweenTimelineDefine.windowMaxSize;
             window.minSize = TweenTimelineDefine.windowMaxSize;
+            if (inspectorWindow)
+            {
+                Rect position = inspectorWindow.position;
+                window.position = position;
+            }
         }
 
         [ContextMenu("GameObject/TweenAction Editor %T")]
@@ -150,6 +161,8 @@ namespace Cr7Sund.TweenTimeLine
 
             var trackInfoDict = new Dictionary<string, TrackInfoContext>();
             var trackRoot = BindUtility.GetAttachRoot(selectTweenAction.target.transform);
+            Assert.IsNotNull(trackRoot, $"{selectTweenAction.target} must be child of panel or composite");
+
             foreach (var animUnit in selectTweenAction.animationSteps)
             {
                 animUnit.GetAnimUnitClipInfo(selectTweenAction, _easingTokenPresetLibrary,
@@ -483,7 +496,7 @@ namespace Cr7Sund.TweenTimeLine
             });
             endPosField.name = "EndPosField";
             endPosField.Q<Label>().text = animActionUnit.tweenOperationType == TweenActionStep.TweenOperationType.Additive
-            ? "Delta": "EndValue";
+            ? "Delta" : "EndValue";
             var startPosField = AniActionEditToolHelper.CreateValueField("StartValue", componentValueType, animActionUnit.StartPos, (newValue) =>
             {
                 animActionUnit.StartPos = newValue;
@@ -505,6 +518,8 @@ namespace Cr7Sund.TweenTimeLine
                 animActionUnit.tweenOperationType = (TweenActionStep.TweenOperationType)evt.newValue;
                 startPosField.style.display = (animActionUnit.tweenOperationType != TweenActionStep.TweenOperationType.Default)
                 ? DisplayStyle.None : DisplayStyle.Flex;
+                endPosField.Q<Label>().text = animActionUnit.tweenOperationType == TweenActionStep.TweenOperationType.Additive
+                 ? "Delta" : "EndValue";
             });
 
             // Add the animUnit to the container
@@ -607,12 +622,12 @@ namespace Cr7Sund.TweenTimeLine
                 // left Click
                 else if (ev.button == 0)
                 {
-                    if (_selecGridItem != null)
+                    if (_selectGridItem != null)
                     {
-                        _selecGridItem.EnableInClassList("Select", false);
+                        _selectGridItem.EnableInClassList("Select", false);
                     }
-                    _selecGridItem = item;
-                    _selecGridItem.EnableInClassList("Select", true);
+                    _selectGridItem = item;
+                    _selectGridItem.EnableInClassList("Select", true);
                     OnAnimationEffectSelect(animAction);
                 }
             });

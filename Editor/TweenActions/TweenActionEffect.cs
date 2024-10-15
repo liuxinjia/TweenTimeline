@@ -49,7 +49,11 @@ namespace Cr7Sund.TweenTimeLine
             // }
 
             // target = animAction.target;
-            animationSteps = new List<TweenActionStep>(animAction.animationSteps);
+            animationSteps = new List<TweenActionStep>();
+            foreach (var item in animAction.animationSteps)
+            {
+                animationSteps.Add(new TweenActionStep(item));
+            }
             image = animAction.image;
             durationToken = animAction.durationToken;
             easeToken = animAction.easeToken;

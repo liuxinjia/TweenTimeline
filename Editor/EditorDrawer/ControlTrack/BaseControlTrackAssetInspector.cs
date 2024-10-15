@@ -130,7 +130,11 @@ namespace Cr7Sund.TweenTimeLine
         {
             var posContainer = new VisualElement();
             posContainer.style.flexDirection = FlexDirection.Row;
+            posContainer.style.flexWrap = Wrap.Wrap;
             var propField = SerializedPropertyValueExtension.CreateField(prop);
+            propField.Q<Label>().style.minWidth = 82;
+            propField.Q("unity-text-input").style.minWidth =60;
+
             // don't change the init pos 
             // since we should consider design one track which should not change the init pos
             Button resetBtn = new Button(() => ResetPos(isStart));
@@ -142,6 +146,9 @@ namespace Cr7Sund.TweenTimeLine
             posContainer.Add(propField);
             posContainer.Add(recordBtn);
             posContainer.Add(resetBtn);
+
+            // var label = posContainer.Q<Label>("label");
+
             return posContainer;
         }
 

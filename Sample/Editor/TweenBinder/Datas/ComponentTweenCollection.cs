@@ -21,7 +21,18 @@ namespace Cr7Sund.TweenTimeLine
             return tweenActions[index].tweenNames;
         }
 
+        [MenuItem("Tools/Cr7Sund/GeneTweenRuntimeCode")]
+
+        public static void GeneTweenRuntimeCode()
+        {
+            var tweenActionCollection = AssetDatabase.LoadAssetAtPath<ComponentTweenCollection>(TweenTimelineDefine.componentTweenCollectionPath);
+            tweenActionCollection.Rebuild();
+            TweenCodeGenerator.GenerateRunTimeCode();
+        }
+
         [ContextMenu(nameof(Rebuild))]
+        [MenuItem("Tools/GeneTweenRuntimeCode")]
+
         public void Rebuild()
         {
             string inputFilePath = TweenTimelineDefine.EditorDataSourcePath;
@@ -60,8 +71,6 @@ namespace Cr7Sund.TweenTimeLine
                     }
                 }
             }
-
-            TweenCodeGenerator.GenerateRunTimeCode();
         }
 
         private static List<ComponentTween> GetTweenTypes(TimelineAsset timeLineAsset)
@@ -106,7 +115,8 @@ namespace Cr7Sund.TweenTimeLine
                 }
 
                 string tweenName = TweenCodeGenerator.GetGenSequenceName(trackAsset);
-                if(string.IsNullOrEmpty(tweenName)){
+                if (string.IsNullOrEmpty(tweenName))
+                {
                     return;
                 }
                 var findIndex = tweenAction.tweenNames.FindIndex(ts => ts.tweenName == tweenName);

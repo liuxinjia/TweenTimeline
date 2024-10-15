@@ -1,3 +1,4 @@
+using System;
 using Cr7Sund.Timeline.Extension;
 using UnityEditor;
 using UnityEngine;
@@ -12,14 +13,22 @@ namespace Cr7Sund.TweenTimeLine
 
         public static void Open(SerializedObject serializedObject, IUniqueBehaviour behaviour)
         {
+            Type windowType = Type.GetType("UnityEditor.SceneHierarchyWindow,UnityEditor.dll");
+            EditorWindow hierarchyWindow = EditorWindow.GetWindow(windowType);
+
             var window = EditorWindow.GetWindow<ControlTrackWindow>(
-                desiredDockNextTo: new[]
-            {
-                System.Type.GetType("UnityEditor.SceneHierarchyWindow,UnityEditor.dll")
-            }
+            //     desiredDockNextTo: new[]
+            // {
+            //     System.Type.GetType("UnityEditor.SceneHierarchyWindow,UnityEditor.dll")
+            // }
             );
             window._behaviour = behaviour;
             window._serializedObject = serializedObject;
+            window.minSize = new Vector2(338, 328);
+            window.maxSize = new Vector2(368, 328);
+
+            if (hierarchyWindow != null)
+                window.position = hierarchyWindow.position;
             window.UpdateUI();
         }
 
