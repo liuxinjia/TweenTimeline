@@ -210,7 +210,7 @@ namespace Cr7Sund.TweenTimeLine
             ComponentTweenCollection tweenActionCollection, string panelName)
         {
             string category = TweenTimelineDefine.PanelTag;
-            if (panelName.EndsWith(category))
+            if (!panelName.EndsWith(category))
             {
                 category = TweenTimelineDefine.CompositeTag;
             }
