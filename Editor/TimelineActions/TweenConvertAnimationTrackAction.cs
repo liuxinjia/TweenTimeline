@@ -62,19 +62,29 @@ namespace Cr7Sund.TweenTimeLine
                     foreach (var timelineClip in clips)
                     {
                         var clip = timelineClip.animationClip;
-                        var keyframeDatas = AnimationClipConverter.GenerateKeyFrameDatas(clip);
-                        newTracks.AddRange(
-                           AnimationClipConverter.CreateTrackContexts(targetGo, clip
-                             , _easingTokenPresetLibrary, keyframeDatas, timelineClip.start));
+                        AddTrack(newTracks, clip, timelineClip.start, targetComponent.gameObject);
+                    }
 
-                        keyframeDatas = AnimationClipConverter.GenerateObjectKeyFrameDatas(clip);
-                        newTracks.AddRange(
-                              AnimationClipConverter.CreateTrackContexts(targetGo, clip, _easingTokenPresetLibrary,
-                              keyframeDatas, timelineClip.start));
+                    if (animationTrack.infiniteClip != null)
+                    {
+                        AddTrack(newTracks, animationTrack.infiniteClip, 0, targetComponent.gameObject);
                     }
                 }
             }
             return newTracks;
+
+            void AddTrack(List<TrackInfoContext> newTracks, AnimationClip clip, double start, GameObject targetGO)
+            {
+                var keyframeDatas = AnimationClipConverter.GenerateKeyFrameDatas(clip);
+                newTracks.AddRange(
+                   AnimationClipConverter.CreateTrackContexts(targetGO, clip
+                     , _easingTokenPresetLibrary, keyframeDatas, start));
+
+                keyframeDatas = AnimationClipConverter.GenerateObjectKeyFrameDatas(clip);
+                newTracks.AddRange(
+                      AnimationClipConverter.CreateTrackContexts(targetGO, clip, _easingTokenPresetLibrary,
+                      keyframeDatas, start));
+            }
         }
 
         private void DeleteOriginalTracks(IEnumerable<TrackAsset> tracks)

@@ -211,8 +211,17 @@ namespace Cr7Sund.TweenTimeLine
 
                     if (!trackAsset.hasClips)
                     {
-                        Debug.LogWarning($"{trackAsset} don't have clips");
-                        continue;
+                        if (trackAsset is AnimationTrack animationTrack
+                        && animationTrack.infiniteClip != null)
+                        {
+
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"{trackAsset} don't have clips");
+                            continue;
+                        }
+
                     }
 
                     TweenTimeLineDataModel.TrackObjectDict.Add(trackAsset, binding);

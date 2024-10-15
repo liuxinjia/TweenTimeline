@@ -360,7 +360,12 @@ namespace Cr7Sund.TweenTimeLine
                     if (target != null)
                     {
                         targetTrans = target.transform.Find(animTargetInfo.ObjectPath);
-                        Assert.IsNotNull(targetTrans, $"Please check the animation bind path {animTargetInfo.ObjectPath} don't exist in {target.transform}");
+                        if (targetTrans == null)
+                        {
+                            Debug.LogWarning($"Please check the animation bind path {animTargetInfo.ObjectPath} don't exist in {target.transform}");
+                            continue;
+                        }
+                        // Assert.IsNotNull(targetTrans, $"Please check the animation bind path {animTargetInfo.ObjectPath} don't exist in {target.transform}");
                         trackRoot = BindUtility.GetAttachRoot(targetTrans.transform);
                         if (trackRoot == null) continue;
                     }
@@ -515,6 +520,11 @@ namespace Cr7Sund.TweenTimeLine
                     {
                         var clip = timelineClip.animationClip;
                         AddPresets(easingTokenPresetLibrary, AnimationClipConverter.CreateCurvePresets(clip));
+                    }
+
+                    if (animationTrack.infiniteClip != null)
+                    {
+                        AddPresets(easingTokenPresetLibrary, AnimationClipConverter.CreateCurvePresets(animationTrack.infiniteClip));
                     }
                 }
             }
