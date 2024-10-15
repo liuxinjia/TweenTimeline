@@ -215,6 +215,10 @@ namespace Cr7Sund.TweenTimeLine
                 category = TweenTimelineDefine.CompositeTag;
             }
 
+            if (!panelName.EndsWith(category))
+            {
+                throw new Exception($"{panelName} should be endWith panel or Composite");
+            }
 
             var tweenComponents = tweenActionCollection.GetTweenActions(category);
             var resultList = new List<ComponentBindTracks>();

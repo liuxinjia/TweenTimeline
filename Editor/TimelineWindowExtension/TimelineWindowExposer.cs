@@ -17,20 +17,12 @@ namespace Cr7Sund.Timeline.Extension
 
         public static bool IteratePlayableAssets(Action<PlayableAsset, TrackAsset> iterateAction)
         {
-            var timelineWindow = TimelineWindow.instance;
-
-            if (timelineWindow == null)
+            var assets = GetTimeLineAssets();
+            foreach (TimelineAsset asset in assets)
             {
-                return false;
+                var tracks = asset.GetRootTracks();
+                iteratePlayTrackAsset(iterateAction, tracks);
             }
-            var editSequence = timelineWindow.state.editSequence;
-            if (editSequence.asset == null)
-            {
-                return false;
-            }
-            var tracks = editSequence.asset.GetRootTracks();
-
-            iteratePlayTrackAsset(iterateAction, tracks);
 
             return true;
 
@@ -53,28 +45,107 @@ namespace Cr7Sund.Timeline.Extension
             }
         }
 
-        public static bool IterateClips(Action<TimelineClip, TrackAsset> iterateAction)
+        public static void IterateClips(Action<TimelineClip, TrackAsset> iterateAction)
+        {
+            var assets = GetTimeLineAssets();
+            foreach (TimelineAsset asset in assets)
+            {
+                var tracks = asset.GetRootTracks();
+                IterateClips(iterateAction, tracks);
+            }
+        }
+
+        private static TimelineAsset GetRootTimeLineAsset()
         {
             var timelineWindow = TimelineWindow.instance;
             if (timelineWindow == null)
             {
-                return false;
+                return null;
             }
             var editSequence = timelineWindow.state.editSequence;
-            if (editSequence.asset == null)
-            {
-                return false;
-            }
-            var tracks = editSequence.asset.GetRootTracks();
-
-            return IterateClips(iterateAction, tracks);
+            return editSequence.asset;
         }
 
-        public static bool IterateClips(Action<TimelineClip, TrackAsset> iterateAction, IEnumerable<TrackAsset> tracks)
+        private static List<TimelineAsset> GetTimeLineAssets()
+        {
+            var rootAsset = GetRootTimeLineAsset();
+            var playableSet = GetSubDirectors(rootAsset, GetCurDirector());
+            return playableSet.Select(asset => asset.playableAsset as TimelineAsset).ToList();
+        }
+
+        public static List<PlayableDirector> GetPlayableDirectors()
+        {
+            var rootAsset = GetRootTimeLineAsset();
+            return GetSubDirectors(rootAsset, GetCurDirector()).ToList();
+        }
+        public static void IterateSubTimelineClipAsset(
+                    Action<TrackAsset, TimelineClip, PlayableDirector> action = null)
+        {
+            var rootAsset = GetRootTimeLineAsset();
+            GetSubDirectors(rootAsset, GetCurDirector(), action);
+        }
+
+        private static HashSet<PlayableDirector> GetSubDirectors(
+            TimelineAsset rootTimeLineAsset, PlayableDirector rootDirector,
+             Action<TrackAsset, TimelineClip, PlayableDirector> action = null)
+        {
+            var tracks = rootTimeLineAsset.GetRootTracks();
+            var subTimeLineAssetSet = new HashSet<TimelineAsset>();
+            var resultDirectors = new HashSet<PlayableDirector>();
+            if (rootTimeLineAsset != null)
+            {
+                resultDirectors.Add(rootDirector);
+                subTimeLineAssetSet.Add(rootTimeLineAsset);
+            }
+
+            void IterateClips(IEnumerable<TrackAsset> tracks)
+            {
+                iterateTrackClips(tracks);
+
+                void iterateTrackClips(IEnumerable<TrackAsset> tracks)
+                {
+                    foreach (var track in tracks)
+                    {
+                        var timelineClips = track.GetClips().ToList();
+                        foreach (TimelineClip clip in timelineClips)
+                        {
+                            var clipAsset = clip.asset;
+                            if (clipAsset == null) continue;
+                            if (clipAsset is not ControlPlayableAsset controlPlayableAsset)
+                            {
+                                continue;
+                            }
+                            var go = controlPlayableAsset.sourceGameObject.Resolve(rootDirector);
+                            if (go == null)
+                            {
+                                continue;
+                            }
+                            var director = go.GetComponent<PlayableDirector>();
+                            var subTimeLineAsset = director.playableAsset as TimelineAsset;
+                            if (subTimeLineAsset == null) continue;
+                            if (!subTimeLineAssetSet.Contains(subTimeLineAsset))
+                            {
+                                action?.Invoke(track, clip, director);
+                                resultDirectors.Add(director);
+                                subTimeLineAssetSet.Add(subTimeLineAsset);
+                            }
+                            else
+                            {
+                                throw new System.Exception($"There will be cycle tween {subTimeLineAsset.name} of {go.name}");
+                            }
+
+                        }
+                        iterateTrackClips(track.GetChildTracks());
+                    }
+                }
+            }
+            IterateClips(tracks);
+            return resultDirectors;
+        }
+
+        public static void IterateClips(Action<TimelineClip, TrackAsset> iterateAction, IEnumerable<TrackAsset> tracks)
         {
             iterateTrackClips(iterateAction, tracks);
-
-            return true;
 
             static void iterateTrackClips(Action<TimelineClip, TrackAsset> iterateAction, IEnumerable<TrackAsset> tracks)
             {
@@ -92,23 +163,14 @@ namespace Cr7Sund.Timeline.Extension
             }
         }
 
-        public static bool IterateClips(Action<object, TimelineClip, TrackAsset> iterateAction)
+        public static void IterateClips(Action<object, TimelineClip, TrackAsset> iterateAction)
         {
-            var timelineWindow = TimelineWindow.instance;
-            if (timelineWindow == null)
+            var assets = GetTimeLineAssets();
+            foreach (TimelineAsset asset in assets)
             {
-                return false;
+                var tracks = asset.GetRootTracks();
+                iterateTrackClips(iterateAction, tracks);
             }
-            var editSequence = timelineWindow.state.editSequence;
-            if (editSequence.asset == null)
-            {
-                return false;
-            }
-            var tracks = editSequence.asset.GetRootTracks();
-
-            iterateTrackClips(iterateAction, tracks);
-
-            return true;
 
             static void iterateTrackClips(Action<object, TimelineClip, TrackAsset> iterateAction, IEnumerable<TrackAsset> tracks)
             {
@@ -130,22 +192,16 @@ namespace Cr7Sund.Timeline.Extension
             }
         }
 
-        public static bool IterateTrackAssets(Action<TrackAsset> iterateAction)
+        public static void IterateTrackAssets(Action<TrackAsset> iterateAction)
         {
-            var timelineWindow = TimelineWindow.instance;
-            if (timelineWindow == null)
+            var assets = GetTimeLineAssets();
+            foreach (TimelineAsset asset in assets)
             {
-                return false;
+                IterateTrackAsset(asset, iterateAction);
             }
-            var editSequence = timelineWindow.state.editSequence;
-            if (editSequence.asset == null)
-            {
-                return false;
-            }
-            return IterateTrackAssets(iterateAction, editSequence.asset);
         }
 
-        static bool IterateTrackAssets(Action<TrackAsset> iterateAction, TimelineAsset asset)
+        public static bool IterateTrackAsset(TimelineAsset asset, Action<TrackAsset> iterateAction)
         {
             var tracks = asset.GetRootTracks();
 

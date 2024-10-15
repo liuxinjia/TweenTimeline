@@ -30,7 +30,6 @@ namespace Cr7Sund.TweenTimeLine
 
         public async void Generate()
         {
-
             EditorUtility.DisplayProgressBar("Generating Code", "Constructing Method Content Dictionary", 0f);
             await ConstructMethodContentDict();
             EditorUtility.ClearProgressBar();
@@ -104,6 +103,10 @@ namespace Cr7Sund.TweenTimeLine
                 var track = sequence.trackInfos[j];
                 if (track.clipInfos.Count < 1)
                 {
+                    if (!string.IsNullOrEmpty(track.customTrack))
+                    {
+                        await writer.WriteLineAsync($"           .Group({track.customTrack}Tween(binding))");
+                    }
                     continue;
                 }
 
@@ -225,6 +228,10 @@ namespace Cr7Sund.TweenTimeLine
                 var track = sequence.trackInfos[j];
                 if (track.clipInfos.Count < 1)
                 {
+                    if (!string.IsNullOrEmpty(track.customTrack))
+                    {
+                        await writer.WriteLineAsync($"           .Group({track.customTrack}Tween(binding))");
+                    }
                     continue;
                 }
 
@@ -457,7 +464,7 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     Assert.IsTrue(timelineAssetName.EndsWith(TweenTimelineDefine.PanelTag)
                                                        || timelineAssetName.EndsWith(TweenTimelineDefine.CompositeTag)
-                    ,$"{sequenceName} _ {timelineAssetName}");
+                    , $"{sequenceName} _ {timelineAssetName}");
                     sequenceName = $"{sequenceName}_{timelineAssetName}";
                 }
             }
@@ -561,13 +568,29 @@ namespace Cr7Sund.TweenTimeLine
                 inputFilePath
             });
             var resultSequences = new Dictionary<string, GenTweenSequence>();
-
+            var set = new HashSet<string>();
             foreach (var assetID in assetGUIDs)
             {
                 var asset = AssetDatabase.LoadAssetAtPath<TimelineAsset>(AssetDatabase.GUIDToAssetPath(assetID));
                 if (asset is TimelineAsset timelineAsset)
                 {
                     IterateTimelineAsset(resultSequences, timelineAsset);
+                    set.Add(timelineAsset.name);
+                }
+            }
+
+            foreach (var item in resultSequences)
+            {
+                List<GenTrackInfo> trackInfos = item.Value.trackInfos;
+                for (int i = trackInfos.Count - 1; i >= 0; i--)
+                {
+                    GenTrackInfo trackInfo = trackInfos[i];
+                    if (!string.IsNullOrEmpty(trackInfo.customTrack)
+                     && !resultSequences.ContainsKey(trackInfo.customTrack))
+                    {
+                        trackInfos.RemoveAt(i);
+                        Debug.LogError($"{item.Value.parentTrackName}'s subTrack ({trackInfo.customTrack}) dont exist any more");
+                    }
                 }
             }
 
@@ -622,6 +645,10 @@ namespace Cr7Sund.TweenTimeLine
                     {
                         GenAudioSequence(trackInfo, clipAsset, trackAsset);
                     }
+                    else if (trackAsset is ControlTrack)
+                    {
+                        GenSubTimelineSequence(trackInfo, clipAsset, trackAsset);
+                    }
                     else
                     {
                         GenCustomSequence(trackInfo, clipAsset, trackAsset);
@@ -664,6 +691,14 @@ namespace Cr7Sund.TweenTimeLine
             sequence.trackInfos.AddRange(
                   AnimationClipConverter.ConstructGenTracks(clip, _easingTokenPresetLibrary,
                   keyframeDatas, timelineClip.start, instanceID, contentDict));
+        }
+
+        private void GenSubTimelineSequence(GenTrackInfo trackInfo, TimelineClip clipAsset, TrackAsset trackAsset)
+        {
+            if (clipAsset.asset is SubTimelineControlAsset controlAsset)
+            {
+                trackInfo.customTrack = controlAsset.subTweenName;
+            }
         }
 
         private void GenAudioSequence(GenTrackInfo trackInfo, TimelineClip clipAsset, TrackAsset trackAsset)

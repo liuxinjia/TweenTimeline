@@ -185,13 +185,13 @@ namespace Cr7Sund.TweenTimeLine
         {
             TweenTimeLineDataModel.TrackObjectDict.Clear();
 
-            var playableDirector = TimelineWindowExposer.GetCurDirector();
-            if (playableDirector != null && playableDirector.playableAsset != null)
+            var playableDirectors = TimelineWindowExposer.GetPlayableDirectors();
+            foreach (var playableDirector in playableDirectors)
             {
                 InitDirector(playableDirector);
-                return true;
             }
-            return false;
+
+            return playableDirectors.Count > 0;
 
             void InitDirector(PlayableDirector playableDirector)
             {
@@ -269,6 +269,7 @@ namespace Cr7Sund.TweenTimeLine
                     }
                 }
             });
+
 
             TimelineWindowExposer.IterateClips((value, clip, trackAsset) =>
             {

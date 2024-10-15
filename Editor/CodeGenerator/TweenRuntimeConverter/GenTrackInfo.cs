@@ -5,6 +5,7 @@ namespace Cr7Sund.TweenTimeLine
     {
         public List<GenClipInfo> clipInfos = new();
         public string InstanceID;
+        public string customTrack;
 
         public GenTrackInfo(int instanceID)
         {
