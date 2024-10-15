@@ -103,13 +103,13 @@ namespace Cr7Sund.TweenTimeLine
                 {
                     continue;
                 }
-                
+
                 var componentPairs = binder.cacheList.FirstOrDefault(
                     x => BindAdapterEditorHelper.GetTweenTarget(
                         componentBindTracks.bindTargets[i], componentBindTracks.bindTypes[i]) == x.key);
                 var component = componentPairs.component;
 
-         
+
                 GetBehaviourInfo(trackTypeName,
                  out var getMethodInfo, out var setMethodInfo, out var behaviour);
 
@@ -210,7 +210,11 @@ namespace Cr7Sund.TweenTimeLine
             ComponentTweenCollection tweenActionCollection, string panelName)
         {
             string category = TweenTimelineDefine.PanelTag;
-            Assert.IsTrue(panelName.EndsWith(category));
+            if (panelName.EndsWith(category))
+            {
+                category = TweenTimelineDefine.CompositeTag;
+            }
+
 
             var tweenComponents = tweenActionCollection.GetTweenActions(category);
             var resultList = new List<ComponentBindTracks>();
