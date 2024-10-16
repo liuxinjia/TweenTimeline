@@ -15,7 +15,6 @@
     "url": "https://github.com/liuxinjia"
   },
   "dependencies": {
-    "com.unity.timeline": "1.6.3"
   },
   "keywords": [
     "ui",
