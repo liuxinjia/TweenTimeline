@@ -1,0 +1,32 @@
+{
+  "name": "com.cr7sund.tweentimeline",
+  "displayName": "Tween Timeline",
+  "description": "Tween TimeLine is an animation design tool for Unity that allows you to easily create UI animations without the need for coding",
+  "version": "1.0.0-preview.1",
+  "unity": "6000.0.17f1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuxinjia/TweenTimeline.git"
+  },
+  "author": {
+    "name": "cr7Sund",
+    "email": "liux4989@gmail.com",
+    "url": "https://github.com/liuxinjia"
+  },
+  "dependencies": {
+    "com.kyrylokuzyk.primetween": "1.1.20"
+  },
+  "keywords": [
+    "ui",
+    "editor-enhancement"
+  ],
+   "documentationUrl": "https://github.com/liuxinjia/TweenTimeline",
+  "samples": [
+    {
+      "displayName": "Demo",
+      "description": "UI Effect Demo",
+      "path": "Samples"
+    }
+  ]
+}
