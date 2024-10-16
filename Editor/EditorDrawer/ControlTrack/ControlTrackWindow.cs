@@ -42,13 +42,17 @@ namespace Cr7Sund.TweenTimeLine
             var btn = new Button(() =>
             {
                 this.Close();
-
-                ForceEndRecord();
-                Selection.activeObject = TweenTimeLineDataModel.SelectDirector;
             });
             btn.text = "Back To TimeLine";
             rootVisualElement.Add(container);
             rootVisualElement.Add(btn);
+        }
+
+
+        private void OnDestroy()
+        {
+            Selection.activeObject = TweenTimeLineDataModel.SelectDirector;
+            ForceEndRecord();
         }
 
         private void ForceEndRecord()

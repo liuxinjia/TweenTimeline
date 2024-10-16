@@ -307,7 +307,6 @@ namespace Cr7Sund.Timeline.Extension
             return TimelineWindow.instance.state.editSequence.director;
         }
 
-
         public static void GetSelectCurveBindings(TrackAsset selectTrackAsset)
         {
             TimelineTreeViewGUI treeView = TimelineWindow.instance.treeView;
@@ -390,5 +389,9 @@ namespace Cr7Sund.Timeline.Extension
             TimelineEditor.selectedClip = timelineClip;
         }
 
+        public static void LockWindow(bool locked)
+        {
+            TimelineWindow.instance.locked = locked;
+        }
     }
 }

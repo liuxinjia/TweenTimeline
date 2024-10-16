@@ -134,7 +134,7 @@ namespace Cr7Sund.TweenTimeLine
             posContainer.style.flexWrap = Wrap.Wrap;
             var propField = SerializedPropertyValueExtension.CreateField(prop);
             propField.Q<Label>().style.minWidth = 82;
-            propField.Q("unity-text-input").style.minWidth =60;
+            propField.Q("unity-text-input").style.minWidth = 60;
 
             // don't change the init pos 
             // since we should consider design one track which should not change the init pos
@@ -221,25 +221,26 @@ namespace Cr7Sund.TweenTimeLine
             var stateInfo = TweenTimeLineDataModel.ClipStateDict[_behaviour];
             var trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[_behaviour];
             var trackTarget = TweenTimeLineDataModel.TrackObjectDict[trackAsset];
-            stateInfo.IsRecordStart = isStart;
 
             TweenTimelineManager.SelectBeforeToggle(_behaviour);
             TweenTimelineManager.ToggleRecordClip(_behaviour);
 
+            // TimelineWindowExposer.LockWindow(stateInfo.BehaviourState == ClipBehaviourStateEnum.Recording);
+            if (TimelineEditor.selectedClip != null)
+            {
+                TweenTimeLineDataModel.SelectTimelineClip = TimelineEditor.selectedClip;
+            }
+            var playableDirector = TimelineWindowExposer.GetCurDirector();
+            if (playableDirector != null)
+            {
+                TweenTimeLineDataModel.SelectDirector = playableDirector.gameObject;
+            }
+
+            var serializedObject = new SerializedObject(TweenTimeLineDataModel.SelectTimelineClip.asset);
+            stateInfo.IsRecordStart = isStart;
+
             if (stateInfo.BehaviourState == ClipBehaviourStateEnum.Recording)
             {
-                if (TimelineEditor.selectedClip != null)
-                {
-                    TweenTimeLineDataModel.SelectTimelineClip = TimelineEditor.selectedClip;
-                }
-                var playableDirector = TimelineWindowExposer.GetCurDirector();
-                if (playableDirector != null)
-                {
-                    TweenTimeLineDataModel.SelectDirector = playableDirector.gameObject;
-                }
-
-                var serializedObject = new SerializedObject(TweenTimeLineDataModel.SelectTimelineClip.asset);
-
                 ControlTrackWindow.Open(serializedObject, _behaviour);
                 SceneView.GetWindow<SceneView>();
                 if (trackTarget is Component trackComponent)
@@ -254,15 +255,15 @@ namespace Cr7Sund.TweenTimeLine
             }
             else
             {
-                var serializedObject = new SerializedObject(TweenTimeLineDataModel.SelectTimelineClip.asset);
-
                 var templateProp = serializedObject.FindProperty("template");
                 SerializedProperty serialProp = templateProp.FindPropertyRelative(propName);
 
                 SerializedPropertyValueExtension.UpdateField(propField, serialProp,
                 stateInfo.IsRecordStart ? _behaviour.StartPos : _behaviour.EndPos);
             }
+          
             stateInfo.IsRecordStart = false;
+            
         }
 
         public void RefreshBtns(VisualElement container)
