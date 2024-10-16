@@ -19,4 +19,4 @@ jobs:
           @semantic-release/git
         branch: master
       env:
-        GITHUB_TOKEN: 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
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GitHub 自动生成的令牌
