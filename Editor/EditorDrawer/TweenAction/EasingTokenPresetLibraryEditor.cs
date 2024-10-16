@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using Cr7Sund.Editor.CurvePreset;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;

@@ -14,7 +14,9 @@
     "email": "liux4989@gmail.com",
     "url": "https://github.com/liuxinjia"
   },
-  "dependencies": {},
+  "dependencies": {
+    "com.unity.timeline": "1.6.3"
+  },
   "keywords": [
     "ui",
     "editor-enhancement"

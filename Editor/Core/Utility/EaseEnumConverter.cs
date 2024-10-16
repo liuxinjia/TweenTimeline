@@ -3,6 +3,7 @@ namespace Cr7Sund.TweenTimeLine
 {
     public class EaseEnumConverter
     {
+        #if DOTWEEN
         // Convert from DG.Tweening.Ease to PrimeTween.Ease
         public static PrimeTween.Ease ConvertToPrimeEase(DG.Tweening.Ease sourceEnum)
         {
@@ -21,6 +22,7 @@ namespace Cr7Sund.TweenTimeLine
 
             throw new ArgumentException("Invalid DG.Tweening.Ease value", nameof(sourceEnum));
         }
+        #endif
 
         // Convert from PrimeTween.Ease to DG.Tweening.Ease
         public static DG.Tweening.Ease ConvertToDGEase(PrimeTween.Ease targetEnum)
