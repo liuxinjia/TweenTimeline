@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Cr7Sund.Editor.CurvePreset;
-using UnityEditor;
-using UnityEditor.Presets;
 using UnityEngine;
 using UnityEngine.Assertions;
 namespace Cr7Sund.TweenTimeLine
