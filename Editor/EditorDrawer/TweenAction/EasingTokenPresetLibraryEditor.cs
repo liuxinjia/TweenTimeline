@@ -29,10 +29,10 @@ namespace Cr7Sund.TweenTimeLine
             var listProp = serializedObject.FindProperty("easingTokenPresets");
             var property = new PropertyField(listProp);
 
-            // var resetBtn = new Button(ResetFromCurvePreset);
-            // resetBtn.text = "Rebuild";
+            var resetBtn = new Button(ResetFromCurvePreset);
+            resetBtn.text = "Rebuild";
 
-            // container.Add(resetBtn);
+            container.Add(resetBtn);
             container.Add(property);
 
             return container;
@@ -42,7 +42,7 @@ namespace Cr7Sund.TweenTimeLine
         {
             curveDictionary = new();
             var easingTokenPresetLibrary = AssetDatabase.LoadAssetAtPath<EasingTokenPresetLibrary>(TweenTimelineDefine.easingTokenPresetsPath);
-            // ConstructLibrary(easingTokenPresetLibrary);
+            ConstructPresets(easingTokenPresetLibrary);
 
             foreach (var item in easingTokenPresetLibrary.easingTokenPresets)
             {
@@ -95,10 +95,12 @@ namespace Cr7Sund.TweenTimeLine
 
         public static Dictionary<string, string> GetCurvePresetLibrary()
         {
-            var presetGUIDs = AssetDatabase.FindAssets("t:CurvePresetLibrary", new[]
+            var presetGUIDs = AssetDatabase.FindAssets("t:CurvePresetLibrary"
+            , new[]
             {
                 TweenTimelineDefine.BuiltInCurvePresetFolder, TweenTimelineDefine.CustomCurvePresetFolder
-            });
+            }
+            );
             var curvePresetDict = new Dictionary<string, string>();
             foreach (var presetGuid in presetGUIDs)
             {

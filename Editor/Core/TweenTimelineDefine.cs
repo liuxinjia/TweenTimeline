@@ -15,7 +15,7 @@ namespace Cr7Sund.TweenTimeLine
 
 
         public static string animTokenPresetsPath => $"{BuiltInConfigEditorFolder}/AnimTokenPresets.asset";
-        public static string componentTweenCollectionPath => $"{BuiltInConfigEditorFolder}/ComponentTweenCollection.asset";
+        public static string componentTweenCollectionPath => $"{CustomConfigEditorFolder}/ComponentTweenCollection.asset";
 
         #region Window Style
         public const string windowVisualTreeAssetGUID = "5d602cb17b57b46439b7bd1be265e07a";
