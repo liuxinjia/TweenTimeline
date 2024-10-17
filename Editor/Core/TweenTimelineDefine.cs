@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.UIElements;
 namespace Cr7Sund.TweenTimeLine
 {
@@ -75,8 +76,7 @@ namespace Cr7Sund.TweenTimeLine
             get
             {
                 var path = TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.TweenlineSourcePath);
-                if (string.IsNullOrEmpty(path))
-                {
+                if (!AssetDatabase.AssetPathExists(path))                {
                     path =  $"{CustomConfigEditorFolder}/Datas";
                 }
                 return path;

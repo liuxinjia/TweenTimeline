@@ -66,6 +66,7 @@ namespace Cr7Sund.TweenTimeLine
                 "TweenTimeline.Sample.Editor", string.Empty)},
             {TweenPreferenceDefine.CustomTweenPath, new Tuple<object, string>("Assets/TweenTimelineSample", string.Empty)},
             {TweenPreferenceDefine.BuiltInLibraryPath, new Tuple<object, string>("Assets/TweenTimelineConfig/", string.Empty)},
+            {TweenPreferenceDefine.TweenlineSourcePath, new Tuple<object, string>("Assets/TweenTimelineConfig/Customs/Editor Default Resources/Datas", string.Empty)},
         };
 
         public void Reset()
