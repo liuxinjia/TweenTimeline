@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f224c2b118b81994180156de236ba010, type: 3}
+  m_Name: GIFCacher
+  m_EditorClassIdentifier: 
+  gifDataLists:
+  - Frames:
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/FadeIn0.png
+      Delay: 0.32
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/FadeIn1.png
+      Delay: 0.35
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/FadeIn2.png
+      Delay: 0.4
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/FadeIn3.png
+      Delay: 0.43
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/FadeIn4.png
+      Delay: 0.47
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/FadeIn5.png
+      Delay: 0.48
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/FadeIn6.png
+      Delay: 0.5
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/FadeIn7.png
+      Delay: 0.52
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/FadeIn8.png
+      Delay: 0.53
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/FadeIn9.png
+      Delay: 0.54999995
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/FadeIn10.png
+      Delay: 0.56999993
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/FadeIn11.png
+      Delay: 0.5999999
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/FadeIn12.png
+      Delay: 0.8699999
+    FilePath: C:\Users\liux4\Documents\UnityProjects\MyMiniGame\Assets/TweenTimelineConfig/BuiltInConfigs/Editor
+      Default Resources/Gifs\FadeIn.gif
+  - Frames:
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut0.png
+      Delay: 0.42
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut1.png
+      Delay: 0.42999998
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut2.png
+      Delay: 0.45
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut3.png
+      Delay: 0.47
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut4.png
+      Delay: 0.48
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut5.png
+      Delay: 0.5
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut6.png
+      Delay: 0.52
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut7.png
+      Delay: 0.53
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut8.png
+      Delay: 0.54999995
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut9.png
+      Delay: 0.56999993
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut10.png
+      Delay: 0.5799999
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut11.png
+      Delay: 0.5999999
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut12.png
+      Delay: 0.6199999
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut13.png
+      Delay: 0.6299999
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut14.png
+      Delay: 0.64999986
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut15.png
+      Delay: 0.66999984
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut16.png
+      Delay: 0.6799998
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut17.png
+      Delay: 0.6999998
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/GrowOut18.png
+      Delay: 0.8699998
+    FilePath: C:\Users\liux4\Documents\UnityProjects\MyMiniGame\Assets/TweenTimelineConfig/BuiltInConfigs/Editor
+      Default Resources/Gifs\GrowOut.gif
+  - Frames:
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/SlideIn0.png
+      Delay: 0.32
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/SlideIn1.png
+      Delay: 0.35
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/SlideIn2.png
+      Delay: 0.4
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/SlideIn3.png
+      Delay: 0.42000002
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/SlideIn4.png
+      Delay: 0.43
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/SlideIn5.png
+      Delay: 0.45000002
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/SlideIn6.png
+      Delay: 0.47000003
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/SlideIn7.png
+      Delay: 0.48000002
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/SlideIn8.png
+      Delay: 0.5
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/SlideIn9.png
+      Delay: 0.52
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/SlideIn10.png
+      Delay: 0.53
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/SlideIn11.png
+      Delay: 0.54999995
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/SlideIn12.png
+      Delay: 0.56999993
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/SlideIn13.png
+      Delay: 0.5799999
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/SlideIn14.png
+      Delay: 0.5999999
+    - texturePath: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GIFTextures/SlideIn15.png
+      Delay: 0.8699999
+    FilePath: C:\Users\liux4\Documents\UnityProjects\MyMiniGame\Assets/TweenTimelineConfig/BuiltInConfigs/Editor
+      Default Resources/Gifs\SlideIn.gif
+  folders:
+  - Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs
+  - Assets/TweenTimelineConfig/Customs/Editor Default Resources/Gifs

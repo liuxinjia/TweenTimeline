@@ -1,0 +1,1753 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcb5a6131a292894bb493562b8e66d75, type: 3}
+  m_Name: TweenActionLibrary
+  m_EditorClassIdentifier: 
+  animationContainers:
+  - animationCollections:
+    - label: Fade In
+      image: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/FadeIn.gif
+      effectCategory: Fade
+      collectionCategory: In
+      durationToken: 300
+      easeToken: 0
+      timeEasePairs: 5
+      animationSteps:
+      - label: 
+        tweenMethod: Graphic_ColorAControlBehaviour
+        EndPos: 1.0f
+        StartPos: 0.0f
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: Slide In
+      image: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/SlideIn.gif
+      effectCategory: Fade
+      collectionCategory: In
+      durationToken: 300
+      easeToken: 0
+      timeEasePairs: 5
+      animationSteps:
+      - label: MoveX
+        tweenMethod: RectTransform_AnchoredPositionControlBehaviour
+        EndPos: (250.00, 0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+      - label: Alpha
+        tweenMethod: Graphic_ColorAControlBehaviour
+        EndPos: 1.0f
+        StartPos: 0.0f
+        tweenOperationType: 0
+        startTimeOffset: 0
+    - label: Grow In
+      image: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GrowIn.gif
+      effectCategory: Scale
+      collectionCategory: In
+      durationToken: 300
+      easeToken: 0
+      timeEasePairs: 5
+      animationSteps:
+      - label: Scale
+        tweenMethod: Transform_LocalScaleControlBehaviour
+        EndPos: (1.00, 1.00, 1.00)
+        StartPos: (0.00, 0.00, 0.00)
+        tweenOperationType: 0
+        startTimeOffset: 0
+      - label: Fade
+        tweenMethod: Graphic_ColorAControlBehaviour
+        EndPos: 1.0f
+        StartPos: 0.0f
+        tweenOperationType: 0
+        startTimeOffset: 0
+    - label: Shrink In
+      image: shrink_in_example.png
+      effectCategory: Scale
+      collectionCategory: In
+      durationToken: 300
+      easeToken: 0
+      timeEasePairs: 5
+      animationSteps:
+      - label: Scale
+        tweenMethod: Transform_LocalScaleControlBehaviour
+        EndPos: (1.00, 1.00, 1.00)
+        StartPos: (2.00, 2.00, 2.00)
+        tweenOperationType: 0
+        startTimeOffset: 0
+      - label: Fade
+        tweenMethod: Graphic_ColorAControlBehaviour
+        EndPos: 1.0f
+        StartPos: 0.0f
+        tweenOperationType: 0
+        startTimeOffset: 0
+    - label: Spin In
+      image: spin_in_example.png
+      effectCategory: Scale
+      collectionCategory: In
+      durationToken: 300
+      easeToken: 0
+      timeEasePairs: 5
+      animationSteps:
+      - label: Scale
+        tweenMethod: Transform_LocalScaleControlBehaviour
+        EndPos: (1.00, 1.00, 1.00)
+        StartPos: (0.50, 0.50, 0.50)
+        tweenOperationType: 0
+        startTimeOffset: 0
+      - label: Rotate
+        tweenMethod: Transform_LocalEulerAnglesControlBehaviour
+        EndPos: (0.00, 0.00, 360.00)
+        StartPos: (0.00, 0.00, 0.00)
+        tweenOperationType: 0
+        startTimeOffset: 0
+      - label: Fade
+        tweenMethod: Graphic_ColorAControlBehaviour
+        EndPos: 1.0f
+        StartPos: 0.0f
+        tweenOperationType: 0
+        startTimeOffset: 0
+    - label: Twist In
+      image: twist_in_example.png
+      effectCategory: Scale
+      collectionCategory: In
+      durationToken: 300
+      easeToken: 0
+      timeEasePairs: 5
+      animationSteps:
+      - label: Scale
+        tweenMethod: Transform_LocalScaleControlBehaviour
+        EndPos: (1.00, 1.00, 1.00)
+        StartPos: (0.50, 0.50, 0.50)
+        tweenOperationType: 0
+        startTimeOffset: 0
+      - label: Rotate
+        tweenMethod: Transform_LocalEulerAnglesControlBehaviour
+        EndPos: (0.00, 0.00, 720.00)
+        StartPos: (0.00, 0.00, 0.00)
+        tweenOperationType: 0
+        startTimeOffset: 0
+      - label: Fade
+        tweenMethod: Graphic_ColorAControlBehaviour
+        EndPos: 1.0f
+        StartPos: 0.0f
+        tweenOperationType: 0
+        startTimeOffset: 0
+    - label: Move & Scale In
+      image: move_and_scale_in_example.png
+      effectCategory: Scale
+      collectionCategory: In
+      durationToken: 300
+      easeToken: 0
+      timeEasePairs: 5
+      animationSteps:
+      - label: MoveX
+        tweenMethod: RectTransform_AnchoredPositionControlBehaviour
+        EndPos: (-200.00, 0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 400
+      - label: Fade
+        tweenMethod: Graphic_ColorAControlBehaviour
+        EndPos: 1.0f
+        StartPos: 0.0f
+        tweenOperationType: 0
+        startTimeOffset: 400
+      - label: Scale
+        tweenMethod: Transform_LocalScaleControlBehaviour
+        EndPos: (0.80, 0.80, 0.80)
+        StartPos: (1.00, 1.00, 1.00)
+        tweenOperationType: 0
+        startTimeOffset: -400
+    - label: Mask Reveal
+      image: Assets/TweenTimeline/BuiltInConfigs/Editor Default Resources/Gifs/MaskReveal.gif
+      effectCategory: Mask
+      collectionCategory: In
+      durationToken: 300
+      easeToken: 0
+      timeEasePairs: 5
+      animationSteps:
+      - label: Padding
+        tweenMethod: RectMask2D_PaddingControlBehaviour
+        EndPos: (0.00, 0.00, 0.00, 0.00)
+        StartPos: (100.00, 0.00, 0.00, 0.00)
+        tweenOperationType: 0
+        startTimeOffset: 500
+    - label: Mask Center
+      image: mask_center_example.png
+      effectCategory: Mask
+      collectionCategory: In
+      durationToken: 300
+      easeToken: 0
+      timeEasePairs: 5
+      animationSteps:
+      - label: PaddingCenter
+        tweenMethod: RectMask2D_PaddingControlBehaviour
+        EndPos: (0.00, 0.00, 0.00, 0.00)
+        StartPos: (0.00, 50.00, 0.00, 50.00)
+        tweenOperationType: 0
+        startTimeOffset: 500
+    - label: Mask Resize
+      image: mask_resize_example.png
+      effectCategory: Mask
+      collectionCategory: In
+      durationToken: 300
+      easeToken: 0
+      timeEasePairs: 5
+      animationSteps:
+      - label: PaddingResize
+        tweenMethod: RectMask2D_PaddingControlBehaviour
+        EndPos: (0.00, 0.00, 0.00, 0.00)
+        StartPos: (50.00, 50.00, 50.00, 50.00)
+        tweenOperationType: 0
+        startTimeOffset: 500
+    - label: Mask Expand
+      image: mask_expand_example.png
+      effectCategory: Mask
+      collectionCategory: In
+      durationToken: 300
+      easeToken: 0
+      timeEasePairs: 5
+      animationSteps:
+      - label: Softness
+        tweenMethod: RectMask2D_SoftnessControlBehaviour
+        EndPos: (0, 0)
+        StartPos: (50, 50)
+        tweenOperationType: 0
+        startTimeOffset: 500
+    category: In
+  - animationCollections:
+    - label: Fade Out
+      image: crate_with_heart.png
+      effectCategory: Fade
+      collectionCategory: Out
+      durationToken: 50
+      easeToken: 0
+      timeEasePairs: 6
+      animationSteps:
+      - label: 
+        tweenMethod: Graphic_ColorAControlBehaviour
+        EndPos: 0.0f
+        StartPos: 1.0f
+        tweenOperationType: 0
+        startTimeOffset: 0
+    - label: Slide Out
+      image: crate_with_heart.png
+      effectCategory: Fade
+      collectionCategory: Out
+      durationToken: 50
+      easeToken: 0
+      timeEasePairs: 6
+      animationSteps:
+      - label: MoveX
+        tweenMethod: RectTransform_AnchoredPositionControlBehaviour
+        EndPos: (-250.00, 0.00)
+        StartPos: 
+        tweenOperationType: 0
+        startTimeOffset: 0
+      - label: Alpha
+        tweenMethod: Graphic_ColorAControlBehaviour
+        EndPos: 0.0f
+        StartPos: 1.0f
+        tweenOperationType: 0
+        startTimeOffset: 0
+    - label: Grow Out
+      image: Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/Gifs/GrowOut.gif
+      effectCategory: Scale
+      collectionCategory: Out
+      durationToken: 50
+      easeToken: 0
+      timeEasePairs: 6
+      animationSteps:
+      - label: Scale
+        tweenMethod: Transform_LocalScaleControlBehaviour
+        EndPos: (2.00, 2.00, 2.00)
+        StartPos: (1.00, 1.00, 1.00)
+        tweenOperationType: 0
+        startTimeOffset: 0
+      - label: Fade
+        tweenMethod: Graphic_ColorAControlBehaviour
+        EndPos: 0.0f
+        StartPos: 1.0f
+        tweenOperationType: 0
+        startTimeOffset: 0
+    - label: Shrink Out
+      image: shrink_out_example.png
+      effectCategory: Scale
+      collectionCategory: Out
+      durationToken: 50
+      easeToken: 0
+      timeEasePairs: 6
+      animationSteps:
+      - label: Scale
+        tweenMethod: Transform_LocalScaleControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: (1.00, 1.00, 1.00)
+        tweenOperationType: 0
+        startTimeOffset: 0
+      - label: Fade
+        tweenMethod: Graphic_ColorAControlBehaviour
+        EndPos: 0.0f
+        StartPos: 1.0f
+        tweenOperationType: 0
+        startTimeOffset: 0
+    - label: Spin Out
+      image: spin_out_example.png
+      effectCategory: Scale
+      collectionCategory: Out
+      durationToken: 50
+      easeToken: 0
+      timeEasePairs: 6
+      animationSteps:
+      - label: Scale
+        tweenMethod: Transform_LocalScaleControlBehaviour
+        EndPos: (0.50, 0.50, 0.50)
+        StartPos: (1.00, 1.00, 1.00)
+        tweenOperationType: 0
+        startTimeOffset: 0
+      - label: Rotate
+        tweenMethod: Transform_LocalEulerAnglesControlBehaviour
+        EndPos: (0.00, 0.00, -360.00)
+        StartPos: (0.00, 0.00, 0.00)
+        tweenOperationType: 0
+        startTimeOffset: 0
+      - label: Fade
+        tweenMethod: Graphic_ColorAControlBehaviour
+        EndPos: 0.0f
+        StartPos: 1.0f
+        tweenOperationType: 0
+        startTimeOffset: 0
+    - label: Twist Out
+      image: twist_out_example.png
+      effectCategory: Scale
+      collectionCategory: Out
+      durationToken: 50
+      easeToken: 0
+      timeEasePairs: 6
+      animationSteps:
+      - label: Scale
+        tweenMethod: Transform_LocalScaleControlBehaviour
+        EndPos: (0.50, 0.50, 0.50)
+        StartPos: (1.00, 1.00, 1.00)
+        tweenOperationType: 0
+        startTimeOffset: 0
+      - label: Rotate
+        tweenMethod: Transform_LocalEulerAnglesControlBehaviour
+        EndPos: (0.00, 0.00, -720.00)
+        StartPos: (0.00, 0.00, 0.00)
+        tweenOperationType: 0
+        startTimeOffset: 0
+      - label: Fade
+        tweenMethod: Graphic_ColorAControlBehaviour
+        EndPos: 0.0f
+        StartPos: 1.0f
+        tweenOperationType: 0
+        startTimeOffset: 0
+    - label: Move & Scale Out
+      image: move_and_scale_out_example.png
+      effectCategory: Scale
+      collectionCategory: Out
+      durationToken: 1000
+      easeToken: 0
+      timeEasePairs: 6
+      animationSteps:
+      - label: MoveX
+        tweenMethod: RectTransform_AnchoredPositionControlBehaviour
+        EndPos: (200.00, 0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 400
+      - label: Fade
+        tweenMethod: Graphic_ColorAControlBehaviour
+        EndPos: 0.0f
+        StartPos: 1.0f
+        tweenOperationType: 0
+        startTimeOffset: 400
+      - label: Scale
+        tweenMethod: Transform_LocalScaleControlBehaviour
+        EndPos: (1.00, 1.00, 1.00)
+        StartPos: (0.80, 0.80, 0.80)
+        tweenOperationType: 0
+        startTimeOffset: -400
+    - label: Mask Unveil
+      image: mask_unveil_example.png
+      effectCategory: Mask
+      collectionCategory: Out
+      durationToken: 300
+      easeToken: 0
+      timeEasePairs: 6
+      animationSteps:
+      - label: Padding
+        tweenMethod: RectMask2D_PaddingControlBehaviour
+        EndPos: (100.00, 0.00, 0.00, 0.00)
+        StartPos: (0.00, 0.00, 0.00, 0.00)
+        tweenOperationType: 0
+        startTimeOffset: 500
+    - label: Mask Contract
+      image: mask_contract_example.png
+      effectCategory: Mask
+      collectionCategory: Out
+      durationToken: 300
+      easeToken: 0
+      timeEasePairs: 6
+      animationSteps:
+      - label: PaddingCenter
+        tweenMethod: RectMask2D_PaddingControlBehaviour
+        EndPos: (0.00, 50.00, 0.00, 50.00)
+        StartPos: (0.00, 0.00, 0.00, 0.00)
+        tweenOperationType: 0
+        startTimeOffset: 500
+    - label: Mask Reduce
+      image: mask_reduce_example.png
+      effectCategory: Mask
+      collectionCategory: Out
+      durationToken: 300
+      easeToken: 0
+      timeEasePairs: 6
+      animationSteps:
+      - label: PaddingResize
+        tweenMethod: RectMask2D_PaddingControlBehaviour
+        EndPos: (50.00, 50.00, 50.00, 50.00)
+        StartPos: (0.00, 0.00, 0.00, 0.00)
+        tweenOperationType: 0
+        startTimeOffset: 500
+    - label: Mask Collapse
+      image: mask_collapse_example.png
+      effectCategory: Mask
+      collectionCategory: Out
+      durationToken: 300
+      easeToken: 0
+      timeEasePairs: 6
+      animationSteps:
+      - label: Softness
+        tweenMethod: RectMask2D_SoftnessControlBehaviour
+        EndPos: (50, 50)
+        StartPos: (0, 0)
+        tweenOperationType: 0
+        startTimeOffset: 500
+    category: Out
+  - animationCollections:
+    - label: range
+      image: custom_Light_example.png
+      effectCategory: Light
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: range
+        tweenMethod: Light_RangeControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: shadowStrength
+      image: custom_Light_example.png
+      effectCategory: Light
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: shadowStrength
+        tweenMethod: Light_ShadowStrengthControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: intensity
+      image: custom_Light_example.png
+      effectCategory: Light
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: intensity
+        tweenMethod: Light_IntensityControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: orthographicSize
+      image: custom_Camera_example.png
+      effectCategory: Camera
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: orthographicSize
+        tweenMethod: Camera_OrthographicSizeControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: backgroundColor
+      image: custom_Camera_example.png
+      effectCategory: Camera
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: backgroundColor
+        tweenMethod: Camera_BackgroundColorControlBehaviour
+        EndPos: RGBA(1.000, 1.000, 1.000, 1.000)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: aspect
+      image: custom_Camera_example.png
+      effectCategory: Camera
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: aspect
+        tweenMethod: Camera_AspectControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: farClipPlane
+      image: custom_Camera_example.png
+      effectCategory: Camera
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: farClipPlane
+        tweenMethod: Camera_FarClipPlaneControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: fieldOfView
+      image: custom_Camera_example.png
+      effectCategory: Camera
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: fieldOfView
+        tweenMethod: Camera_FieldOfViewControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: nearClipPlane
+      image: custom_Camera_example.png
+      effectCategory: Camera
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: nearClipPlane
+        tweenMethod: Camera_NearClipPlaneControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: pixelRect
+      image: custom_Camera_example.png
+      effectCategory: Camera
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: pixelRect
+        tweenMethod: Camera_PixelRectControlBehaviour
+        EndPos: (x:0.00, y:0.00, width:0.00, height:0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: rect
+      image: custom_Camera_example.png
+      effectCategory: Camera
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: rect
+        tweenMethod: Camera_RectControlBehaviour
+        EndPos: (x:0.00, y:0.00, width:0.00, height:0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: localRotation.eulerAngles
+      image: custom_Transform_example.png
+      effectCategory: Transform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: localRotation.eulerAngles
+        tweenMethod: Transform_LocalRotationEulerAnglesControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: localScale
+      image: custom_Transform_example.png
+      effectCategory: Transform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: localScale
+        tweenMethod: Transform_LocalScaleControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 1
+        startTimeOffset: 0
+    - label: eulerAngles
+      image: custom_Transform_example.png
+      effectCategory: Transform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: eulerAngles
+        tweenMethod: Transform_EulerAnglesControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: value
+      image: custom_Slider_example.png
+      effectCategory: Slider
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: value
+        tweenMethod: Slider_ValueControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: GetNormalizedPosition()
+      image: custom_ScrollRect_example.png
+      effectCategory: ScrollRect
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: GetNormalizedPosition()
+        tweenMethod: ScrollRect_GetNormalizedPositionControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: horizontalNormalizedPosition
+      image: custom_ScrollRect_example.png
+      effectCategory: ScrollRect
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: horizontalNormalizedPosition
+        tweenMethod: ScrollRect_HorizontalNormalizedPositionControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: verticalNormalizedPosition
+      image: custom_ScrollRect_example.png
+      effectCategory: ScrollRect
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: verticalNormalizedPosition
+        tweenMethod: ScrollRect_VerticalNormalizedPositionControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: pivot.x
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: pivot.x
+        tweenMethod: RectTransform_PivotXControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: pivot.y
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: pivot.y
+        tweenMethod: RectTransform_PivotYControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: pivot
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: pivot
+        tweenMethod: RectTransform_PivotControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: anchorMax
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: anchorMax
+        tweenMethod: RectTransform_AnchorMaxControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: anchorMin
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: anchorMin
+        tweenMethod: RectTransform_AnchorMinControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: anchoredPosition3D
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: anchoredPosition3D
+        tweenMethod: RectTransform_AnchoredPosition3DControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: anchoredPosition3D.x
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: anchoredPosition3D.x
+        tweenMethod: RectTransform_AnchoredPosition3DXControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: anchoredPosition3D.y
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: anchoredPosition3D.y
+        tweenMethod: RectTransform_AnchoredPosition3DYControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: anchoredPosition3D.z
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: anchoredPosition3D.z
+        tweenMethod: RectTransform_AnchoredPosition3DZControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: effectDistance
+      image: custom_Shadow_example.png
+      effectCategory: Shadow
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: effectDistance
+        tweenMethod: Shadow_EffectDistanceControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: effectColor.a
+      image: custom_Shadow_example.png
+      effectCategory: Shadow
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: effectColor.a
+        tweenMethod: Shadow_EffectColorAControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: effectColor
+      image: custom_Shadow_example.png
+      effectCategory: Shadow
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: effectColor
+        tweenMethod: Shadow_EffectColorControlBehaviour
+        EndPos: RGBA(1.000, 1.000, 1.000, 1.000)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: GetPreferredSize()
+      image: custom_LayoutElement_example.png
+      effectCategory: LayoutElement
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: GetPreferredSize()
+        tweenMethod: LayoutElement_GetPreferredSizeControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: preferredWidth
+      image: custom_LayoutElement_example.png
+      effectCategory: LayoutElement
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: preferredWidth
+        tweenMethod: LayoutElement_PreferredWidthControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: preferredHeight
+      image: custom_LayoutElement_example.png
+      effectCategory: LayoutElement
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: preferredHeight
+        tweenMethod: LayoutElement_PreferredHeightControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: position
+      image: custom_Rigidbody_example.png
+      effectCategory: Rigidbody
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: position
+        tweenMethod: Rigidbody_PositionControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: rotation
+      image: custom_Rigidbody_example.png
+      effectCategory: Rigidbody
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: rotation
+        tweenMethod: Rigidbody_RotationControlBehaviour
+        EndPos: (0.00000, 0.00000, 0.00000, 1.00000)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: position
+      image: custom_Rigidbody2D_example.png
+      effectCategory: Rigidbody2D
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: position
+        tweenMethod: Rigidbody2D_PositionControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: rotation
+      image: custom_Rigidbody2D_example.png
+      effectCategory: Rigidbody2D
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: rotation
+        tweenMethod: Rigidbody2D_RotationControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: GetFlexibleSize()
+      image: custom_LayoutElement_example.png
+      effectCategory: LayoutElement
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: GetFlexibleSize()
+        tweenMethod: LayoutElement_GetFlexibleSizeControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: flexibleWidth
+      image: custom_LayoutElement_example.png
+      effectCategory: LayoutElement
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: flexibleWidth
+        tweenMethod: LayoutElement_FlexibleWidthControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: flexibleHeight
+      image: custom_LayoutElement_example.png
+      effectCategory: LayoutElement
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: flexibleHeight
+        tweenMethod: LayoutElement_FlexibleHeightControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: GetMinSize()
+      image: custom_LayoutElement_example.png
+      effectCategory: LayoutElement
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: GetMinSize()
+        tweenMethod: LayoutElement_GetMinSizeControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: minWidth
+      image: custom_LayoutElement_example.png
+      effectCategory: LayoutElement
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: minWidth
+        tweenMethod: LayoutElement_MinWidthControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: minHeight
+      image: custom_LayoutElement_example.png
+      effectCategory: LayoutElement
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: minHeight
+        tweenMethod: LayoutElement_MinHeightControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: position
+      image: custom_Transform_example.png
+      effectCategory: Transform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: position
+        tweenMethod: Transform_PositionControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: position.x
+      image: custom_Transform_example.png
+      effectCategory: Transform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: position.x
+        tweenMethod: Transform_PositionXControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: position.y
+      image: custom_Transform_example.png
+      effectCategory: Transform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: position.y
+        tweenMethod: Transform_PositionYControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: position.z
+      image: custom_Transform_example.png
+      effectCategory: Transform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: position.z
+        tweenMethod: Transform_PositionZControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: localPosition
+      image: custom_Transform_example.png
+      effectCategory: Transform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: localPosition
+        tweenMethod: Transform_LocalPositionControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: localPosition.x
+      image: custom_Transform_example.png
+      effectCategory: Transform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: localPosition.x
+        tweenMethod: Transform_LocalPositionXControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: localPosition.y
+      image: custom_Transform_example.png
+      effectCategory: Transform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: localPosition.y
+        tweenMethod: Transform_LocalPositionYControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: localPosition.z
+      image: custom_Transform_example.png
+      effectCategory: Transform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: localPosition.z
+        tweenMethod: Transform_LocalPositionZControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: rotation.eulerAngles
+      image: custom_Transform_example.png
+      effectCategory: Transform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: rotation.eulerAngles
+        tweenMethod: Transform_RotationEulerAnglesControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: localEulerAngles
+      image: custom_Transform_example.png
+      effectCategory: Transform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: localEulerAngles
+        tweenMethod: Transform_LocalEulerAnglesControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: localScale.x
+      image: custom_Transform_example.png
+      effectCategory: Transform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: localScale.x
+        tweenMethod: Transform_LocalScaleXControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: localScale.y
+      image: custom_Transform_example.png
+      effectCategory: Transform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: localScale.y
+        tweenMethod: Transform_LocalScaleYControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: localScale.z
+      image: custom_Transform_example.png
+      effectCategory: Transform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: localScale.z
+        tweenMethod: Transform_LocalScaleZControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: color
+      image: custom_Graphic_example.png
+      effectCategory: Graphic
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: color
+        tweenMethod: Graphic_ColorControlBehaviour
+        EndPos: RGBA(1.000, 1.000, 1.000, 1.000)
+        StartPos: 
+        tweenOperationType: 1
+        startTimeOffset: 0
+    - label: color
+      image: custom_SpriteRenderer_example.png
+      effectCategory: SpriteRenderer
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: color
+        tweenMethod: SpriteRenderer_ColorControlBehaviour
+        EndPos: RGBA(1.000, 1.000, 1.000, 1.000)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: color
+      image: custom_Material_example.png
+      effectCategory: Material
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: color
+        tweenMethod: Material_ColorControlBehaviour
+        EndPos: RGBA(1.000, 1.000, 1.000, 1.000)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: color
+      image: custom_Light_example.png
+      effectCategory: Light
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: color
+        tweenMethod: Light_ColorControlBehaviour
+        EndPos: RGBA(1.000, 1.000, 1.000, 1.000)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: anchoredPosition
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: anchoredPosition
+        tweenMethod: RectTransform_AnchoredPositionControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: anchoredPosition.x
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: anchoredPosition.x
+        tweenMethod: RectTransform_AnchoredPositionXControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: anchoredPosition.y
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: anchoredPosition.y
+        tweenMethod: RectTransform_AnchoredPositionYControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: sizeDelta
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: sizeDelta
+        tweenMethod: RectTransform_SizeDeltaControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: alpha
+      image: custom_CanvasGroup_example.png
+      effectCategory: CanvasGroup
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: alpha
+        tweenMethod: CanvasGroup_AlphaControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: color.a
+      image: custom_Graphic_example.png
+      effectCategory: Graphic
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: color.a
+        tweenMethod: Graphic_ColorAControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 1
+        startTimeOffset: 0
+    - label: color.a
+      image: custom_SpriteRenderer_example.png
+      effectCategory: SpriteRenderer
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: color.a
+        tweenMethod: SpriteRenderer_ColorAControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: color.a
+      image: custom_Material_example.png
+      effectCategory: Material
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: color.a
+        tweenMethod: Material_ColorAControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: mainTextureOffset
+      image: custom_Material_example.png
+      effectCategory: Material
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: mainTextureOffset
+        tweenMethod: Material_MainTextureOffsetControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: mainTextureScale
+      image: custom_Material_example.png
+      effectCategory: Material
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: mainTextureScale
+        tweenMethod: Material_MainTextureScaleControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: fillAmount
+      image: custom_Image_example.png
+      effectCategory: Image
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: fillAmount
+        tweenMethod: Image_FillAmountControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: volume
+      image: custom_AudioSource_example.png
+      effectCategory: AudioSource
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: volume
+        tweenMethod: AudioSource_VolumeControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: pitch
+      image: custom_AudioSource_example.png
+      effectCategory: AudioSource
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: pitch
+        tweenMethod: AudioSource_PitchControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: panStereo
+      image: custom_AudioSource_example.png
+      effectCategory: AudioSource
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: panStereo
+        tweenMethod: AudioSource_PanStereoControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: timeScale
+      image: custom_Tween_example.png
+      effectCategory: Tween
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: timeScale
+        tweenMethod: Tween_TimeScaleControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: timeScale
+      image: custom_Sequence_example.png
+      effectCategory: Sequence
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: timeScale
+        tweenMethod: Sequence_TimeScaleControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: GetResolvedStyleRect()
+      image: custom_VisualElement_example.png
+      effectCategory: VisualElement
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: GetResolvedStyleRect()
+        tweenMethod: VisualElement_GetResolvedStyleRectControlBehaviour
+        EndPos: (x:0.00, y:0.00, width:0.00, height:0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: position
+      image: custom_ITransform_example.png
+      effectCategory: ITransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: position
+        tweenMethod: ITransform_PositionControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: rotation
+      image: custom_ITransform_example.png
+      effectCategory: ITransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: rotation
+        tweenMethod: ITransform_RotationControlBehaviour
+        EndPos: (0.00000, 0.00000, 0.00000, 1.00000)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: scale
+      image: custom_ITransform_example.png
+      effectCategory: ITransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: scale
+        tweenMethod: ITransform_ScaleControlBehaviour
+        EndPos: (0.00, 0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: layout.size
+      image: custom_VisualElement_example.png
+      effectCategory: VisualElement
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: layout.size
+        tweenMethod: VisualElement_LayoutSizeControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: GetTopLeft()
+      image: custom_VisualElement_example.png
+      effectCategory: VisualElement
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: GetTopLeft()
+        tweenMethod: VisualElement_GetTopLeftControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: style.color.value
+      image: custom_VisualElement_example.png
+      effectCategory: VisualElement
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: style.color.value
+        tweenMethod: VisualElement_StyleColorValueControlBehaviour
+        EndPos: RGBA(1.000, 1.000, 1.000, 1.000)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: style.backgroundColor.value
+      image: custom_VisualElement_example.png
+      effectCategory: VisualElement
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: style.backgroundColor.value
+        tweenMethod: VisualElement_StyleBackgroundColorValueControlBehaviour
+        EndPos: RGBA(1.000, 1.000, 1.000, 1.000)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: offsetMin
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: offsetMin
+        tweenMethod: RectTransform_OffsetMinControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: offsetMin.x
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: offsetMin.x
+        tweenMethod: RectTransform_OffsetMinXControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: offsetMin.y
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: offsetMin.y
+        tweenMethod: RectTransform_OffsetMinYControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: offsetMax
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: offsetMax
+        tweenMethod: RectTransform_OffsetMaxControlBehaviour
+        EndPos: (0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: offsetMax.x
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: offsetMax.x
+        tweenMethod: RectTransform_OffsetMaxXControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: offsetMax.y
+      image: custom_RectTransform_example.png
+      effectCategory: RectTransform
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: offsetMax.y
+        tweenMethod: RectTransform_OffsetMaxYControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: maxVisibleCharacters
+      image: custom_TMP_Text_example.png
+      effectCategory: TMP_Text
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: maxVisibleCharacters
+        tweenMethod: TMP_Text_MaxVisibleCharactersControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: padding
+      image: custom_RectMask2D_example.png
+      effectCategory: RectMask2D
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: padding
+        tweenMethod: RectMask2D_PaddingControlBehaviour
+        EndPos: (0.00, 0.00, 0.00, 0.00)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: softness
+      image: custom_RectMask2D_example.png
+      effectCategory: RectMask2D
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: softness
+        tweenMethod: RectMask2D_SoftnessControlBehaviour
+        EndPos: (0, 0)
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    - label: fontSize
+      image: custom_TMP_Text_example.png
+      effectCategory: TMP_Text
+      collectionCategory: Custom
+      durationToken: 300
+      easeToken: 3
+      timeEasePairs: 0
+      animationSteps:
+      - label: fontSize
+        tweenMethod: TMP_Text_FontSizeControlBehaviour
+        EndPos: 0
+        StartPos: 
+        tweenOperationType: 2
+        startTimeOffset: 0
+    category: Custom

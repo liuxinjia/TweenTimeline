@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c3814623f7ef9444bca59d9feaa1372, type: 3}
+  m_Name: SampleTweenGenTrackConfig
+  m_EditorClassIdentifier: 
+  componentDatas:
+  - ComponentType: TMPro.TMP_Text
+    ValueType: float
+    GetPropertyMethod: characterSpacing
+    SetPropertyMethod: target.characterSpacing = updateValue;
+    PreTweenMethod: Custom
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: float
+    GetPropertyMethod: sizeDelta.x
+    SetPropertyMethod: target.sizeDelta = new Vector2(updateValue, target.sizeDelta.y);
+    PreTweenMethod: Custom
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: float
+    GetPropertyMethod: anchorMax.x
+    SetPropertyMethod: target.anchorMax = new Vector2(updateValue, target.anchorMax.y);
+    PreTweenMethod: Custom
+  - ComponentType: Coffee.UIEffects.UITransitionEffect
+    ValueType: float
+    GetPropertyMethod: effectFactor
+    SetPropertyMethod: target.effectFactor = updateValue;
+    PreTweenMethod: Custom

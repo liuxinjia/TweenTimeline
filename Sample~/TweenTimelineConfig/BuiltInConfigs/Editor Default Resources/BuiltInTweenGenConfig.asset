@@ -1,0 +1,512 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c3814623f7ef9444bca59d9feaa1372, type: 3}
+  m_Name: BuiltInTweenGenConfig
+  m_EditorClassIdentifier: 
+  componentDatas:
+  - ComponentType: UnityEngine.Light
+    ValueType: float
+    GetPropertyMethod: range
+    SetPropertyMethod: target.range = updateValue;
+    PreTweenMethod: LightRange
+  - ComponentType: UnityEngine.Light
+    ValueType: float
+    GetPropertyMethod: shadowStrength
+    SetPropertyMethod: target.shadowStrength = updateValue;
+    PreTweenMethod: LightShadowStrength
+  - ComponentType: UnityEngine.Light
+    ValueType: float
+    GetPropertyMethod: intensity
+    SetPropertyMethod: target.intensity = updateValue;
+    PreTweenMethod: LightIntensity
+  - ComponentType: UnityEngine.Camera
+    ValueType: float
+    GetPropertyMethod: orthographicSize
+    SetPropertyMethod: target.orthographicSize = updateValue;
+    PreTweenMethod: CameraOrthographicSize
+  - ComponentType: UnityEngine.Camera
+    ValueType: Color
+    GetPropertyMethod: backgroundColor
+    SetPropertyMethod: target.backgroundColor = updateValue;
+    PreTweenMethod: CameraBackgroundColor
+  - ComponentType: UnityEngine.Camera
+    ValueType: float
+    GetPropertyMethod: aspect
+    SetPropertyMethod: target.aspect = updateValue;
+    PreTweenMethod: CameraAspect
+  - ComponentType: UnityEngine.Camera
+    ValueType: float
+    GetPropertyMethod: farClipPlane
+    SetPropertyMethod: target.farClipPlane = updateValue;
+    PreTweenMethod: CameraFarClipPlane
+  - ComponentType: UnityEngine.Camera
+    ValueType: float
+    GetPropertyMethod: fieldOfView
+    SetPropertyMethod: target.fieldOfView = updateValue;
+    PreTweenMethod: CameraFieldOfView
+  - ComponentType: UnityEngine.Camera
+    ValueType: float
+    GetPropertyMethod: nearClipPlane
+    SetPropertyMethod: target.nearClipPlane = updateValue;
+    PreTweenMethod: CameraNearClipPlane
+  - ComponentType: UnityEngine.Camera
+    ValueType: Rect
+    GetPropertyMethod: pixelRect
+    SetPropertyMethod: target.pixelRect = updateValue;
+    PreTweenMethod: CameraPixelRect
+  - ComponentType: UnityEngine.Camera
+    ValueType: Rect
+    GetPropertyMethod: rect
+    SetPropertyMethod: target.rect = updateValue;
+    PreTweenMethod: CameraRect
+  - ComponentType: UnityEngine.Transform
+    ValueType: Vector3
+    GetPropertyMethod: localRotation.eulerAngles
+    SetPropertyMethod: target.localRotation = Quaternion.Euler(updateValue);
+    PreTweenMethod: LocalRotation
+  - ComponentType: UnityEngine.Transform
+    ValueType: float
+    GetPropertyMethod: localScale
+    SetPropertyMethod: target. = updateValue;
+    PreTweenMethod: Scale
+  - ComponentType: UnityEngine.Transform
+    ValueType: Vector3
+    GetPropertyMethod: eulerAngles
+    SetPropertyMethod: 'target.eulerAngles = updateValue; '
+    PreTweenMethod: EulerAngles
+  - ComponentType: UnityEngine.UI.Slider
+    ValueType: float
+    GetPropertyMethod: value
+    SetPropertyMethod: target.value = updateValue;
+    PreTweenMethod: UISliderValue
+  - ComponentType: UnityEngine.UI.ScrollRect
+    ValueType: Vector2
+    GetPropertyMethod: GetNormalizedPosition()
+    SetPropertyMethod: target.SetNormalizedPosition((updateValue)) ;
+    PreTweenMethod: UINormalizedPosition
+  - ComponentType: UnityEngine.UI.ScrollRect
+    ValueType: float
+    GetPropertyMethod: horizontalNormalizedPosition
+    SetPropertyMethod: target.horizontalNormalizedPosition = updateValue;
+    PreTweenMethod: UIHorizontalNormalizedPosition
+  - ComponentType: UnityEngine.UI.ScrollRect
+    ValueType: float
+    GetPropertyMethod: verticalNormalizedPosition
+    SetPropertyMethod: target.verticalNormalizedPosition = updateValue;
+    PreTweenMethod: UIVerticalNormalizedPosition
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: float
+    GetPropertyMethod: pivot.x
+    SetPropertyMethod: target.pivot = target.pivot.WithComponent(0, (updateValue))
+      ;
+    PreTweenMethod: UIPivotX
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: float
+    GetPropertyMethod: pivot.y
+    SetPropertyMethod: target.pivot = target.pivot.WithComponent(1, (updateValue))
+      ;
+    PreTweenMethod: UIPivotY
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: Vector2
+    GetPropertyMethod: pivot
+    SetPropertyMethod: target.pivot = updateValue;
+    PreTweenMethod: UIPivot
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: Vector2
+    GetPropertyMethod: anchorMax
+    SetPropertyMethod: target.anchorMax = updateValue;
+    PreTweenMethod: UIAnchorMax
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: Vector2
+    GetPropertyMethod: anchorMin
+    SetPropertyMethod: target.anchorMin = updateValue;
+    PreTweenMethod: UIAnchorMin
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: Vector3
+    GetPropertyMethod: anchoredPosition3D
+    SetPropertyMethod: target.anchoredPosition3D = updateValue;
+    PreTweenMethod: UIAnchoredPosition3D
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: float
+    GetPropertyMethod: anchoredPosition3D.x
+    SetPropertyMethod: target.anchoredPosition3D = target.anchoredPosition3D.WithComponent(0,
+      (updateValue)) ;
+    PreTweenMethod: UIAnchoredPosition3DX
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: float
+    GetPropertyMethod: anchoredPosition3D.y
+    SetPropertyMethod: target.anchoredPosition3D = target.anchoredPosition3D.WithComponent(1,
+      (updateValue)) ;
+    PreTweenMethod: UIAnchoredPosition3DY
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: float
+    GetPropertyMethod: anchoredPosition3D.z
+    SetPropertyMethod: target.anchoredPosition3D = target.anchoredPosition3D.WithComponent(2,
+      (updateValue)) ;
+    PreTweenMethod: UIAnchoredPosition3DZ
+  - ComponentType: UnityEngine.UI.Shadow
+    ValueType: Vector2
+    GetPropertyMethod: effectDistance
+    SetPropertyMethod: target.effectDistance = updateValue;
+    PreTweenMethod: UIEffectDistance
+  - ComponentType: UnityEngine.UI.Shadow
+    ValueType: float
+    GetPropertyMethod: effectColor.a
+    SetPropertyMethod: target.effectColor = target.effectColor.WithAlpha((updateValue))
+      ;
+    PreTweenMethod: Alpha
+  - ComponentType: UnityEngine.UI.Shadow
+    ValueType: Color
+    GetPropertyMethod: effectColor
+    SetPropertyMethod: target.effectColor = updateValue;
+    PreTweenMethod: Color
+  - ComponentType: UnityEngine.UI.LayoutElement
+    ValueType: Vector2
+    GetPropertyMethod: GetPreferredSize()
+    SetPropertyMethod: target.SetPreferredSize((updateValue)) ;
+    PreTweenMethod: UIPreferredSize
+  - ComponentType: UnityEngine.UI.LayoutElement
+    ValueType: float
+    GetPropertyMethod: preferredWidth
+    SetPropertyMethod: target.preferredWidth = updateValue;
+    PreTweenMethod: UIPreferredWidth
+  - ComponentType: UnityEngine.UI.LayoutElement
+    ValueType: float
+    GetPropertyMethod: preferredHeight
+    SetPropertyMethod: target.preferredHeight = updateValue;
+    PreTweenMethod: UIPreferredHeight
+  - ComponentType: UnityEngine.Rigidbody
+    ValueType: Vector3
+    GetPropertyMethod: position
+    SetPropertyMethod: target.MovePosition((updateValue)) ;
+    PreTweenMethod: RigidbodyMovePosition
+  - ComponentType: UnityEngine.Rigidbody
+    ValueType: Quaternion
+    GetPropertyMethod: rotation
+    SetPropertyMethod: target.MoveRotation((updateValue)) ;
+    PreTweenMethod: RigidbodyMoveRotation
+  - ComponentType: UnityEngine.Rigidbody2D
+    ValueType: Vector2
+    GetPropertyMethod: position
+    SetPropertyMethod: target.MovePosition((updateValue)) ;
+    PreTweenMethod: RigidbodyMovePosition
+  - ComponentType: UnityEngine.Rigidbody2D
+    ValueType: float
+    GetPropertyMethod: rotation
+    SetPropertyMethod: target.MoveRotation((updateValue)) ;
+    PreTweenMethod: RigidbodyMoveRotation
+  - ComponentType: UnityEngine.UI.LayoutElement
+    ValueType: Vector2
+    GetPropertyMethod: GetFlexibleSize()
+    SetPropertyMethod: target.SetFlexibleSize((updateValue)) ;
+    PreTweenMethod: UIFlexibleSize
+  - ComponentType: UnityEngine.UI.LayoutElement
+    ValueType: float
+    GetPropertyMethod: flexibleWidth
+    SetPropertyMethod: target.flexibleWidth = updateValue;
+    PreTweenMethod: UIFlexibleWidth
+  - ComponentType: UnityEngine.UI.LayoutElement
+    ValueType: float
+    GetPropertyMethod: flexibleHeight
+    SetPropertyMethod: target.flexibleHeight = updateValue;
+    PreTweenMethod: UIFlexibleHeight
+  - ComponentType: UnityEngine.UI.LayoutElement
+    ValueType: Vector2
+    GetPropertyMethod: GetMinSize()
+    SetPropertyMethod: target.SetMinSize((updateValue)) ;
+    PreTweenMethod: UIMinSize
+  - ComponentType: UnityEngine.UI.LayoutElement
+    ValueType: float
+    GetPropertyMethod: minWidth
+    SetPropertyMethod: target.minWidth = updateValue;
+    PreTweenMethod: UIMinWidth
+  - ComponentType: UnityEngine.UI.LayoutElement
+    ValueType: float
+    GetPropertyMethod: minHeight
+    SetPropertyMethod: target.minHeight = updateValue;
+    PreTweenMethod: UIMinHeight
+  - ComponentType: UnityEngine.Transform
+    ValueType: Vector3
+    GetPropertyMethod: position
+    SetPropertyMethod: target.position = updateValue;
+    PreTweenMethod: Position
+  - ComponentType: UnityEngine.Transform
+    ValueType: float
+    GetPropertyMethod: position.x
+    SetPropertyMethod: target.position = target.position.WithComponent(0, (updateValue))
+      ;
+    PreTweenMethod: PositionX
+  - ComponentType: UnityEngine.Transform
+    ValueType: float
+    GetPropertyMethod: position.y
+    SetPropertyMethod: target.position = target.position.WithComponent(1, (updateValue))
+      ;
+    PreTweenMethod: PositionY
+  - ComponentType: UnityEngine.Transform
+    ValueType: float
+    GetPropertyMethod: position.z
+    SetPropertyMethod: target.position = target.position.WithComponent(2, (updateValue))
+      ;
+    PreTweenMethod: PositionZ
+  - ComponentType: UnityEngine.Transform
+    ValueType: Vector3
+    GetPropertyMethod: localPosition
+    SetPropertyMethod: target.localPosition = updateValue;
+    PreTweenMethod: LocalPosition
+  - ComponentType: UnityEngine.Transform
+    ValueType: float
+    GetPropertyMethod: localPosition.x
+    SetPropertyMethod: target.localPosition = target.localPosition.WithComponent(0,
+      (updateValue)) ;
+    PreTweenMethod: LocalPositionX
+  - ComponentType: UnityEngine.Transform
+    ValueType: float
+    GetPropertyMethod: localPosition.y
+    SetPropertyMethod: target.localPosition = target.localPosition.WithComponent(1,
+      (updateValue)) ;
+    PreTweenMethod: LocalPositionY
+  - ComponentType: UnityEngine.Transform
+    ValueType: float
+    GetPropertyMethod: localPosition.z
+    SetPropertyMethod: target.localPosition = target.localPosition.WithComponent(2,
+      (updateValue)) ;
+    PreTweenMethod: LocalPositionZ
+  - ComponentType: UnityEngine.Transform
+    ValueType: Vector3
+    GetPropertyMethod: rotation.eulerAngles
+    SetPropertyMethod: target.rotation = Quaternion.Euler(updateValue);
+    PreTweenMethod: Rotation
+  - ComponentType: UnityEngine.Transform
+    ValueType: Vector3
+    GetPropertyMethod: localEulerAngles
+    SetPropertyMethod: 'target.localEulerAngles = updateValue; '
+    PreTweenMethod: LocalEulerAngles
+  - ComponentType: UnityEngine.Transform
+    ValueType: Vector3
+    GetPropertyMethod: localScale
+    SetPropertyMethod: target.localScale = updateValue;
+    PreTweenMethod: Scale
+  - ComponentType: UnityEngine.Transform
+    ValueType: float
+    GetPropertyMethod: localScale.x
+    SetPropertyMethod: target.localScale = target.localScale.WithComponent(0, (updateValue))
+      ;
+    PreTweenMethod: ScaleX
+  - ComponentType: UnityEngine.Transform
+    ValueType: float
+    GetPropertyMethod: localScale.y
+    SetPropertyMethod: target.localScale = target.localScale.WithComponent(1, (updateValue))
+      ;
+    PreTweenMethod: ScaleY
+  - ComponentType: UnityEngine.Transform
+    ValueType: float
+    GetPropertyMethod: localScale.z
+    SetPropertyMethod: target.localScale = target.localScale.WithComponent(2, (updateValue))
+      ;
+    PreTweenMethod: ScaleZ
+  - ComponentType: UnityEngine.UI.Graphic
+    ValueType: Color
+    GetPropertyMethod: color
+    SetPropertyMethod: target.color = updateValue;
+    PreTweenMethod: Color
+  - ComponentType: UnityEngine.SpriteRenderer
+    ValueType: Color
+    GetPropertyMethod: color
+    SetPropertyMethod: target.color = updateValue;
+    PreTweenMethod: Color
+  - ComponentType: UnityEngine.Material
+    ValueType: Color
+    GetPropertyMethod: color
+    SetPropertyMethod: target.color = updateValue;
+    PreTweenMethod: MaterialColor
+  - ComponentType: UnityEngine.Light
+    ValueType: Color
+    GetPropertyMethod: color
+    SetPropertyMethod: target.color = updateValue;
+    PreTweenMethod: LightColor
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: Vector2
+    GetPropertyMethod: anchoredPosition
+    SetPropertyMethod: target.anchoredPosition = updateValue;
+    PreTweenMethod: UIAnchoredPosition
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: float
+    GetPropertyMethod: anchoredPosition.x
+    SetPropertyMethod: target.anchoredPosition = target.anchoredPosition.WithComponent(0,
+      (updateValue)) ;
+    PreTweenMethod: UIAnchoredPositionX
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: float
+    GetPropertyMethod: anchoredPosition.y
+    SetPropertyMethod: target.anchoredPosition = target.anchoredPosition.WithComponent(1,
+      (updateValue)) ;
+    PreTweenMethod: UIAnchoredPositionY
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: Vector2
+    GetPropertyMethod: sizeDelta
+    SetPropertyMethod: target.sizeDelta = updateValue;
+    PreTweenMethod: UISizeDelta
+  - ComponentType: UnityEngine.CanvasGroup
+    ValueType: float
+    GetPropertyMethod: alpha
+    SetPropertyMethod: target.alpha = updateValue;
+    PreTweenMethod: Alpha
+  - ComponentType: UnityEngine.UI.Graphic
+    ValueType: float
+    GetPropertyMethod: color.a
+    SetPropertyMethod: target.color = target.color.WithAlpha((updateValue)) ;
+    PreTweenMethod: Alpha
+  - ComponentType: UnityEngine.SpriteRenderer
+    ValueType: float
+    GetPropertyMethod: color.a
+    SetPropertyMethod: target.color = target.color.WithAlpha((updateValue)) ;
+    PreTweenMethod: Alpha
+  - ComponentType: UnityEngine.Material
+    ValueType: float
+    GetPropertyMethod: color.a
+    SetPropertyMethod: target.color = target.color.WithAlpha((updateValue)) ;
+    PreTweenMethod: MaterialAlpha
+  - ComponentType: UnityEngine.Material
+    ValueType: Vector2
+    GetPropertyMethod: mainTextureOffset
+    SetPropertyMethod: target.mainTextureOffset = updateValue;
+    PreTweenMethod: MaterialMainTextureOffset
+  - ComponentType: UnityEngine.Material
+    ValueType: Vector2
+    GetPropertyMethod: mainTextureScale
+    SetPropertyMethod: target.mainTextureScale = updateValue;
+    PreTweenMethod: MaterialMainTextureScale
+  - ComponentType: UnityEngine.UI.Image
+    ValueType: float
+    GetPropertyMethod: fillAmount
+    SetPropertyMethod: target.fillAmount = updateValue;
+    PreTweenMethod: UIFillAmount
+  - ComponentType: UnityEngine.AudioSource
+    ValueType: float
+    GetPropertyMethod: volume
+    SetPropertyMethod: target.volume = updateValue;
+    PreTweenMethod: AudioVolume
+  - ComponentType: UnityEngine.AudioSource
+    ValueType: float
+    GetPropertyMethod: pitch
+    SetPropertyMethod: target.pitch = updateValue;
+    PreTweenMethod: AudioPitch
+  - ComponentType: UnityEngine.AudioSource
+    ValueType: float
+    GetPropertyMethod: panStereo
+    SetPropertyMethod: target.panStereo = updateValue;
+    PreTweenMethod: AudioPanStereo
+  - ComponentType: PrimeTween.Tween
+    ValueType: float
+    GetPropertyMethod: timeScale
+    SetPropertyMethod: target.timeScale = updateValue;
+    PreTweenMethod: TweenTimeScale
+  - ComponentType: PrimeTween.Sequence
+    ValueType: float
+    GetPropertyMethod: timeScale
+    SetPropertyMethod: target.timeScale = updateValue;
+    PreTweenMethod: TweenTimeScale
+  - ComponentType: UnityEngine.UIElements.VisualElement
+    ValueType: Rect
+    GetPropertyMethod: GetResolvedStyleRect()
+    SetPropertyMethod: target.SetStyleRect((updateValue)) ;
+    PreTweenMethod: VisualElementLayout
+  - ComponentType: UnityEngine.UIElements.ITransform
+    ValueType: Vector3
+    GetPropertyMethod: position
+    SetPropertyMethod: target.position = updateValue;
+    PreTweenMethod: Position
+  - ComponentType: UnityEngine.UIElements.ITransform
+    ValueType: Quaternion
+    GetPropertyMethod: rotation
+    SetPropertyMethod: target.rotation = updateValue;
+    PreTweenMethod: Rotation
+  - ComponentType: UnityEngine.UIElements.ITransform
+    ValueType: Vector3
+    GetPropertyMethod: scale
+    SetPropertyMethod: target.scale = updateValue;
+    PreTweenMethod: Scale
+  - ComponentType: UnityEngine.UIElements.VisualElement
+    ValueType: Vector2
+    GetPropertyMethod: layout.size
+    SetPropertyMethod: target.style.width = updateValue.x;             target.style.height
+      = updateValue.y;
+    PreTweenMethod: VisualElementSize
+  - ComponentType: UnityEngine.UIElements.VisualElement
+    ValueType: Vector2
+    GetPropertyMethod: GetTopLeft()
+    SetPropertyMethod: target.SetTopLeft((updateValue)) ;
+    PreTweenMethod: VisualElementTopLeft
+  - ComponentType: UnityEngine.UIElements.VisualElement
+    ValueType: Color
+    GetPropertyMethod: style.color.value
+    SetPropertyMethod: target.style.color = updateValue;
+    PreTweenMethod: VisualElementColor
+  - ComponentType: UnityEngine.UIElements.VisualElement
+    ValueType: Color
+    GetPropertyMethod: style.backgroundColor.value
+    SetPropertyMethod: target.style.backgroundColor = updateValue;
+    PreTweenMethod: VisualElementBackgroundColor
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: Vector2
+    GetPropertyMethod: offsetMin
+    SetPropertyMethod: target.offsetMin = updateValue;
+    PreTweenMethod: UIOffsetMin
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: float
+    GetPropertyMethod: offsetMin.x
+    SetPropertyMethod: target.offsetMin = target.offsetMin.WithComponent(0, (updateValue))
+      ;
+    PreTweenMethod: UIOffsetMinX
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: float
+    GetPropertyMethod: offsetMin.y
+    SetPropertyMethod: target.offsetMin = target.offsetMin.WithComponent(1, (updateValue))
+      ;
+    PreTweenMethod: UIOffsetMinY
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: Vector2
+    GetPropertyMethod: offsetMax
+    SetPropertyMethod: target.offsetMax = updateValue;
+    PreTweenMethod: UIOffsetMax
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: float
+    GetPropertyMethod: offsetMax.x
+    SetPropertyMethod: target.offsetMax = target.offsetMax.WithComponent(0, (updateValue))
+      ;
+    PreTweenMethod: UIOffsetMaxX
+  - ComponentType: UnityEngine.RectTransform
+    ValueType: float
+    GetPropertyMethod: offsetMax.y
+    SetPropertyMethod: target.offsetMax = target.offsetMax.WithComponent(1, (updateValue))
+      ;
+    PreTweenMethod: UIOffsetMaxY
+  - ComponentType: TMPro.TMP_Text
+    ValueType: int
+    GetPropertyMethod: maxVisibleCharacters
+    SetPropertyMethod: target.maxVisibleCharacters = updateValue;
+    PreTweenMethod: TextMaxVisibleCharacters
+  - ComponentType: UnityEngine.UI.RectMask2D
+    ValueType: Vector4
+    GetPropertyMethod: padding
+    SetPropertyMethod: target.padding = updateValue;
+    PreTweenMethod: Custom
+  - ComponentType: UnityEngine.UI.RectMask2D
+    ValueType: Vector2
+    GetPropertyMethod: softness
+    SetPropertyMethod: target.softness = new Vector2Int((int)updateValue.x, (int)updateValue.y);
+    PreTweenMethod: Custom
+  - ComponentType: TMPro.TMP_Text
+    ValueType: float
+    GetPropertyMethod: fontSize
+    SetPropertyMethod: target.fontSize = updateValue;
+    PreTweenMethod: Custom
