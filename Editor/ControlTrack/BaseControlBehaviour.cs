@@ -4,6 +4,7 @@ using PrimeTween;
 using UnityEngine;
 using UnityEngine.Playables;
 using Object = System.Object;
+using Assert = UnityEngine.Assertions.Assert;
 
 namespace Cr7Sund.TweenTimeLine
 {

@@ -8,7 +8,9 @@ using UnityEditor;
 using UnityEditor.Timeline;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UIElements;
+using Assert = UnityEngine.Assertions.Assert;
 
 namespace Cr7Sund.TweenTimeLine
 {

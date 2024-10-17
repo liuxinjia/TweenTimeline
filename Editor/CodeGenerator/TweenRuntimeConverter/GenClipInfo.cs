@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using PrimeTween;
+using Assert = UnityEngine.Assertions.Assert;
 namespace Cr7Sund.TweenTimeLine
 {
     public class GenClipInfo

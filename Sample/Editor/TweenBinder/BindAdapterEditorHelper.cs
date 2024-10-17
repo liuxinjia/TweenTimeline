@@ -163,23 +163,7 @@ namespace Cr7Sund.TweenTimeLine
             }
         }
 
-        public static bool IterateTimeLineTrackAssets(TimelineAsset asset, Action<TrackAsset> iterateAction)
-        {
-            var tracks = asset.GetRootTracks();
 
-            iterateTrackAsset(iterateAction, tracks);
-
-            return true;
-
-            static void iterateTrackAsset(Action<TrackAsset> iterateAction, IEnumerable<TrackAsset> tracks)
-            {
-                foreach (var track in tracks)
-                {
-                    iterateAction?.Invoke(track);
-                    iterateTrackAsset(iterateAction, track.GetChildTracks());
-                }
-            }
-        }
 
         public static string GetCategory(GameObject go)
         {

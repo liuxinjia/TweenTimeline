@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using PrimeTween;
-using UnityEngine;
-using Assert = UnityEngine.Assertions.Assert;
 
 namespace Cr7Sund.TweenTimeLine
 {
@@ -29,7 +28,10 @@ namespace Cr7Sund.TweenTimeLine
         {
             if (_sequence.isAlive)
             {
-                _sequence.releaseTweens();
+                var releaseMethod = _sequence.GetType().GetMethod("releaseTweens",
+                  BindingFlags.Instance | BindingFlags.NonPublic);
+                releaseMethod.Invoke(_sequence, null);
+                // _sequence.releaseTweens();
                 _sequence.Stop();
             }
 
