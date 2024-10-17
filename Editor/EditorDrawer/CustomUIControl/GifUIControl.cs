@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using Cr7Sund.TweenTimeLine;
 using UnityEditor;
@@ -64,10 +65,16 @@ namespace Cr7Sund
             System.Diagnostics.Stopwatch profilerWatch = new();
             profilerWatch.Restart();
 
-            var guids = AssetDatabase.FindAssets("t:GifCache",
-            new string[] {
+            var searchInFolders = new List<string> {
                 TweenTimelineDefine.BuiltInGIFPresetFolder,
-                TweenTimelineDefine.CustomGIFPresetFolder });
+                 };
+            if (AssetDatabase.AssetPathExists(TweenTimelineDefine.CustomGIFPresetFolder))
+            {
+                searchInFolders.Add(TweenTimelineDefine.CustomGIFPresetFolder);
+            }
+            var guids = AssetDatabase.FindAssets("t:GifCache",
+            searchInFolders.ToArray());
+
             TweenTimelineManager.LogProfile($"Find Assetse: {profilerWatch.ElapsedMilliseconds} ms"); // Log elapsed time
 
             profilerWatch.Restart();

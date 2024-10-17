@@ -462,9 +462,9 @@ namespace Cr7Sund.TweenTimeLine
                 if (sequenceName.EndsWith(TweenTimelineDefine.PanelTag)
                                || sequenceName.EndsWith(TweenTimelineDefine.CompositeTag))
                 {
-                    Assert.IsTrue(timelineAssetName.EndsWith(TweenTimelineDefine.PanelTag)
+                Assert.IsTrue(timelineAssetName.EndsWith(TweenTimelineDefine.PanelTag)
                                                        || timelineAssetName.EndsWith(TweenTimelineDefine.CompositeTag)
-                    , $"{sequenceName} _ {timelineAssetName}");
+                    , $"TimelineAsset : {timelineAssetName} should be end with suitable postFix: panle or composite");
                     sequenceName = $"{sequenceName}_{timelineAssetName}";
                 }
             }
@@ -494,8 +494,10 @@ namespace Cr7Sund.TweenTimeLine
 
             async Task constructMethodDict(string controlFolder)
             {
-                await ConstructContentDict(controlFolder);
-                EditorUtility.ClearProgressBar();
+                if(Directory.Exists(controlFolder))
+                {
+                    await ConstructContentDict(controlFolder);
+                }
             }
         }
 

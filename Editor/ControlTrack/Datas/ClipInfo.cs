@@ -12,7 +12,8 @@ namespace Cr7Sund.TweenTimeLine
         // public AnimationCurve curve;
         public List<MarkInfo> valueMakers;
         private PrimeTween.Sequence _sequence;
-
+        private static MethodInfo _releaseMethod = typeof(Sequence).GetMethod("releaseTweens",
+            BindingFlags.Instance | BindingFlags.NonPublic);
 
         public PrimeTween.Sequence Sequence { get => _sequence; }
 
@@ -28,10 +29,8 @@ namespace Cr7Sund.TweenTimeLine
         {
             if (_sequence.isAlive)
             {
-                // var releaseMethod = _sequence.GetType().GetMethod("releaseTweens",
-                //   BindingFlags.Instance | BindingFlags.NonPublic);
-                //  releaseMethod.Invoke(_sequence, new object[]{null});
-                _sequence.releaseTweens();
+                _releaseMethod.Invoke(_sequence, new object[]{null});
+                // _sequence.releaseTweens();
                 _sequence.Stop();
             }
 

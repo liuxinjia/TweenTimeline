@@ -70,8 +70,18 @@ namespace Cr7Sund.TweenTimeLine
             $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.CustomTweenPath)}/Editor/Configs";
 
         // Assets/TweenTimeline/Customs/Editor/Datas
-        public static string EditorDataSourcePath =>
-            $"{CustomConfigEditorFolder}/Datas";
+        public static string EditorDataSourcePath
+        {
+            get
+            {
+                var path = TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.TweenlineSourcePath);
+                if (string.IsNullOrEmpty(path))
+                {
+                    path =  $"{CustomConfigEditorFolder}/Datas";
+                }
+                return path;
+            }
+        }
         // Assets/TweenTimeline/Customs/Resources/Datas
         public static string RuntimDataSourePath =>
             $"{CustomConfigRuntimeFolder}/Datas";

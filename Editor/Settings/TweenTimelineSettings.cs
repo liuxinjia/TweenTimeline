@@ -26,6 +26,8 @@ namespace Cr7Sund.TweenTimeLine
         CustomTweenPath, // Assets/Plugins/TweenTimeline/Sample/
    
         BuiltInLibraryPath, // Assets/TweenTimeline/
+        
+        TweenlineSourcePath,
     }
 
     // [CreateAssetMenu(fileName = "TweenTimelineSettings", menuName = "Cr7Sund/TweenTimelineSettings")]
@@ -62,7 +64,7 @@ namespace Cr7Sund.TweenTimeLine
             {ActionEditorSettings.DelayResetTime, new Tuple<object, string>(1.0f, string.Empty)},
             {TweenPreferenceDefine.CustomTweenAssemblyName, new Tuple<object, string>(
                 "TweenTimeline.Sample.Editor", string.Empty)},
-            {TweenPreferenceDefine.CustomTweenPath, new Tuple<object, string>("Assets/Plugins/TweenTimeline/Sample", string.Empty)},
+            {TweenPreferenceDefine.CustomTweenPath, new Tuple<object, string>("Assets/TweenTimelineSample", string.Empty)},
             {TweenPreferenceDefine.BuiltInLibraryPath, new Tuple<object, string>("Assets/TweenTimelineConfig/", string.Empty)},
         };
 
