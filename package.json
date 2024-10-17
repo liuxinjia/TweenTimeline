@@ -2,7 +2,7 @@
   "name": "com.cr7sund.tweentimeline",
   "displayName": "Tween Timeline",
   "description": "Tween TimeLine is an animation design tool for Unity that allows you to easily create UI animations without the need for coding",
-  "version": "1.0.4--preview",
+  "version": "1.0.5--preview",
   "unity": "2022.3",
   "license": "MIT",
   "repository": {
@@ -23,11 +23,6 @@
   ],
   "documentationUrl": "https://github.com/liuxinjia/TweenTimeline",
   "samples": [
-    {
-      "displayName": "BuiltInConfig",
-      "description": "UI Demo",
-      "path": "Samples~/TweenTimelineConfig"
-    },
     {
       "displayName": "Sample",
       "description": "UI Demo",
