@@ -24,13 +24,13 @@ namespace Cr7Sund.TweenTimeLine
         // Custom
         CustomTweenAssemblyName,
         CustomTweenPath, // Assets/Plugins/TweenTimeline/Sample/
+   
         BuiltInLibraryPath, // Assets/TweenTimeline/
     }
 
     // [CreateAssetMenu(fileName = "TweenTimelineSettings", menuName = "Cr7Sund/TweenTimelineSettings")]
     public class TweenTimelineSettings : ScriptableObject
     {
-        private const string TweenConfigGUID = "c6a3e85204b9957469ca407e5fbb362e";
         private static TweenTimelineSettings _settingsAsset;
         public static TweenTimelineSettings Instance
         {
@@ -38,14 +38,13 @@ namespace Cr7Sund.TweenTimeLine
             {
                 if (_settingsAsset == null)
                 {
-                    string tweenConfigPath = AssetDatabase.GUIDToAssetPath(TweenConfigGUID);
+                    string tweenConfigPath = "Assets/TweenTimelineConfig/BuiltInConfigs/Editor Default Resources/TweenTimelineSettings.asset";
                     _settingsAsset = AssetDatabase.LoadAssetAtPath<TweenTimelineSettings>(tweenConfigPath);
                     if (_settingsAsset == null)
                     {
-                        string path = $"Assets/Plugins/TweenTimeline/Editor/Settings/TweenTimelineSettings.asset";
                         _settingsAsset = ScriptableObject.CreateInstance<TweenTimelineSettings>();
 
-                        AssetDatabase.CreateAsset(_settingsAsset, path);
+                        AssetDatabase.CreateAsset(_settingsAsset, tweenConfigPath);
                         AssetDatabase.SaveAssets();
                     }
                 }
@@ -61,6 +60,10 @@ namespace Cr7Sund.TweenTimeLine
             {ActionEditorSettings.AlwaysCreateTrack, new Tuple<object, string>(false, string.Empty)},
             {TweenGenSettings.UseFullPathName, new Tuple<object, string>(false, string.Empty)},
             {ActionEditorSettings.DelayResetTime, new Tuple<object, string>(1.0f, string.Empty)},
+            {TweenPreferenceDefine.CustomTweenAssemblyName, new Tuple<object, string>(
+                "TweenTimeline.Sample.Editor", string.Empty)},
+            {TweenPreferenceDefine.CustomTweenPath, new Tuple<object, string>("Assets/Plugins/TweenTimeline/Sample", string.Empty)},
+            {TweenPreferenceDefine.BuiltInLibraryPath, new Tuple<object, string>("Assets/TweenTimelineConfig/", string.Empty)},
         };
 
         public void Reset()

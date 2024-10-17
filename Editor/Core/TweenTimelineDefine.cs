@@ -33,11 +33,32 @@ namespace Cr7Sund.TweenTimeLine
         public static Background stopBackground;
         #endregion
 
-
+        // Assets/Plugins/TweenTimeline/Sample/Editor/TweenTimeline.Sample.Editor.asmdef
         private static Assembly customAssembly;
 
-        public static Assembly CustomAssembly =>
-            customAssembly ??= Assembly.Load(TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.CustomTweenAssemblyName));
+        public static Assembly CustomAssembly
+        {
+            get
+            {
+                if (customAssembly == null)
+                {
+                    foreach (var item in AppDomain.CurrentDomain.GetAssemblies())
+                    {
+                        if(item.GetName().Name == TweenTimelinePreferencesProvider.GetString(
+                                    TweenPreferenceDefine.CustomTweenAssemblyName)){
+                            customAssembly = item;
+                            break;
+                        }
+                    }
+                }
+                return customAssembly;
+            }
+        }
+        // =>
+        //     customAssembly ??= Assembly.LoadFile(
+        //         PathUtility.ConvertToAbsolutePath(
+        //         TweenTimelinePreferencesProvider.GetString(
+        //         TweenPreferenceDefine.CustomTweenAssemblyName)));
 
         #region Custom
         // Assets/Plugins/TweenTimeline/Sample/RuntTime/CodeGens
@@ -112,8 +133,7 @@ namespace Cr7Sund.TweenTimeLine
                     var baseType = typeof(BaseEasingTokenPreset);
                     var assemblies = new List<Assembly>();
                     assemblies.Add(typeof(MaterialEasingTokenPreset).Assembly);
-                    var customAssembyName = TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.CustomTweenAssemblyName);
-                    assemblies.Add(Assembly.Load(customAssembyName));
+                    assemblies.Add(CustomAssembly);
 
                     derivedTokenTypes = assemblies
                         .SelectMany(assembly => assembly.GetTypes())
