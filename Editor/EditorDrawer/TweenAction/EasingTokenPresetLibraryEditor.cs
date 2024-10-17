@@ -29,10 +29,10 @@ namespace Cr7Sund.TweenTimeLine
             var listProp = serializedObject.FindProperty("easingTokenPresets");
             var property = new PropertyField(listProp);
 
-            var resetBtn = new Button(ResetFromCurvePreset);
-            resetBtn.text = "Rebuild";
+            // var resetBtn = new Button(ResetFromCurvePreset);
+            // resetBtn.text = "Rebuild";
 
-            container.Add(resetBtn);
+            // container.Add(resetBtn);
             container.Add(property);
 
             return container;
@@ -41,29 +41,35 @@ namespace Cr7Sund.TweenTimeLine
         private static void ResetFromCurvePreset()
         {
             curveDictionary = new();
-            Dictionary<string, string> paths = GetCurvePresetLibrary();
-            foreach (var item in paths)
-            {
-                var easingLibrary = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(item.Value);
-                AnimationCurveExtensions.GenerateCurveDict(easingLibrary, in curveDictionary);
-            }
-
             var easingTokenPresetLibrary = AssetDatabase.LoadAssetAtPath<EasingTokenPresetLibrary>(TweenTimelineDefine.easingTokenPresetsPath);
-            if (easingTokenPresetLibrary.easingTokenPresets == null ||
-                  easingTokenPresetLibrary.easingTokenPresets.Count <= 0)
-            {
-                RebuildCurvePreset(easingTokenPresetLibrary);
-            }
+            // ConstructLibrary(easingTokenPresetLibrary);
 
             foreach (var item in easingTokenPresetLibrary.easingTokenPresets)
             {
                 var name = item.Name;
                 var curve = item.Curve;
-                
+
                 if (curve != null && name != null && !curveDictionary.ContainsKey(name))
                 {
                     curveDictionary.Add(name, curve);
                 }
+            }
+
+        }
+
+        private static void ConstructPresets(EasingTokenPresetLibrary easingTokenPresetLibrary)
+        {
+            Dictionary<string, string> paths = GetCurvePresetLibrary();
+            foreach (var item in paths)
+            {
+                var easingLibrary = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(item.Value);
+                EasingCurveExtensions.GenerateCurveDict(easingLibrary, in curveDictionary);
+            }
+
+            if (easingTokenPresetLibrary.easingTokenPresets == null ||
+                  easingTokenPresetLibrary.easingTokenPresets.Count <= 0)
+            {
+                RebuildCurvePreset(easingTokenPresetLibrary);
             }
 
         }

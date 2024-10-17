@@ -151,43 +151,36 @@ namespace Cr7Sund.TweenTimeLine
             MethodInfo createTweenMethodInfo, getMethodInfo, setMethodInfo;
             object target;
             GetTweenMethodInfo(animAction, easingTokenPresetLibrary, out tweenBehaviourType, out var trackInfo,
-            out component, out createTweenMethodInfo, out getMethodInfo, out setMethodInfo, out target);
+                out component, out target);
 
-            // Reflectively set properties from AnimationSettings
-            FieldInfo destPosFieldInfo = tweenBehaviourType.GetField("_endPos", BindingFlags.NonPublic | BindingFlags.Instance);
-            FieldInfo easeFieldInfo = tweenBehaviourType.BaseType.GetField("_easePreset", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            var initPos = getMethodInfo.Invoke(target, new[]
+            if (target is IUniqueBehaviour uniqueBehaviour)
             {
-                component
-            });
+                var initPos = uniqueBehaviour.Get(component);
+                uniqueBehaviour.EndPos = trackInfo.endPos;
+                uniqueBehaviour.EasePreset = trackInfo.easePreset;
+                Tween tweenValue = uniqueBehaviour.CreateTween(
+                    component, trackInfo.duration,
+                    trackInfo.startPos);
 
-            destPosFieldInfo.SetValue(target, trackInfo.endPos);
-            easeFieldInfo.SetValue(target, trackInfo.easePreset);
-
-            Tween tweenValue = (PrimeTween.Tween)createTweenMethodInfo.Invoke(target, new object[]
-            {
-                component, trackInfo.duration,
-                trackInfo.startPos
-            });
-            onResetAction = () =>
-            {
-                setMethodInfo?.Invoke(target, new[]
+                onResetAction = () =>
                 {
-                    component, initPos
-                });
-            };
-            return tweenValue;
+                    uniqueBehaviour.Set(component, initPos);
+                };
+
+                return tweenValue;
+            }
+            else
+            {
+                onResetAction = null;
+                return Tween.Custom(0, 1, 1, (value) => { });
+            }
         }
 
         private void GetTweenMethodInfo(TweenActionEffect animAction, EasingTokenPresetLibrary easingTokenPresetLibrary,
-         out Type tweenBehaviourType, out ClipInfoContext clipInfo, out Component component, out MethodInfo createTweenMethodInfo, out MethodInfo getMethodInfo, out MethodInfo setMethodInfo, out object target)
+            out Type tweenBehaviourType, out ClipInfoContext clipInfo, out Component component , out object target)
         {
             tweenBehaviourType = GetTweenBehaviourType();
             GetAnimUnitClipInfo(animAction, easingTokenPresetLibrary, out clipInfo, out component);
-            createTweenMethodInfo = tweenBehaviourType.GetMethod("OnCreateTween", BindingFlags.NonPublic | BindingFlags.Instance);
-            getMethodInfo = tweenBehaviourType.GetMethod("OnGet", BindingFlags.NonPublic | BindingFlags.Instance);
-            setMethodInfo = tweenBehaviourType.GetMethod("OnSet", BindingFlags.NonPublic | BindingFlags.Instance);
             target = Activator.CreateInstance(tweenBehaviourType);
         }
 

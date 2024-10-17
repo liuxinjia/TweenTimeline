@@ -28,10 +28,10 @@ namespace Cr7Sund.TweenTimeLine
         {
             if (_sequence.isAlive)
             {
-                var releaseMethod = _sequence.GetType().GetMethod("releaseTweens",
-                  BindingFlags.Instance | BindingFlags.NonPublic);
-                releaseMethod.Invoke(_sequence, null);
-                // _sequence.releaseTweens();
+                // var releaseMethod = _sequence.GetType().GetMethod("releaseTweens",
+                //   BindingFlags.Instance | BindingFlags.NonPublic);
+                //  releaseMethod.Invoke(_sequence, new object[]{null});
+                _sequence.releaseTweens();
                 _sequence.Stop();
             }
 
