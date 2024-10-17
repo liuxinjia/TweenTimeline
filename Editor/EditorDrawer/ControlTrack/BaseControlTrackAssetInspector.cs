@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 
 namespace Cr7Sund.TweenTimeLine
 {
-    [CustomEditor(typeof(ControlAsset), true, isFallback = true)]
+    [CustomEditor(typeof(ControlAsset), true, isFallback = false)]
     [CanEditMultipleObjects]
     public class BaseControlTrackAssetInspector : UnityEditor.Editor
     {

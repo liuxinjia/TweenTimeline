@@ -143,7 +143,8 @@ namespace Cr7Sund.TweenTimeLine
                     var baseType = typeof(BaseEasingTokenPreset);
                     var assemblies = new List<Assembly>();
                     assemblies.Add(typeof(MaterialEasingTokenPreset).Assembly);
-                    assemblies.Add(CustomAssembly);
+                    if(CustomAssembly!=null)
+                        assemblies.Add(CustomAssembly);
 
                     derivedTokenTypes = assemblies
                         .SelectMany(assembly => assembly.GetTypes())
