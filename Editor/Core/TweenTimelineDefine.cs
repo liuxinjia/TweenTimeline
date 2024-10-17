@@ -91,7 +91,7 @@ namespace Cr7Sund.TweenTimeLine
         public static string BuiltInConfigPath =>
             $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.BuiltInLibraryPath)}BuiltInConfigs";
         public static string CustomConfigPath =>
-            $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.BuiltInLibraryPath)}Customs";
+            $"{TweenTimelinePreferencesProvider.GetString(TweenPreferenceDefine.BuiltInLibraryPath)}CustomConfigs";
 
 
         // Assets/Plugins/TweenTimeline/Sample/Editor/CustomTracks
