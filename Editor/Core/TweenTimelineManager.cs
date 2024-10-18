@@ -470,7 +470,15 @@ namespace Cr7Sund.TweenTimeLine
 
         public static void InitPreTween()
         {
-            PrimeTweenManagerExposer.Init();
+            try
+            {
+                PrimeTweenManagerExposer.Init();
+            }
+            catch (System.Exception e)
+            {
+                TryRemoveTweenManager();
+                throw new Exception("InitPreTween Fail! Try to reimport Core again  \nOutput: ");
+            }
         }
 
         private static void UpdateTimeCache()
