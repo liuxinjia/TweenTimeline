@@ -89,8 +89,8 @@ namespace Cr7Sund.TweenTimeLine
             }
 
             // serializedObject.ApplyModifiedProperties();
-            // AssetDatabase.SaveAssetIfDirty(target);
-            // AssetDatabase.Refresh();
+            AssetDatabase.SaveAssetIfDirty(easingTokenPresetLibrary);
+            AssetDatabase.Refresh();
         }
 
         public static Dictionary<string, string> GetCurvePresetLibrary()

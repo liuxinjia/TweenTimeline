@@ -1,21 +1,22 @@
-![Logo](Document/LogoBanner.png)
-<h1 align="center">Tween TimeLine</h1>
+# Tween Timeline Home Page
 
-Tween TimeLine is an animation design tool for Unity that allows you to easily create UI animations without the need for coding. With the Timeline feature, you can organize and sequence complex animations, while the Tween Action functionality makes it more intuitive to add tween animations and control animated properties. Additionally, the reusable Tween Action Collection helps effectively avoid repetitive work, making animation creation faster and more efficient.
+Status: FrameWork
 
-Tween TimeLine 是一款用于 Unity 的动画设计工具，可以让你轻松创建无需代码的 UI 动画。通过 Timeline 功能，你可以组织和编排复杂的动画，
+# Tween TimeLine
 
-而 Tween Action 功能则帮助更直观的添加缓动动画和控制动画属性。此外，可复用的 Tween Action Collection可有效避免重复工作，使动画制作更加快捷高效。
+---
 
-支持Straight Ahead Action and Pose to Pose两种不同方式来创建动画，前者我们提供缓动动画来创建快速自然的动画，后者动画师可以创建更个性化的动画。
+**TweenTimeline** is a powerful animation design tool for Unity that enables you to visually create, organize, and manage animations with no coding required. The intuitive and familiar **Timeline** window allows you to seamlessly sequence animations, making it easy to build complex transitions and effects.
 
-Additionally, the reusable Tween Action Collection helps effectively avoid repetitive work, making animation creation faster and more efficient.
+With **TweenTimeline**, adding and editing animations is both straightforward and fast. The tool supports both **Straight Ahead Action** for smooth, natural motion, and **Pose to Pose** for personalized, keyframe-based animation.
 
-Fell free to use it ! Welcome to contribute it.
+Additionally, **tween collections** and **tween components** enhance asset reuse across projects, promoting a more efficient workflow.
 
-![.gif](Document/preview1.gif)
+Feel free to use it and contribute to its development!
 
-![.gif](Document/preview2.gif)
+![bandicam2024-10-1220-22-54-874-ezgif.com-video-to-gif-converter.gif](Document/bandicam2024-10-1220-22-54-874-ezgif.com-video-to-gif-converter.gif)
+
+![bandicam2024-10-1220-49-04-012-ezgif.com-video-to-gif-converter.gif](Document/bandicam2024-10-1220-49-04-012-ezgif.com-video-to-gif-converter.gif)
 
 # **🕹️ Demo Preview**
 
@@ -23,113 +24,206 @@ Fell free to use it ! Welcome to contribute it.
 
 The source is from [dating-sim-ui-pac](https://loudeyes.itch.io/dating-sim-ui-pack?download) and [**Recreating Mario Odyssey's Kingdom Select | Mix and Jam**](https://www.youtube.com/watch?v=sCK4u5ol3xw&ab_channel=MixandJam)
 
-# **✨ Features**
+# ✨ Features
 
-- Tween Timeline
-    - 实时预览：随着时间线拖拽预览，单个track动画，整个动画组合预览
-    - 控制动画属性：可以记录场景变化，来调整动画对象的**图形变化**和**运动变化，以及控制时间和动画曲线。**
-        - 直接画关键动作（Pose-to-Pose），如果动效简单，你只需用到一个单一的参数，比如物体的位置或者比例，设置两个关键帧或关键动作，结合缓动函数来实现自然的动效。
-        - 逐帧画（Straight ahead，接续动作），如果想要实现的动效比较复杂，那么就需要涉及接续动作，得设置多个参数，逐帧逐帧画。
-        
-        ---
-        
-        Custom - Curve  Create Editor
-        
-    - 编排动画：通过拖拽和分层调整动画组合的层级和优先级
-    - 智能分层：关于不同Panel 和Composite 的自动分组，关于进入和退出动画的分层，关于同一个对象同一个属性的分层。
-    - 一些快速操作：一键生成对应的退出动画，一键归位
-- Tween Action
-    - Tween Action Unit: 将动画属性和动画行为从代码可视化，更方便的添加动画到TimeLine
-        - 快速预览：不理解这个属性是什么，直接应用到对象预览效果
-        - *动画预览：不想一个一个尝试预览，可以查看GIF 动画
-    - Prebuilt Tween Action Collection: 精心制作的动画，可以无缝应用到你的目标对象上。
-    - Create Tween Action Collection: 现有的预构建动画基础上进行组合，或加入自定义的 Action Unit，创建符合你需求的动画。
-    - **Suggested easing and duration pairs：选择合适的缓动函数和持续时间组来更快的实现更合理更一致的动画**
-- Animation Converter: 支持你之前项目的Animation Clip， 直接加入到TimeLine
-- *一些 动画组件：不同的Hover 动画， 不同的Click 动画
-- Runtime Tweener : 我们会生成对应的运行动画代码，以及一个“足够智能”的绑定器。
+## Tween Timeline
 
-# **🐼 Installation**
+---
 
-### Via Asset Store
+- **Real-time Preview**: Use buttons to play/stop animations or drag the timeline cursor for real-time scrubbing and feedback.
+    - **Individual Clip Preview**: Play single clips in isolation for detailed adjustments.
+    - **Individual Track Group Preview**: Play the select group you want to focus
+    - **Full Timeline Preview**: See the entire animation sequence to check transitions and overall flow..
+- **Control Animation Properties**: Record scene changes to adjust both **visual** and **motion properties**, including timing and animation curves.
+    - **Pose-to-Pose (Tween Animation)**: Create smooth animations for simple effects, such as changing an object’s position or scale. This method allows you to set just two keyframes (start and  end ) with easing functions, resulting in fluid transitions ideal for animations.
+    - **Straight Ahead Action (Frame-by-Frame Animation)**: For more complex effects, you can fine-tune multiple parameters by creating frame-by-frame animations. This approach provides detailed control and enables expressive, non-linear movements, making it ideal for handcrafted or intricate actions.
+- **Animation Layering**: Organize and layer animations by dragging and adjusting their priority on the timeline.
+- **Intelligent Layering**: Automatically group animations by panels or composites. Separate layers for enter and exit animations, and manage layers for the same property on a single object.
+- **Useful Track Actions**: Quickly generate exit animations based on the entry position or reset objects to their original state with a single click.
 
-Import PrimeTween from [Asset Store](https://assetstore.unity.com/packages/slug/252960).
+## Tween Action
 
-### Via UPM
+---
 
-### Via Github
+- **Tween Action Units**: Visualize animation properties and behaviors directly, making it easier to add animations to the timeline.
+    - **Quick Preview**: Apply properties to objects instantly to preview the effect in real-time.
+    - **Animation Preview**: View prebuilt GIFs of animations to quickly understand how they will behave without trial and error.
+- **Prebuilt Tween Action Collection**: A collection of ready-made animations that can be applied directly to your objects with minimal adjustment.
+- **Create Custom Tween Actions**: Combine existing prebuilt actions with custom **Action Units** to craft animations tailored to your specific needs.
+- **Suggested Easing and Duration Pairs**: Speed up your workflow by selecting Material Motion style easing functions and duration pairs for consistent, professional-looking animations.
 
-## Dependences:
+### Animation Converter
 
-- PrimeTween (Dotween version is on the road map)
-- Timeline
+- **Import Animation Clips**: Seamlessly import Animation Clips from previous projects and add them to the timeline for reuse and adaptation.
 
-## **Enabling Other Extensions (TMPro, Timeline, etc...)**
+### Runtime Tweener
 
-# **📘 Instruction**
+- **Auto-generated Runtime Code**: Automatically create the code to run your animations from timeline assets, featuring an intelligent binder for easy object linking.
+- Panel Binder and Composite Binder: do panel  and composite transition
+- **Compontent Binder Adapter**:  Some prebuilt binder that can be easily applied to your UI elements for immediate interactivity.
 
-- [Create PlayableDirector and Timeline](https://docs.unity3d.com/Packages/com.unity.timeline@1.8/manual/wf-create-instance.html) （If you know timeline , you can skip this part)
-    - Create  a GameObject using a [Playable Director](https://docs.unity3d.com/Packages/com.unity.timeline@1.8/manual/playable-director.html) component.
-    - Create a Timeline Asset depend on your animation types
-    
-    ![image.png](image.png)
-    
-- [Use Unity Timeline window to visually arrange tracks.](https://docs.unity3d.com/Packages/com.unity.timeline@1.8/manual/tl-window.html) There are some additional features we added.
-    - Custom Marker
-    - Useful track shorcut actions
-    - A more visual and convenient method to add animated track
-- Open Tween Action Window to quick preview animation
-    - Press Ctrl + T on  TimelineWindow or Hierachy Window to Open Tween Action Window
-    - Select the game object you want to animate and drag it into Tween Action Window
-    - You can see three tabs: In and Out Categroy means prebuilt Animation Collections, the Custom Category contains all animatable tween properties and method depenend on your selected target GameObject
-    - Left Click to Select one tween  collection and click the preview btn to preview
-    - Right Click to select other tween collection to composite your custom collection
-- Create Straight Ahead Action
-    - Add Animation Track via Tween Action Window
-        - Click the Add Track Btn to Add your select track Into Tracks
-        - If you want to add into your wanted place, you can select the group track first and then add the track.
-    - Control the timeline clip’s start value and end value
-        - you can directly input the new value
-        - or you can use the record button to record dynamic changes like Animation.
-        - when you append with a new track, we will automatilcally set the start value next to the previous one’s end value. The other button - reset button do these reset things
-- Create Pose to Pose Animation
-    - Add Animation Track via recording animation directly
-        - record animation directly to a Timeline instance. Please see the [record flow on Unity Website](https://docs.unity3d.com/Packages/com.unity.timeline@1.8/manual/wf-record-anim.html).
-        - select the animation track and right click →CustomActions→TweenConvertAnimationTrackAction to convert animation to tracks
-- Control the timeline clip’s time and easing
-    - try combine with different easing token set and different time
-    - you can also create your own curve instead of provided presets
-- Preview Animation
-    - Press the play button of TimelineWindow to play the whole animation
-        - But there is a problem TimelineWindow always skip the last frame
-        https://discussions.unity.com/t/animation-events-on-last-frame-arent-fired-in-timeline-when-its-the-last-frame-of-the-timeline/768636/3
-    - Press the play button of TweenActionWindow to play the animation completely.
+### Animation Components (Samples): Preview in Editor and Run at Runtime
+
+- **Panel Binder and Composite Binder**: Manage panel and composite transitions.
+- **Component Binder Adapter**: Prebuilt binders that can be easily applied to your UI elements for instant interactivity.
+
+# 📘 Getting Started Guide
+
+## **Installation**
+
+### Install Via Asset Store
+
+1. Download the package from [Unity Asset Store](https://assetstore.unity.com/packages/slug/299475)
+2. After downloading, you will see the Welcome window below
+3. Click the "Import Core" button to automatically import the package and all dependencies
+4. (Optional) Click "Import Demo" and open the demo scene to explore sample implementations
+
+![image.png](Document/image.png)
+
+### Via OpenUPM
+
+Step 1: Install PrimeTween
+
+First ensure PrimeTween is installed in your project, as it's a required dependency.
+
+Step 2: Add Package
+
+Add the package to your project using OpenUPM CLI:
+
+```bash
+openupm add com.cr7sund.tweentimeline
+```
+
+### Dependences:
+
+- [PrimeTween](https://github.com/KyryloKuzyk/PrimeTween)
+- Unity.[Timeline](https://docs.unity3d.com/Packages/com.unity.timeline@1.8/manual/index.html)
+
+## Initial Setup
+
+### 1. [Create Timeline Components](https://docs.unity3d.com/Packages/com.unity.timeline@1.8/manual/wf-create-instance.html)
+
+- Create a GameObject with a [PlayableDirector](https://docs.unity3d.com/Packages/com.unity.timeline@1.8/manual/playable-director.html) component
+- Create a Timeline Asset based on your animation requirements
+
+## Core Features
+
+### 1. Tween Action Window
+
+**Opening the Window**
+
+- Press `Ctrl + T` in Timeline or Hierarchy Window
+- Select and drag your target GameObject into the window
+
+**Window Layout**
+
+- **In/Out Tabs**: Browse prebuilt animation collections
+- **Custom Tab**: Access all animatable tween properties for selected GameObject
+- **Tween Action** :
+    - Left Click preview button to test selected action
+    - Right-click to
+        - Combine multiple actions by right-clicking additional selections, see more at custom part
+
+**Preview Action**
+
+- Select different action to preview
+- Select [different easing pairs](https://m3.material.io/styles/motion/easing-and-duration/applying-easing-and-duration#27a05b8b-02b1-4695-a7e4-70797f205222) to preivew different time and easing combinations
+- **Value Configuration:** Adjust start value and end value
+    - **Default Mode**: Direct transition from start value to end value
+    - **Relative Mode**: Movement relative to current position
+        - Example: If current position is (100,100) and target is (50,50), object moves +50 units
+    - **Additive Mode**: Apply delta changes to current position
+        - Example: If delta is (10,10), adds to current position each update
+
+### 2. Creating Animations
+
+**Straight Ahead Animation**
+
+1. Add Animation Track:
+    - Click "Add Track" in Tween Action Window
+        - To add to your desired location, first select the group track, then proceed to add the new track.
+2. Configure Values:
+    - Manually input start/end values
+    - Use record button for dynamic changes
+        - Auto-move to you start/end values
+    - Reset button available for value restoration
+        - Auto-continue from previous track's end value (append mode)
+
+**Pose to Pose Animation**
+
+1. Direct Recording:
+    - Follow Unity's [standard recording workflow](https://docs.unity3d.com/Packages/com.unity.timeline@1.8/manual/wf-record-anim.html)
+    - Convert to tween tracks: Right-click animation track → Custom Actions → Tween Convert Animation Track
+2. Convert existed Animation 
+    1. Add your animation track with existed animation clip
+    2.  Convert to tween tracks: Right-click animation track → Custom Actions → Tween Convert Animation Track
+
+### 3. Animation Control
+
+**Timing & Easing**
+
+- Combine different easing tokens and timing
+- Create custom curves for unique effects
+
+**Preview Options**
+
+- Timeline Window
+    - Play Toggle: Full animation preview (Note: may skip last frame)
     - [Enable the **Play Range** toggle to continuously loop playback within a specific range](Enable the Play Range toggle to continuously loop playback within a specific range)
-    - 🤔Select an Timeline Track (usually a group track) to play a slot animation
-    - Press the play button of Inspector to preview single animation
-- Organize Different TimeLineTracks
-    - try the subTimeline when you want to composite and reusable other template, or just use it as a placeholder, for example  to preview scene transitions.
-- Convert exsited Animatin Clip
-    - Select the animation track and right lick→CustomActions/ TweenConvertAnimations to convert animation. Or  use the shortcut (Shift+H)
-    - But you  can still keep it in timeline , we will convert it when GenRuntimeCode.
-        - But it’s not recommend to do that since the animation can consits of many animated properties which is not visualized in timeline window
-- Add Custom Makers to your track.
-    - It’s a placeholder tool for some properties don’t support animated which usually is a type of bool, string. For exmaple .Image.Sprite, GameObject.Enable.
-    - if you only want to mark state. Try Empty Track. For exmaple, set one image to disable when animation start.
-- Generate Runtime Code: Please  select Tools/Cr7Sund/GeneTweenRuntimeCode.
-    - And you will find two generated file  [GenerateTween.cs](https://github.com/liuxinjia/TweenTimeline/blob/473f87f87e734fb758e756c4c51271759a10f4a1/Sample/RunTime/CodeGens/GenerateTween.cs) and [ITweenBindingExtension.cs](https://github.com/liuxinjia/TweenTimeline/blob/d8b982fb17153b9e5ee2835a01ee564b154f4953/Sample/RunTime/CodeGens/ITweenBindingExtension.cs). Please see [this for the use](https://www.notion.so/Tween-Timeline-Home-Page-11d7440b69108091a700fc1f238036f9?pvs=21) of this.
-- RunTime Use (Sample Project)
-    - Panel transition: you can attach a panel with panel binder. And select the in and out panel transition
-    - Composite transition: you can attach a gameobect with composite binder. And select the in and out composite transition
-    - Animation Component:you can  attach a animation componnet with the UI Comonent. For example,you can use  HoverBinder to respond the PointerEnterEvent .
+    - However  there is a problem
+    - https://discussions.unity.com/t/animation-events-on-last-frame-arent-fired-in-timeline-when-its-the-last-frame-of-the-timeline/768636/3
+- Tween Action Window Smater Play Button
+    - Complete animation playback
+    - Select Timeline Track First to play selected track animation
+- Inspector preview for single clip animations
 
-# Customazation -Develpers
+### 4. Advanced Features
 
-# Customazation -Artist
+**Track Organization**
 
-### Custom Tween Collection
+- Use sub-timelines for:
+    - Reusable animation templates
+    - Scene transition previews
+    - Modular animation composition
 
-# Reusable Work
+**Converting Existing Animations**
+
+- Select animation track → Right-click → Custom Actions → Tween Convert Animations
+- Shortcut: `Shift + H`
+- Option to defer conversion until runtime code generation
+
+**Custom Markers**
+
+- Perfect for non-animated properties (bool, string)
+- Useful for state marking with Empty Track
+- Example:
+    - Toggle GameObject visibility during animation
+    - Switch Image sprite at differnt time
+
+### 5. Runtime Implementation
+
+**Code Generation**
+
+1. Select `Tools/Cr7Sund/GeneTweenRuntimeCode`
+2. Generated files:
+    - `GenerateTween.cs`
+    - `ITweenBindingExtension.cs`
+
+> Note: For more detailed examples and API documentation, [see the api below](https://www.notion.so/Tween-Timeline-Home-Page-11d7440b69108091a700fc1f238036f9?pvs=21).
+> 
+
+**Runtime Components (Sample)**
+
+- **Panel Binder**: Handle panel transitions
+- **Composite Binder**: Manage composite transitions
+- **Animation Components**: Attach to UI elements to respond to various events (e.g., HoverBinder for pointer events)
+
+## Tips & Best Practices
+
+- Keep animation tracks organized in logical groups
+- Use markers for chagne state
+    - Try Empty Track if there exist no animation. For exmaple, set one image to disable when animation start.
+- Test a whole transitions with different thoroughly in one itmeline asset
 
 # **🔍 API Reference**
 
@@ -182,55 +276,104 @@ You need to define some data to be binded. We define an interface to bind like t
     }
 ```
 
-You can see the the exmaple implementation of  ITweenBinding in Sample
-
-# **📖 Examples**
-
-请import sample
-
-- implemenation of ITweenBinding, PanelBinder, CompositeBinder, ComponentBinder
-- UI Animated Component: HoverAdapter
+You can find an example implementation of **ITweenBinding** in the Demo.
 
 # **📃 Note**
 
-- 关于设计动画的一些思考
-- About Covert Animation
+[Mateial Motion Design](https://www.notion.so/Mateial-Motion-Design-56985849391146faa0481ca5fe2c34ec?pvs=21)
 
-# 👽 Tips
+[Animation Guide Desgin](https://www.notion.so/Animation-Guide-Desgin-1237440b691080a88463d61a1c80c5c9?pvs=21)
 
-<aside>
-💡
+[Customazation](https://www.notion.so/Customazation-1237440b691080b5ad86e04652b9503a?pvs=21)
 
-👻👻 To  organized the assets, it’s highly recommend to divide different folders for different types. For example
-
-</aside>
-
-<aside>
-💡
-
-Recommend to create only one playable director outmost in the hierarchy. We can change different timeline asset to preview and animate differnt targets.
-
-</aside>
+[Component Kit](https://www.notion.so/Component-Kit-1237440b6910804f86a1ed4d1e2b726a?pvs=21)
 
 # ❓ Q&A
+
+1. Why use PrimeTween instead Of Dotween?
+    
+    PrimeTween has 0 runtime memory allocations
+    
+2. How does the tool convert animations?
+We simplify different keyframes to just two keyframes: the start and end keyframes. The intermediate keyframes are handled by evaluating the animation curve. Therefore, it's essential to ensure that we have the appropriate curve in place.
+Below is an example comparing the animation clip with our converted track.
+    
+    ![image.png](Document/image%201.png)
+    
+    ![image.png](Document/image%202.png)
+    
+    **Another issue we encounter: Object KeyFrames.**
+    
+    We need to convert certain non-animatable properties, specifically unsupported types such as string, bool, and (~~Sprite~~). We are attempting to use markers to handle these cases.
+    
+    ![image.png](Document/image%203.png)
+    
+    and we use reflection to get all not animatale Field Types And Properties.
+    
+    ![image.png](Document/image%204.png)
+    
+    ![image.png](Document/image%205.png)
+    
+    ![image.png](Document/image%206.png)
+    
+    ```csharp
+               .Group(Sequence.Create()
+                    .InsertCallback(0.3166667f, binding.GetBindObj<UnityEngine.RectTransform>("Bg"), (target) => { target.gameObject.SetActive(false);})
+                    .InsertCallback(1.333333f, binding.GetBindObj<UnityEngine.RectTransform>("Bg"), (target) => { target.gameObject.SetActive(true);})
+               )
+    ```
+    
+    ```csharp
+               .Group(Sequence.Create()
+                    .InsertCallback(0.3166667f, binding.GetBindObj<UnityEngine.UI.Image>("NextBtn"), (target) => { binding.SetSprite(target, "clock_blue");})
+                    .InsertCallback(0.8166667f, binding.GetBindObj<UnityEngine.UI.Image>("NextBtn"), (target) => { binding.SetSprite(target, "BlueBtn");})
+                    .InsertCallback(1.333333f, binding.GetBindObj<UnityEngine.UI.Image>("NextBtn"), (target) => { binding.SetSprite(target, "BlueBtn");})
+               )
+               .Group(Sequence.Create()
+                    .InsertCallback(0.3166667f, binding.GetBindObj<UnityEngine.UI.Image>("backArrow"), (target) => { binding.SetSprite(target, "BackArrow");})
+                    .InsertCallback(1.333333f, binding.GetBindObj<UnityEngine.UI.Image>("backArrow"), (target) => { binding.SetSprite(target, "blueprint_rare");})
+               )             
+    ```
+    
+    However, there are some issues we cannot resolve or practices to avoid:
+    
+    关于Curve 不一致
+    
+    1. Use alternative methods for looping.
+        
+        ![image.png](Document/image%207.png)
+        
+    2. Inconsistencies with the curve:The last frame has a different duration from the clip (usually occurs after deleting the last frame).
+    
+        
+        ![image.png](Document/image%208.png)
+        
+        ![image.png](Document/image%209.png)
+        
+    
+    1. Why one track can only control one proerty?
+        
+        我们发现每个track 只控制一个属性，对于整体来说更加直观，且随着动画的不断增加，不同track 之间也能职能明确。同时通过调研，我们发现大部分工具实现也是如此。
+        
+        ![image.png](Document/image%2010.png)
+        
+        ![image.png](Document/image%2011.png)
+        
+        ![image.png](Document/image%2012.png)
+        
+    
 
 # **Want to contribute?**
 
 **Please follow these steps to get your work merged in.**
 
-1. Clone the repo and make a new branch: `$ git checkout https://github.com/Juce-Assets/Juce-TweenPlayer/tree/develop -b [name_of_new_branch]`.
+1. Clone the repo and make a new branch:
 2. Add a feature, fix a bug, or refactor some code :)
+    1. If you want to submit a new tween collection set or Animated Components
+    2. Please subit it as sample and update package`.json`
 3. Update `README.md` contributors, if necessary.
 4. Open a Pull Request with a comprehensive description of changes.
 
-# **Support**
-
-Join the discussion on [Unity Forum](https://forum.unity.com/threads/1479609/).
-
-Please submit bug reports [here](https://github.com/KyryloKuzyk/PrimeTween/issues).
-
-Submit your questions and feature requests [here](https://github.com/KyryloKuzyk/PrimeTween/discussions).
-
-If you want to contact me privately, please drop me an email: [kuzykkirill@gmail.com](mailto:kuzykkirill@gmail.com)
-
 # **📝 License**
+
+[MIT](https://choosealicense.com/licenses/mit/)
