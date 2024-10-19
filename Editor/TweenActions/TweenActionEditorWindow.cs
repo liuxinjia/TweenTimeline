@@ -230,41 +230,7 @@ namespace Cr7Sund.TweenTimeLine
 
             playBtn.RegisterCallback<ClickEvent>(_ =>
             {
-                AssertTimelineOpen();
-                var previousState = TweenTimeLineDataModel.StateInfo.BehaviourState;
-
-                // https://discussions.unity.com/t/animation-events-on-last-frame-arent-fired-in-timeline-when-its-the-last-frame-of-the-timeline/768636/9
-                // Timeline is inclusive of the first frame of clips and exclusive of the last, meaning that an active clip that starts exactly at 0 and ends at exactly frame N, will be disabled at frame N.
-                if (Application.isPlaying)
-                {
-                    TweenTimelineManager.ToggleAllPLayClips();
-                }
-                else
-                {
-                    if (!string.IsNullOrEmpty(_curRestID))
-                    {
-                        EditorTweenCenter.UnRegisterEditorTimer(_curRestID);
-                        TweenTimelineManager.ToggleAllPLayClips();
-                    }
-
-                    float delayResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DelayResetTime);
-                    TweenTimelineManager.ToggleAllPLayClips();
-
-                    _curRestID = EditorTweenCenter.RegisterDelayCallback(this,
-                      (float)TimelineWindowExposer.GetPlayDuration() + delayResetTime,
-                     (t, elapsedTime) =>
-                     {
-                         TweenTimelineManager.ToggleAllPLayClips();
-                         _curRestID = string.Empty;
-                     });
-
-                    // TweenTimelineManager.Play();
-                }
-
-                // if (previousState == TweenTimeLineDataModel.StateInfo.BehaviourState)
-                // {
-                //     Debug.Log($"try to change into the same state {previousState}, please check the timeline is valid");
-                // }
+                PlayTimeline();
             });
 
             recordBtn.RegisterCallback<ClickEvent>(_ =>
@@ -275,6 +241,45 @@ namespace Cr7Sund.TweenTimeLine
             this.titleContent = new GUIContent("Animation Editor");
 
             RefreshBtns();
+        }
+
+        private void PlayTimeline()
+        {
+            AssertTimelineOpen();
+            var previousState = TweenTimeLineDataModel.StateInfo.BehaviourState;
+
+            // https://discussions.unity.com/t/animation-events-on-last-frame-arent-fired-in-timeline-when-its-the-last-frame-of-the-timeline/768636/9
+            // Timeline is inclusive of the first frame of clips and exclusive of the last, meaning that an active clip that starts exactly at 0 and ends at exactly frame N, will be disabled at frame N.
+            if (Application.isPlaying)
+            {
+                TweenTimelineManager.ToggleAllPLayClips();
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(_curRestID))
+                {
+                    EditorTweenCenter.UnRegisterEditorTimer(_curRestID);
+                    TweenTimelineManager.ToggleAllPLayClips();
+                }
+
+                float delayResetTime = TweenTimelinePreferencesProvider.GetFloat(ActionEditorSettings.DelayResetTime);
+                TweenTimelineManager.ToggleAllPLayClips();
+
+                _curRestID = EditorTweenCenter.RegisterDelayCallback(this,
+                  (float)TimelineWindowExposer.GetPlayDuration() + delayResetTime,
+                 (t, elapsedTime) =>
+                 {
+                     TweenTimelineManager.ToggleAllPLayClips();
+                     _curRestID = string.Empty;
+                 });
+
+                // TweenTimelineManager.Play();
+            }
+
+            // if (previousState == TweenTimeLineDataModel.StateInfo.BehaviourState)
+            // {
+            //     Debug.Log($"try to change into the same state {previousState}, please check the timeline is valid");
+            // }
         }
 
         private void AssertTimelineOpen()

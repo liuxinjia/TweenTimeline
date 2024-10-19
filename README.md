@@ -153,7 +153,7 @@ openupm add com.cr7sund.tweentimeline
 ![image.png](Document/Record.gif)
 
 **Pose to Pose Animation**
-
+![image.png](Document/recordCurve.gif)
 1. Direct Recording:
     - Follow Unity's [standard recording workflow](https://docs.unity3d.com/Packages/com.unity.timeline@1.8/manual/wf-record-anim.html)
     - Convert to tween tracks: Right-click animation track → Custom Actions → Tween Convert Animation Track
@@ -161,6 +161,7 @@ openupm add com.cr7sund.tweentimeline
     1. Add your animation track with existed animation clip
     2.  Convert to tween tracks: Right-click animation track → Custom Actions → Tween Convert Animation Track
 
+![image.png](Document/updateCurve.gif)
 ### 3. Animation Control
 
 **Timing & Easing**
@@ -176,7 +177,7 @@ openupm add com.cr7sund.tweentimeline
     - [Enable the **Play Range** toggle to continuously loop playback within a specific range](Enable the Play Range toggle to continuously loop playback within a specific range)
     - However  there is a problem
     - https://discussions.unity.com/t/animation-events-on-last-frame-arent-fired-in-timeline-when-its-the-last-frame-of-the-timeline/768636/3
-- Tween Action Window Smater Play Button
+- Tween Action Window Smarter Play Button
     - Complete animation playback
     - Select Timeline Track First to play selected track animation
 - Inspector preview for single clip animations

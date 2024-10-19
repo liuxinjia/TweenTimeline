@@ -430,6 +430,7 @@ namespace Cr7Sund.TweenTimeLine
             };
 
             trackInfo.clipInfos.Add(clipInfoContext);
+
             return trackInfo;
         }
 
@@ -543,7 +544,7 @@ namespace Cr7Sund.TweenTimeLine
             return easingTokenPresetsToAdd;
         }
 
-        public static List<CustomCurveEasingTokenPreset> CreateCurvePresets(AnimationClip clip, string curveName = "")
+        public static List<CustomCurveEasingTokenPreset> CreateCurvePresets(AnimationClip clip, in string customCurveName = "")
         {
             List<CustomCurveEasingTokenPreset> curves = new();
 
@@ -561,7 +562,7 @@ namespace Cr7Sund.TweenTimeLine
                 for (int i = 0; i < keys.Length; i++)
                 {
                     if (curKeyFrameData != float.MaxValue &&
-                        keys[i].value != curKeyFrameData)
+                        !Mathf.Approximately(keys[i].value, curKeyFrameData))
                     {
                         constant = false;
                         break;
@@ -574,6 +575,7 @@ namespace Cr7Sund.TweenTimeLine
                     continue;
                 }
 
+                string curveName = customCurveName;
                 if (string.IsNullOrEmpty(curveName))
                 {
                     string clipName = clip.name;
@@ -595,6 +597,8 @@ namespace Cr7Sund.TweenTimeLine
                     tokenKey = curveName
                 };
 
+                var findIndex = curves.FindIndex(preset => preset.tokenKey == curveName);
+                Assert.IsFalse(findIndex >= 0, "Already have curve {curveName}");
                 curves.Add(curve);
             }
 
@@ -609,8 +613,6 @@ namespace Cr7Sund.TweenTimeLine
                 EasingTokenPresetLibraryEditor.UpdatePresetLibrary(preset);
             }
         }
-
-
 
         private static AnimationCurve NormalizeCurve(AnimationCurve curve, string propertyName)
         {

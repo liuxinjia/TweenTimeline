@@ -28,7 +28,7 @@ namespace Cr7Sund.TweenTimeLine
         void Set(System.Object target, object updateValue);
         object EndPos { get; set; }
         object StartPos { get; set; }
-        bool IsDynamicPos{get;}
+        bool IsDynamicPos { get; }
     }
 
     public static class ActionCenters
@@ -64,6 +64,10 @@ namespace Cr7Sund.TweenTimeLine
             var clipInfo = TweenTimeLineDataModel.ClipInfoDicts[key];
             var trackAsset = TweenTimeLineDataModel.PlayBehaviourTrackDict[key];
             if (!TweenTimeLineDataModel.TrackObjectDict.ContainsKey(trackAsset))
+            {
+                return;
+            }
+            if (!TweenTimelineManager.CanPlay(trackAsset))
             {
                 return;
             }

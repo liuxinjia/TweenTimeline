@@ -56,7 +56,7 @@ namespace Cr7Sund.Timeline.Extension
             }
         }
 
-        private static TimelineAsset GetRootTimeLineAsset()
+        public static TimelineAsset GetEditTimeLineAsset()
         {
             var timelineWindow = TimelineWindow.instance;
             if (timelineWindow == null)
@@ -69,20 +69,20 @@ namespace Cr7Sund.Timeline.Extension
 
         private static List<TimelineAsset> GetTimeLineAssets()
         {
-            var rootAsset = GetRootTimeLineAsset();
+            var rootAsset = GetEditTimeLineAsset();
             var playableSet = GetSubDirectors(rootAsset, GetCurDirector());
             return playableSet.Select(asset => asset.playableAsset as TimelineAsset).ToList();
         }
 
         public static List<PlayableDirector> GetPlayableDirectors()
         {
-            var rootAsset = GetRootTimeLineAsset();
+            var rootAsset = GetEditTimeLineAsset();
             return GetSubDirectors(rootAsset, GetCurDirector()).ToList();
         }
         public static void IterateSubTimelineClipAsset(
                     Action<TrackAsset, TimelineClip, PlayableDirector> action = null)
         {
-            var rootAsset = GetRootTimeLineAsset();
+            var rootAsset = GetEditTimeLineAsset();
             GetSubDirectors(rootAsset, GetCurDirector(), action);
         }
 

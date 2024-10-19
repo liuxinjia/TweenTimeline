@@ -195,6 +195,10 @@ namespace Cr7Sund.TweenTimeLine
 
             void InitDirector(PlayableDirector playableDirector)
             {
+                if (playableDirector == null)
+                {
+                    return;
+                }
                 PlayableAsset playableAsset = playableDirector.playableAsset;
                 var outputs = playableAsset.outputs;
                 foreach (PlayableBinding output in outputs)
@@ -477,7 +481,7 @@ namespace Cr7Sund.TweenTimeLine
             catch (System.Exception e)
             {
                 TryRemoveTweenManager();
-                throw new Exception("InitPreTween Fail! Try to reimport Core again  \nOutput: ");
+                throw new Exception($"InitPreTween Fail! Try to reimport Core again  \nOutput: {e}");
             }
         }
 
@@ -690,6 +694,7 @@ namespace Cr7Sund.TweenTimeLine
         {
             var timelineAsset = TimelineWindowExposer.GetCurDirector().playableAsset as TimelineAsset;
 
+
             Undo.RecordObject(timelineAsset, "Add Track");
 
             GroupTrack parentTrack = GetParentGroup(groupTrack, timelineAsset, isIn);
@@ -698,8 +703,11 @@ namespace Cr7Sund.TweenTimeLine
             AddTrackWithParents(trackInfo, createNewTrack, parentTrack);
         }
 
-        private static bool IsParent(GroupTrack selectGroupTrack, GroupTrack parentTrack)
+        private static bool IsParentTrack(TrackAsset trackAsset, GroupTrack parentTrack)
         {
+            if (trackAsset.parent == null) return false;
+
+            GroupTrack selectGroupTrack = trackAsset.parent as GroupTrack;
             while (selectGroupTrack != null)
             {
                 if (selectGroupTrack == parentTrack)
@@ -834,41 +842,100 @@ namespace Cr7Sund.TweenTimeLine
                 }
             }
 
-            string rootTrackName = isIn ?
-                  TweenTimelineDefine.InDefine :
-                  TweenTimelineDefine.OutDefine;
-            GroupTrack rootParentTrack = CreateRootTrack(timelineAsset, rootTrackName);
+            var parentTrack = GetSelectParentTrack(timelineAsset, groupTrack);
+            if (parentTrack == null)
+            {
+                string rootTrackName = isIn ?
+                    TweenTimelineDefine.InDefine :
+                    TweenTimelineDefine.OutDefine;
+                parentTrack = CreateRootTrack(timelineAsset, rootTrackName);
+            }
+            return CreateGroupAsset(groupTrackName, timelineAsset, parentTrack);
+        }
 
+        public static bool CanPlay(TrackAsset trackAsset)
+        {
+            var timelineAsset = TimelineWindowExposer.GetEditTimeLineAsset();
+            if (timelineAsset == null)
+            {
+                return true;
+            }
+            var selectTracks = TimelineWindowExposer.GetSelectTracks();
+            if (selectTracks == null
+            || selectTracks.Count() <= 0)
+            {
+                return true;
+            }
+
+            foreach (var selectTrack in selectTracks)
+            {
+                if (selectTrack == trackAsset)
+                {
+                    return true;
+                }
+
+                if (selectTrack is GroupTrack selectGroupTrack)
+                {
+                    if (IsParentTrack(trackAsset, selectGroupTrack))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private static GroupTrack GetSelectParentTrack(TimelineAsset timelineAsset, Transform goTrans)
+        {
             var selectTracks = TimelineWindowExposer.GetSelectTracks();
 
             foreach (var selectTrack in selectTracks)
             {
-                if (selectTrack is GroupTrack selectGroupTrack
-                    && IsParent(selectGroupTrack, rootParentTrack) //disallowed  when select track but with different attach root
-                    )
+                if (selectTrack is GroupTrack selectGroupTrack)
                 {
-                    if (selectTrack.name == TweenTimelineDefine.InDefine
-                    || selectTrack.name == TweenTimelineDefine.OutDefine)
+                    if (goTrans.tag == TweenTimelineDefine.PanelTag)
                     {
-                        rootParentTrack = CreateRootTrack(timelineAsset, selectTrack.name);
-                        break;
+                        if (selectTrack.name == TweenTimelineDefine.InDefine
+                          || selectTrack.name == TweenTimelineDefine.OutDefine)
+                        {
+                            return selectGroupTrack;
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
-                    else
+
+                    // Check for potential infinite loop by keeping track of visited transforms
+                    var parentTrans = goTrans;
+                    bool isChildOfSelectTrack = false;
+                    while (parentTrans != null)
                     {
-                        return selectTrack as GroupTrack;
+                        if (parentTrans.name == selectGroupTrack.name)
+                        {
+                            isChildOfSelectTrack = true;
+                            break;
+                        }
+                        parentTrans = parentTrans.parent;
+                    }
+                    Assert.IsTrue(isChildOfSelectTrack, $"Try to add {selectGroupTrack.name} into different attach parent: {goTrans.name}");
+                    if (isChildOfSelectTrack)
+                    {
+                        return selectGroupTrack;
                     }
                 }
             }
-            return CreateGroupAsset(groupTrackName, timelineAsset, rootParentTrack);
+
+            return null;
         }
 
-        private static GroupTrack CreateRootTrack(TimelineAsset timelineAsset, string rootTrackName)
+        private static GroupTrack CreateRootTrack(TimelineAsset timelineAsset, string grandParentName)
         {
-            GroupTrack rootParentTrack = null;
-            var grandParentTrackIndex = TweenTimeLineDataModel.groupTracks.FindIndex(track => track.name == rootTrackName);
-            rootParentTrack = AddGroup(rootTrackName, timelineAsset, null, grandParentTrackIndex);
+            GroupTrack parentTrack = null;
+            var grandParentTrackIndex = TweenTimeLineDataModel.groupTracks.FindIndex(track => track.name == grandParentName);
+            parentTrack = AddGroup(grandParentName, timelineAsset, null, grandParentTrackIndex);
 
-            return rootParentTrack;
+            return parentTrack;
         }
 
         public static GroupTrack CreateGroupAsset(string groupTrackName, TimelineAsset timelineAsset, TrackAsset parentTrack)
