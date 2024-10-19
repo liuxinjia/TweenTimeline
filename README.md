@@ -110,7 +110,7 @@ openupm add com.cr7sund.tweentimeline
 
 ### 1. Tween Action Window
 
-![image.png](Document/Gifs/TweenActionWindow.gif)
+![image.png](Document/TweenActionWindow.gif)
 
 **Opening the Window**
 
@@ -139,7 +139,7 @@ openupm add com.cr7sund.tweentimeline
 ### 2. Creating Animations
 
 **Straight Ahead Animation**
-![image.png](Document/Gifs/AddTrack.gif)
+![image.png](Document/AddTrack.gif)
 
 1. Add Animation Track:
     - Click "Add Track" in Tween Action Window
@@ -150,7 +150,7 @@ openupm add com.cr7sund.tweentimeline
         - Auto-move to you start/end values
     - Reset button available for value restoration
         - Auto-continue from previous track's end value (append mode)
-![image.png](Document/Gifs/Record.gif)
+![image.png](Document/Record.gif)
 
 **Pose to Pose Animation**
 
@@ -169,7 +169,7 @@ openupm add com.cr7sund.tweentimeline
 - Create custom curves for unique effects
 
 **Preview Options**
-![image.png](Document/Gifs/previewTrip.gif)
+![image.png](Document/previewTrip.gif)
 
 - Timeline Window
     - Play Toggle: Full animation preview (Note: may skip last frame)
@@ -191,7 +191,7 @@ openupm add com.cr7sund.tweentimeline
     - Modular animation composition
 
 **Converting Existing Animations**
-![image.png](Document/Gifs/ConvertAnimation.gif)
+![image.png](Document/ConvertAnimation.gif)
 - Select animation track → Right-click → Custom Actions → Tween Convert Animations
 - Shortcut: `Shift + H`
 - Option to defer conversion until runtime code generation
@@ -217,7 +217,7 @@ openupm add com.cr7sund.tweentimeline
 > 
 
 **Runtime Components (Sample)**
-![image.png](Document/Gifs/AnimationComponents.gif)
+![image.png](Document/AnimationComponents.gif)
 - **Panel Binder**: Handle panel transitions
 - **Composite Binder**: Manage composite transitions
 - **Animation Components**: Attach to UI elements to respond to various events (e.g., HoverBinder for pointer events)

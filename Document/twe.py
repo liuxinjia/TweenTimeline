@@ -36,7 +36,7 @@ def convert_video_to_gif(filename):
             # 可以添加一些优化参数，比如调整分辨率和帧率
             clip_resized.write_gif(
                 gif_path,
-                fps=30,  # 降低帧率以减小文件大小
+                fps=10,  # 降低帧率以减小文件大小
                 program="ffmpeg",  # 使用ffmpeg可能会得到更好的性能
                 opt="nq",  # 启用优化选项
             )
