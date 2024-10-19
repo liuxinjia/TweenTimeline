@@ -14,9 +14,9 @@ Additionally, **tween collections** and **tween components** enhance asset reuse
 
 Feel free to use it and contribute to its development!
 
-![bandicam2024-10-1220-22-54-874-ezgif.com-video-to-gif-converter.gif](Document/bandicam2024-10-1220-22-54-874-ezgif.com-video-to-gif-converter.gif)
+![bandicam2024-10-1220-22-54-874-ezgif.com-video-to-gif-converter.gif](bandicam2024-10-1220-22-54-874-ezgif.com-video-to-gif-converter.gif)
 
-![bandicam2024-10-1220-49-04-012-ezgif.com-video-to-gif-converter.gif](Document/bandicam2024-10-1220-49-04-012-ezgif.com-video-to-gif-converter.gif)
+![bandicam2024-10-1220-49-04-012-ezgif.com-video-to-gif-converter.gif](bandicam2024-10-1220-49-04-012-ezgif.com-video-to-gif-converter.gif)
 
 # **🕹️ Demo Preview**
 
@@ -78,7 +78,7 @@ The source is from [dating-sim-ui-pac](https://loudeyes.itch.io/dating-sim-ui-pa
 3. Click the "Import Core" button to automatically import the package and all dependencies
 4. (Optional) Click "Import Demo" and open the demo scene to explore sample implementations
 
-![image.png](Document/image.png)
+![image.png](image.png)
 
 ### Via OpenUPM
 
@@ -110,7 +110,7 @@ openupm add com.cr7sund.tweentimeline
 
 ### 1. Tween Action Window
 
-![image.png](Document/TweenActionWindow.gif)
+![image.png](TweenActionWindow.gif)
 
 **Opening the Window**
 
@@ -139,7 +139,7 @@ openupm add com.cr7sund.tweentimeline
 ### 2. Creating Animations
 
 **Straight Ahead Animation**
-![image.png](Document/AddTrack.gif)
+![image.png](AddTrack.gif)
 
 1. Add Animation Track:
     - Click "Add Track" in Tween Action Window
@@ -150,10 +150,10 @@ openupm add com.cr7sund.tweentimeline
         - Auto-move to you start/end values
     - Reset button available for value restoration
         - Auto-continue from previous track's end value (append mode)
-![image.png](Document/Record.gif)
+![image.png](Record.gif)
 
 **Pose to Pose Animation**
-![image.png](Document/recordCurve.gif)
+![image.png](recordCurve.gif)
 1. Direct Recording:
     - Follow Unity's [standard recording workflow](https://docs.unity3d.com/Packages/com.unity.timeline@1.8/manual/wf-record-anim.html)
     - Convert to tween tracks: Right-click animation track → Custom Actions → Tween Convert Animation Track
@@ -161,7 +161,7 @@ openupm add com.cr7sund.tweentimeline
     1. Add your animation track with existed animation clip
     2.  Convert to tween tracks: Right-click animation track → Custom Actions → Tween Convert Animation Track
 
-![image.png](Document/updateCurve.gif)
+![image.png](updateCurve.gif)
 ### 3. Animation Control
 
 **Timing & Easing**
@@ -170,7 +170,7 @@ openupm add com.cr7sund.tweentimeline
 - Create custom curves for unique effects
 
 **Preview Options**
-![image.png](Document/previewTrip.gif)
+![image.png](previewTrip.gif)
 
 - Timeline Window
     - Play Toggle: Full animation preview (Note: may skip last frame)
@@ -192,7 +192,7 @@ openupm add com.cr7sund.tweentimeline
     - Modular animation composition
 
 **Converting Existing Animations**
-![image.png](Document/ConvertAnimation.gif)
+![image.png](ConvertAnimation.gif)
 - Select animation track → Right-click → Custom Actions → Tween Convert Animations
 - Shortcut: `Shift + H`
 - Option to defer conversion until runtime code generation
@@ -218,7 +218,7 @@ openupm add com.cr7sund.tweentimeline
 > 
 
 **Runtime Components (Sample)**
-![image.png](Document/AnimationComponents.gif)
+![image.png](AnimationComponents.gif)
 - **Panel Binder**: Handle panel transitions
 - **Composite Binder**: Manage composite transitions
 - **Animation Components**: Attach to UI elements to respond to various events (e.g., HoverBinder for pointer events)
@@ -303,23 +303,23 @@ You can find an example implementation of **ITweenBinding** in the Demo.
 We simplify different keyframes to just two keyframes: the start and end keyframes. The intermediate keyframes are handled by evaluating the animation curve. Therefore, it's essential to ensure that we have the appropriate curve in place.
 Below is an example comparing the animation clip with our converted track.
     
-    ![image.png](Document/image%201.png)
+    ![image.png](image%201.png)
     
-    ![image.png](Document/image%202.png)
+    ![image.png](image%202.png)
     
     **Another issue we encounter: Object KeyFrames.**
     
     We need to convert certain non-animatable properties, specifically unsupported types such as string, bool, and (~~Sprite~~). We are attempting to use markers to handle these cases.
     
-    ![image.png](Document/image%203.png)
+    ![image.png](image%203.png)
     
     and we use reflection to get all not animatale Field Types And Properties.
     
-    ![image.png](Document/image%204.png)
+    ![image.png](image%204.png)
     
-    ![image.png](Document/image%205.png)
+    ![image.png](image%205.png)
     
-    ![image.png](Document/image%206.png)
+    ![image.png](image%206.png)
     
     ```csharp
                .Group(Sequence.Create()
@@ -346,25 +346,25 @@ Below is an example comparing the animation clip with our converted track.
     
     1. Use alternative methods for looping.
         
-        ![image.png](Document/image%207.png)
+        ![image.png](image%207.png)
         
     2. Inconsistencies with the curve:The last frame has a different duration from the clip (usually occurs after deleting the last frame).
     
         
-        ![image.png](Document/image%208.png)
+        ![image.png](image%208.png)
         
-        ![image.png](Document/image%209.png)
+        ![image.png](image%209.png)
         
     
     1. Why one track can only control one proerty?
         
         我们发现每个track 只控制一个属性，对于整体来说更加直观，且随着动画的不断增加，不同track 之间也能职能明确。同时通过调研，我们发现大部分工具实现也是如此。
         
-        ![image.png](Document/image%2010.png)
+        ![image.png](image%2010.png)
         
-        ![image.png](Document/image%2011.png)
+        ![image.png](image%2011.png)
         
-        ![image.png](Document/image%2012.png)
+        ![image.png](image%2012.png)
         
     
 
