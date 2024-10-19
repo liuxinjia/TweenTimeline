@@ -110,6 +110,8 @@ openupm add com.cr7sund.tweentimeline
 
 ### 1. Tween Action Window
 
+![image.png](Document/Gifs/TweenActionWindow.gif)
+
 **Opening the Window**
 
 - Press `Ctrl + T` in Timeline or Hierarchy Window
@@ -125,7 +127,6 @@ openupm add com.cr7sund.tweentimeline
         - Combine multiple actions by right-clicking additional selections, see more at custom part
 
 **Preview Action**
-
 - Select different action to preview
 - Select [different easing pairs](https://m3.material.io/styles/motion/easing-and-duration/applying-easing-and-duration#27a05b8b-02b1-4695-a7e4-70797f205222) to preivew different time and easing combinations
 - **Value Configuration:** Adjust start value and end value
@@ -138,6 +139,7 @@ openupm add com.cr7sund.tweentimeline
 ### 2. Creating Animations
 
 **Straight Ahead Animation**
+![image.png](Document/Gifs/AddTrack.gif)
 
 1. Add Animation Track:
     - Click "Add Track" in Tween Action Window
@@ -148,6 +150,7 @@ openupm add com.cr7sund.tweentimeline
         - Auto-move to you start/end values
     - Reset button available for value restoration
         - Auto-continue from previous track's end value (append mode)
+![image.png](Document/Gifs/Record.gif)
 
 **Pose to Pose Animation**
 
@@ -166,6 +169,7 @@ openupm add com.cr7sund.tweentimeline
 - Create custom curves for unique effects
 
 **Preview Options**
+![image.png](Document/Gifs/previewTrip.gif)
 
 - Timeline Window
     - Play Toggle: Full animation preview (Note: may skip last frame)
@@ -187,7 +191,7 @@ openupm add com.cr7sund.tweentimeline
     - Modular animation composition
 
 **Converting Existing Animations**
-
+![image.png](Document/Gifs/ConvertAnimation.gif)
 - Select animation track → Right-click → Custom Actions → Tween Convert Animations
 - Shortcut: `Shift + H`
 - Option to defer conversion until runtime code generation
@@ -213,7 +217,7 @@ openupm add com.cr7sund.tweentimeline
 > 
 
 **Runtime Components (Sample)**
-
+![image.png](Document/Gifs/AnimationComponents.gif)
 - **Panel Binder**: Handle panel transitions
 - **Composite Binder**: Manage composite transitions
 - **Animation Components**: Attach to UI elements to respond to various events (e.g., HoverBinder for pointer events)
