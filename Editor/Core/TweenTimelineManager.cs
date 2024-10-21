@@ -632,14 +632,7 @@ namespace Cr7Sund.TweenTimeLine
 
         public static void ReusablePrimeTweens()
         {
-            var primeTweenType = typeof(Tween).Assembly.GetType("PrimeTween.PrimeTweenManager");
-            var instanceField = primeTweenType.GetField("Instance", BindingFlags.Static | BindingFlags.NonPublic);
-            var instance = instanceField.GetValue(null);
-            if (instance != null)
-            {
-                var updateMethodInfo = primeTweenType.GetMethod("Update", BindingFlags.Instance | BindingFlags.NonPublic);
-                updateMethodInfo.Invoke(instance, null);
-            }
+            PrimeTweenManagerExposer.ReuseTween();
         }
 
         private static void ChangeTweenManagerState(ClipBehaviourStateEnum behaviourStateType)

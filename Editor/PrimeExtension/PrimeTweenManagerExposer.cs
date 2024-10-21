@@ -54,6 +54,10 @@ namespace Cr7Sund.TweenTimeLine
             }
 
         }
+  
+        public static void ReuseTween(){
+            PrimeTweenManager.Instance.Update();
+        }
     }
 }
 #endif
